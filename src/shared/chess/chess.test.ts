@@ -32,6 +32,15 @@ describe('parseFen', () => {
   });
 });
 
+describe('crazyhouse placements', () => {
+  it('skips the promoted-piece marker and the pockets', () => {
+    const board = parsePlacement('Q~3k3/8/8/8/8/8/8/4K3[Pp]');
+    expect(board.get('a8')).toEqual({ color: 'white', role: 'queen' });
+    expect(board.get('e8')).toEqual({ color: 'black', role: 'king' });
+    expect(board.size).toBe(3);
+  });
+});
+
 describe('attackers', () => {
   it('finds pawns on the side they capture from', () => {
     const board = parsePlacement('8/8/8/3p4/4P3/8/8/8');

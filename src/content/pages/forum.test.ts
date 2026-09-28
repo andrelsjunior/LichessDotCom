@@ -1,0 +1,37 @@
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { queryOne } from '#shared/dom.ts';
+import { syncForumLabels } from './forum.ts';
+// The forum index as the original left it.
+import legacy from './fixtures/legacy-forum.json' with { type: 'json' };
+
+beforeAll(() => {
+  // happy-dom has no rows on a table section.
+  const section: unknown = Object.getPrototypeOf(document.createElement('thead'));
+  if (typeof section === 'object' && section !== null && !('rows' in section))
+    Object.defineProperty(section, 'rows', {
+      get(this: Element) {
+        return this.querySelectorAll(':scope > tr');
+      },
+    });
+});
+
+afterEach(() => {
+  document.body.innerHTML = '';
+});
+
+describe('forum labels', () => {
+  it('labels each count with its column, as the original did', () => {
+    document.body.innerHTML = legacy.html;
+    syncForumLabels();
+    expect(document.querySelector('main')?.innerHTML).toBe(legacy.after);
+  });
+
+  it('labels a table once', () => {
+    document.body.innerHTML = legacy.html;
+    syncForumLabels();
+    const cell = queryOne(document, 'td.right', HTMLElement);
+    if (cell) delete cell.dataset.cdcLabel;
+    syncForumLabels();
+    expect(cell?.dataset.cdcLabel).toBeUndefined();
+  });
+});

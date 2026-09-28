@@ -1,7 +1,42 @@
+import { createElement, onDomReady, queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { pageLang } from '#shared/lang.ts';
+import { onEveryTick } from '#content/sync-loop.ts';
+import { nonEmpty } from '#content/ui/text.ts';
+import { heroText, type HeroText } from './hero-texts.ts';
 
-// TODO(port): not ported yet.
+// The home page's hero card (styles/home.css), in the page's language.
+
+export function buildHero(text: HeroText, user: string | undefined): HTMLElement {
+  const hero = createElement('section', { className: 'cdc-hero' });
+  hero.append(
+    createElement('p', { className: 'cdc-hero__eyebrow', text: text.eyebrow }),
+    createElement('h1', {
+      className: 'cdc-hero__title',
+      text: user ? text.greeting(user) : text.title,
+    }),
+    createElement('p', { className: 'cdc-hero__sub', text: text.sub }),
+  );
+  return hero;
+}
+
+// The header's name keeps its capitals, unlike body's user id.
+function userName(): string | undefined {
+  const tag = document.getElementById('user_tag')?.textContent.trim();
+  return nonEmpty(tag) ?? document.body.dataset.user;
+}
+
+export function addHero(text: HeroText): void {
+  const main = queryOne(document, 'main.lobby', HTMLElement);
+  if (!main || main.querySelector(':scope > .cdc-hero')) return;
+  main.prepend(buildHero(text, userName()));
+}
+
 export const homeHero: Feature = {
   name: 'home hero',
-  start: () => {},
+  start: () => {
+    const text = heroText(pageLang());
+    onDomReady(() => addHero(text));
+    onEveryTick('home hero', () => addHero(text));
+  },
 };

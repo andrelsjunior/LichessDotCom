@@ -1,7 +1,73 @@
+import type { Color } from '#shared/chess/types.ts';
+import { queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { setHtml } from '#shared/html.ts';
+import { extensionUrl } from '#content/platform/runtime.ts';
+import { onEveryTick } from '#content/sync-loop.ts';
+import { createOwnedElement } from '#content/ui/owned-element.ts';
+import { CAPTURABLE_ROLES, capturedMarkup, type BarSide, type MaterialPiece } from './material.ts';
 
-// TODO(port): not ported yet.
+// The captured pieces in the game page's and the analysis board's player
+// bars (styles/playerbar.css), read off the board as it is drawn.
+
+function readPieces(board: Element): MaterialPiece[] {
+  const pieces: MaterialPiece[] = [];
+  for (const piece of board.querySelectorAll('piece:not(.ghost):not(.fading)')) {
+    const role = CAPTURABLE_ROLES.find(name => piece.classList.contains(name));
+    if (role) pieces.push({ color: piece.classList.contains('white') ? 'white' : 'black', role });
+  }
+  return pieces;
+}
+
+// Three-check: Lichess counts the checks a side gave as kings in its
+// material difference, which our bars hide.
+function readChecks(main: Element): Record<BarSide, number> {
+  const count = (side: BarSide): number =>
+    main.querySelectorAll(`.material-${side} mpiece.king`).length;
+  return { top: count('top'), bottom: count('bottom') };
+}
+
+// The game page names the variant on its app, the analysis board on <main>.
+function readVariant(main: HTMLElement): string | undefined {
+  const classes = queryOne(main, '.round__app', HTMLElement)?.className ?? main.className;
+  return /\bvariant-(\w+)/.exec(classes)?.[1];
+}
+
+/** A sync task drawing the captured pieces, with the Neo pieces at `piecesUrl`. */
+export function createCapturedSync(piecesUrl: string): () => void {
+  const topRow = createOwnedElement('cdc-captured cdc-captured--top');
+  const bottomRow = createOwnedElement('cdc-captured cdc-captured--bottom');
+  let lastKey = '';
+  return () => {
+    const main = queryOne(document, 'main.round, main.analyse', HTMLElement);
+    const wrap =
+      main && queryOne(main, '.round__app__board .cg-wrap, .analyse__board > .cg-wrap', Element);
+    const board = wrap?.querySelector('cg-board');
+    if (!main || !wrap || !board) return;
+    // On the analysis board, only under the players of a game.
+    if (main.matches('.analyse') && !main.querySelector(':scope > .cdc-player')) return;
+    const variant = readVariant(main);
+    const bottom: Color = wrap.classList.contains('orientation-black') ? 'black' : 'white';
+    const checks = variant === 'threeCheck' ? readChecks(main) : { top: 0, bottom: 0 };
+    const markup = capturedMarkup({
+      pieces: readPieces(board),
+      bottom,
+      variant,
+      checks,
+      piecesUrl,
+    });
+    const top = topRow(main);
+    const bottomBar = bottomRow(main);
+    if (top.isNew || bottomBar.isNew) lastKey = '';
+    const key = `${markup.top.value}|${markup.bottom.value}`;
+    if (key === lastKey) return;
+    lastKey = key;
+    setHtml(top.element, markup.top);
+    setHtml(bottomBar.element, markup.bottom);
+  };
+}
+
 export const capturedPieces: Feature = {
   name: 'captured pieces',
-  start: () => {},
+  start: () => onEveryTick('captured pieces', createCapturedSync(extensionUrl('img/pieces/neo/'))),
 };

@@ -10,12 +10,17 @@ const ROLE_BY_LETTER: Readonly<Record<string, Role>> = {
   k: 'king',
 };
 
-/** The pieces of a FEN's placement field ("rnbqkbnr/pppppppp/8/…"). */
+/**
+ * The pieces of a FEN's placement field ("rnbqkbnr/pppppppp/8/…"). Crazyhouse
+ * adds a `~` after a promoted piece and its pockets in brackets: both skipped.
+ */
 export function parsePlacement(placement: string): Map<Square, Piece> {
   const board = new Map<Square, Piece>();
   for (const [i, row] of placement.split('/').entries()) {
     let file = 0;
     for (const char of row) {
+      if (char === '~') continue;
+      if (char === '[') break;
       if (/\d/.test(char)) {
         file += Number(char);
         continue;

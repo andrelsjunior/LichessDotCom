@@ -50,9 +50,3 @@ export const onSounds = (handler: (sounds: SoundFiles) => void): (() => void) =>
 export const postCoachState = (state: CoachState): void => post({ type: 'cdc:coach', ...state });
 export const onCoachState = (handler: (state: CoachState) => void): (() => void) =>
   listen(CoachStateSchema, ({ coach, mood, talking }) => handler({ coach, mood, talking }));
-
-// Content script → background worker, over `chrome.runtime` (unpacked installs only).
-export const DevCheckRequestSchema = z.object({ type: z.literal('cdc:dev-check') });
-export const DevCheckResponseSchema = z.object({ reload: z.boolean() });
-export type DevCheckRequest = z.infer<typeof DevCheckRequestSchema>;
-export type DevCheckResponse = z.infer<typeof DevCheckResponseSchema>;

@@ -1,7 +1,71 @@
+import { z } from 'zod/mini';
+import { queryAll } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { onEveryTick } from '#content/sync-loop.ts';
+import { setDataText } from '#content/ui/data-text.ts';
+import { flagEmoji } from './flag-emoji.ts';
 
-// TODO(port): not ported yet.
+// Country flags in the player bars (styles/playerbar.css). The round data has
+// no country, so it comes from the players' profiles: `/api/users` takes a
+// batch of names. The bars are snabbdom's: the flag is an attribute shown by
+// CSS, put back whenever a bar is drawn again.
+
+const BARS =
+  'main.round .ruser, main.analyse > .cdc-player, main.round .game__meta__players a.user-link';
+
+const UsersSchema = z.array(
+  z.object({
+    id: z.string(),
+    profile: z.optional(z.object({ flag: z.optional(z.string()) })),
+  }),
+);
+
+async function fetchUsers(names: readonly string[]): Promise<z.infer<typeof UsersSchema>> {
+  try {
+    const response = await fetch('/api/users', { method: 'POST', body: names.join(',') });
+    const body: unknown = await response.json();
+    const result = UsersSchema.safeParse(body);
+    return result.success ? result.data : [];
+  } catch {
+    return [];
+  }
+}
+
+function userName(bar: HTMLElement): string | undefined {
+  const link = bar.matches('a') ? bar : bar.querySelector('a.user-link');
+  return link instanceof HTMLAnchorElement
+    ? link.pathname.split('/').pop()?.toLowerCase()
+    : undefined;
+}
+
+/** A sync task marking each bar with its player's flag, fetched once per name. */
+export function createFlagsSync(): () => void {
+  // A name maps to null while its flag loads, then to its emoji or ''.
+  const flags = new Map<string, string | null>();
+
+  async function load(names: readonly string[]): Promise<void> {
+    for (const name of names) flags.set(name, null);
+    const users = await fetchUsers(names);
+    for (const name of names) flags.set(name, '');
+    for (const user of users) flags.set(user.id, flagEmoji(user.profile?.flag));
+  }
+
+  return () => {
+    const bars = queryAll(document, BARS, HTMLElement);
+    const names = bars.map(userName);
+    const missing = names.filter(
+      (name): name is string => name !== undefined && name !== '' && !flags.has(name),
+    );
+    if (missing.length > 0) void load(missing);
+    for (const [i, bar] of bars.entries()) {
+      const name = names[i];
+      const flag = name === undefined ? undefined : flags.get(name);
+      setDataText(bar, 'cdcFlag', flag ?? '');
+    }
+  };
+}
+
 export const flags: Feature = {
   name: 'country flags',
-  start: () => {},
+  start: () => onEveryTick('country flags', createFlagsSync()),
 };
