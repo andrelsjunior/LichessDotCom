@@ -1,0 +1,77 @@
+// Test support: what the Game Review shows, read off the page after a step
+// of the script. The class icons and their data URLs, the same everywhere,
+// are cut down to their color and a hash.
+
+/** A short hash, for what's too long to keep whole; null stays null. */
+export const hashOf = (text: string | null): string | null => (text === null ? null : fnv(text));
+
+function fnv(text: string): string {
+  let value = 2166136261;
+  for (let i = 0; i < text.length; i++) value = Math.imul(value ^ text.charCodeAt(i), 16777619);
+  return (value >>> 0).toString(36);
+}
+
+const ICON = /<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 18 19">[\s\S]*?<\/svg>/g;
+const ICON_URL = /url\((?:&quot;|")?data:image\/svg\+xml,.*?%3C%2Fsvg%3E(?:&quot;|")?\)/g;
+
+export function compact(markup: string): string {
+  return markup
+    .replace(ICON, icon => `[icon ${/fill="(#[0-9a-f]+)"/.exec(icon)?.[1] ?? ''} ${fnv(icon)}]`)
+    .replace(ICON_URL, url => `url(icon ${fnv(url)})`);
+}
+
+const outer = (selector: string): string | null => {
+  const found = document.querySelector(selector);
+  return found ? compact(found.outerHTML) : null;
+};
+
+const inner = (selector: string): string | null => {
+  const found = document.querySelector(selector);
+  return found ? compact(found.innerHTML) : null;
+};
+
+/** Where each of the review's elements sits, by its parent's class or tag. */
+function placement(): string {
+  return [
+    '#cdc-review',
+    '#cdc-review-graph',
+    '#cdc-review-controls',
+    '#cdc-evalbar',
+    '#cdc-board-overlay',
+    '#cdc-opening',
+    '#cdc-tip',
+  ]
+    .map(selector => {
+      const parent = document.querySelector(selector)?.parentElement;
+      return `${selector}:${parent ? parent.className || parent.tagName : '-'}`;
+    })
+    .join(' ');
+}
+
+export interface ReviewSnapshot {
+  readonly [part: string]: unknown;
+}
+
+export interface SnapshotExtras {
+  readonly arrows: unknown;
+  readonly coach: unknown;
+  readonly cache: string | null;
+}
+
+export function snapshotReview(extras: SnapshotExtras): ReviewSnapshot {
+  const root = document.documentElement;
+  return {
+    html: [...root.classList].filter(name => name.startsWith('cdc')).join(' '),
+    cls: root.dataset.cdcCls ?? null,
+    placement: placement(),
+    panel: inner('#cdc-review'),
+    graph: outer('#cdc-review-graph'),
+    controls: inner('#cdc-review-controls'),
+    bar: outer('#cdc-evalbar'),
+    overlay: inner('#cdc-board-overlay'),
+    opening: outer('#cdc-opening'),
+    tip: outer('#cdc-tip'),
+    moves: inner('.tview2'),
+    ...extras,
+  };
+}

@@ -1,6 +1,6 @@
 import { z } from 'zod/mini';
 import { createGuard } from '#shared/guards.ts';
-import { readSite } from '#page/lichess/globals.ts';
+import { readSite } from './globals.ts';
 
 // Lichess's asset helper, `site.asset.url`: where its own files (the engine,
 // its networks) are served from.

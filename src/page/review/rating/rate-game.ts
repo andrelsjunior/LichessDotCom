@@ -41,7 +41,7 @@ export interface GameRatingInput {
   readonly fens: readonly string[];
   /** Every mainline move, judged at full depth. */
   readonly moves: readonly RatedMove[];
-  readonly ratings: Readonly<Partial<Record<Color, number>>>;
+  readonly ratings: Readonly<Partial<Record<Color, number | undefined>>>;
 }
 
 const SPEEDS: ReadonlyMap<string, Speed> = new Map([

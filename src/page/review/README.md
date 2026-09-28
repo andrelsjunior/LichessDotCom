@@ -1,9 +1,16 @@
-# Game Review: the domain
+# Game Review
+
+On a game's analysis page, a summary of the game, then a move-by-move review
+with a coach; on the free analysis board (`/analysis`), the same coach judging
+each move as it's played. Lichess's analysis controller is reached through
+`#page/lichess/analysis.ts`, a typed facade over `site.analysis`.
+
+## The domain
 
 What the review knows, judges and says, apart from what it shows. Everything
 here is pure but the engine wrapper (`engine/stockfish.ts`), and none of it
-reads the page: the UI (`index.ts` and what it builds on) passes in the game
-id, the coach, the language, the opening's name and the page's asset URL.
+reads the page: the UI passes in the game id, the coach, the language, the
+opening's name and the page's asset URL.
 
 | Folder        | What it holds                                                                                                                                                |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -34,3 +41,30 @@ opening)` → `CommentPart[]`: sentences, the droppable one going when the
 - `StreamState` (`key`, `shown`, `dropped`): the typing's progress, kept by
   the UI. `streamFor(state, parts)` starts it over for a new comment;
   `commentMarkup(parts, { stream, assets, language })` draws the words.
+
+## The UI
+
+`index.ts` waits for the controller, `start.ts` wires the review up. One
+`Session` (`session.ts`) holds what a page keeps: the view's state, the game's
+analysis as it comes in (`GameWork`), the moves judged as they're played
+(`LiveState`), the coach and the typing. Modules never call the render
+directly but through `session.redraw` and `session.setMode`, which keeps the
+imports acyclic.
+
+| Folder  | What it holds                                                                                                                                                                                                               |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `game/` | The game's analysis: its export (opening, server analysis), the cache, the cloud, the engine's queue (`nextJob`), and `buildReview`, which judges the moves whose positions are in and drafts the rest                      |
+| `live/` | Moves played on the board (the free board's, and those off a game): `judgeAt`, `bookAt`, `openingAt`, and the queue of engine and masters lookups (`pump`)                                                                  |
+| `view/` | The DOM: the panel per mode (summary, moves, closed, live), the graph, the eval bar, the badge and arrows on the board, the move list's badges, the opening's name, the coach's avatar, the typing, the tooltip, the clicks |
+
+`render.ts` runs every 150 ms: it draws the panel again only when what it
+shows changes (`render-key.ts`), keeping the buttons and scroll positions a
+redraw leaves as they were, then the board's marks.
+
+## Tests
+
+Besides each folder's unit tests, `golden/` drives the review through
+scripts of steps on a fake analysis page (`fixtures/review-script.ts`,
+`fixtures/review-scenarios.ts`: a fake controller, move list and Stockfish,
+fake timers) and checks that after each step it shows exactly what the
+original script showed (`golden/fixtures/legacy-*.json`).

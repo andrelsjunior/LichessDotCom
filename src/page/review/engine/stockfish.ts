@@ -1,7 +1,7 @@
 import { z } from 'zod/mini';
 import { createGuard } from '#shared/guards.ts';
 import { FULL_SEARCH, type SearchLimits, STOCKFISH_BUILD } from './settings.ts';
-import { assetUrl } from './site-assets.ts';
+import { assetUrl } from '#page/lichess/assets.ts';
 import { type EngineResult, SearchCollector } from './uci.ts';
 
 // Lichess's Stockfish build (stockfish-web), loaded from its own assets in the

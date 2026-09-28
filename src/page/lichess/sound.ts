@@ -1,6 +1,7 @@
 import { z } from 'zod/mini';
 import { createGuard } from '#shared/guards.ts';
 import { readSite } from './globals.ts';
+import { lenient } from '#shared/zod.ts';
 
 // Lichess's sound player, `site.sound` (ui/lib/src/sound.ts). Lichess calls
 // it from untyped code, so what it passes is unknown until read.
@@ -32,28 +33,15 @@ export function soundPlayer(): SoundPlayer | null {
   return isSoundPlayer(sound) ? sound : null;
 }
 
-// A field of another type counts as missing.
-const optionalString = z.optional(
-  z.pipe(
-    z.unknown(),
-    z.transform((value): string | undefined => (typeof value === 'string' ? value : undefined)),
-  ),
-);
-const optionalNumber = z.optional(
-  z.pipe(
-    z.unknown(),
-    z.transform((value): number | undefined => (typeof value === 'number' ? value : undefined)),
-  ),
-);
-
 // What `move()` is called with: a move from the server (with its SAN), an
 // analysis node, or a named sound.
+// A field of another type counts as missing.
 const MoveOptionsSchema = z.object({
-  san: optionalString,
-  ply: optionalNumber,
-  name: optionalString,
-  filter: optionalString,
-  volume: optionalNumber,
+  san: lenient(z.string()),
+  ply: lenient(z.number()),
+  name: lenient(z.string()),
+  filter: lenient(z.string()),
+  volume: lenient(z.number()),
 });
 
 export type MoveOptions = z.infer<typeof MoveOptionsSchema>;
