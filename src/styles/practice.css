@@ -1,11 +1,7 @@
-/*
- * Practice (/practice) with a playful lesson look: every section
- * has its own color, lessons are cards whose icon sits white on a bright
- * gradient tile that bounces on hover, progress is a pill ("3 / 7") and a
- * green check when done, and the side panel's progress bar is green.
- */
+/* Practice (/practice): a color per section, lessons as cards with a white icon
+ * on a gradient tile, progress as pills. */
 
-/* ------------------------------------------------------------ side --- */
+/* ---- Side --- */
 
 .practice-side {
   gap: 14px !important;
@@ -15,9 +11,8 @@
   background: var(--cdc-bg-panel) !important;
 }
 
-/* The Drills illustration (bundled in img/icons) instead of Lichess's grey
- * golem. Lichess's light theme darkens the golem to near black, which would
- * black out ours too, hence the !important. */
+/* The Drills illustration instead of Lichess's grey golem. !important: the
+ * light theme darkens the golem, and would darken ours with it. */
 .practice-side__decoration {
   content: url('chrome-extension://__MSG_@@extension_id__/img/icons/drills.svg');
   width: 120px !important;
@@ -99,7 +94,7 @@
   background: var(--cdc-btn-green-hover);
 }
 
-/* ------------------------------------------------------- sections --- */
+/* ---- Sections --- */
 
 .practice-app section {
   --cdc-practice: #81b64c;
@@ -127,8 +122,7 @@
   --cdc-practice-2: #d27a1c;
 }
 
-/* Section titles: left-aligned, bold, with a dot in the section's color
- * instead of Lichess's spaced-out grey capitals. */
+/* A dot in the section's color, instead of Lichess's spaced-out grey capitals. */
 .practice-app section > h2 {
   display: flex;
   align-items: center;
@@ -157,7 +151,7 @@
   margin: 16px 0 36px !important;
 }
 
-/* ---------------------------------------------------------- lessons --- */
+/* ---- Lessons --- */
 
 .practice-app .study {
   position: relative;
@@ -187,7 +181,7 @@ html[dir='rtl'] .practice-app .study {
   transform: translateY(-3px) !important;
 }
 
-/* The icon tile: a gradient in the section's color, behind the icon. */
+/* The icon's tile, in the section's color. */
 .practice-app .study::before {
   content: '';
   position: absolute;
@@ -241,10 +235,8 @@ html[dir='rtl'] .practice-app .study {
   opacity: 1 !important;
 }
 
-/* Lesson states. Lichess's state gradients go and every card stays dark:
- * not started stays neutral, in progress keeps its animated border, done
- * gets a check on its tile. Not while hovered, or the hover's lighter fill
- * would lose to this one. */
+/* Lichess's state gradients go: every card stays dark. Not while hovered, or
+ * the hover fill would lose to this one. */
 .practice-app .study:is(.future, .ongoing, .done):not(:hover, .active) {
   background: var(--cdc-bg-panel) !important;
 }
@@ -326,8 +318,8 @@ html[dir='rtl'] .practice-app .study {
   text-shadow: none !important;
 }
 
-/* Lichess's mobile layout runs the sections edge to edge. The progress card
- * on top gets the same inset, or it sat flush against the window's edge. */
+/* Lichess's mobile layout runs edge to edge: the sections and the progress card
+ * need an inset. */
 @media (max-width: 799.98px) {
   .practice-side {
     margin-inline: 12px !important;

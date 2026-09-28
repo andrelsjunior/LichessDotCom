@@ -1,30 +1,11 @@
-/*
- * Lichess TV (`main.round.tv-single`): the game page's layout (game.css),
- * with the channels back in a column left of the board, where the game
- * page has nothing. Lichess lists them in `.round__side > .subnav`, which
- * game.css hides with the rest of the side: here each channel is a row with
- * its mode's icon white on a gradient tile in the leaderboards' colors, the
- * name and the channel's champion, and the channel on air lit up with a
- * pulsing live dot. The column scrolls on its own, and content.js scrolls
- * the channel on air into view.
- *
- * Below 1260px the column shrinks to the tiles alone, and each one's name
- * shows as a tooltip (content.js), so the board keeps its room.
- *
- *   +--------+  +--------------------+  +--------+
- *   | [#] Bu |  | player bar         |  | moves  |
- *   | [#] Bl |  | board              |  +--------+
- *   | [#] Ra |  |                    |  | ctrls  |
- *   |   …    |  | player bar         |  | info   |
- *   +--------+  +--------------------+  +--------+
- */
+/* Lichess TV (main.round.tv-single): game.css's layout, plus the channels (Lichess's
+ * `.round__side > .subnav`, hidden by game.css) in a scrolling column left of the board. */
 
 @media (min-width: 1020px) {
   html[data-cdc-has~='tv-channels'] main.round.tv-single {
     --cdc-tv-w: 62px;
     --cdc-lead-w: calc(var(--cdc-tv-w) + var(--cdc-gap));
-    /* No chat on TV, only the moves and the game's info: a slimmer panel
-       leaves the board what the channels take. */
+    /* TV has no chat: a slimmer panel gives the board back what the channels take. */
     --cdc-panel-min: clamp(260px, 20vw, 360px);
     --cdc-panel-w: var(--cdc-panel-min);
 
@@ -37,8 +18,8 @@
       'tv user-bot chat' !important;
   }
 
-  /* Crazyhouse: the pockets' strip after the board, and no column gap, as
-     game.css lays it out; the channels' column carries its own. */
+  /* Crazyhouse: pockets after the board and no column gap, as in game.css; the channels'
+   * column carries its own gap. */
   html[data-cdc-has~='tv-channels'][data-cdc-has~='pocket'] main.round.tv-single {
     grid-template-columns:
       var(--cdc-lead-w)
@@ -53,7 +34,7 @@
       'tv user-bot .      chat' !important;
   }
 
-  /* Zen mode hides the side, channels included (game.css): no column. */
+  /* Zen mode hides the side, channels included (game.css). */
   body.zenable.zen main.round.tv-single {
     --cdc-tv-w: 0px !important;
     --cdc-lead-w: 0px !important;
@@ -63,7 +44,7 @@
     margin-inline-end: var(--cdc-gap) !important;
   }
 
-  /* -------------------------------------------------------- the column --- */
+  /* ---- Column --- */
 
   main.round.tv-single > .round__side > .subnav {
     grid-area: tv !important;
@@ -94,11 +75,10 @@
     scrollbar-color: #ffffff26 transparent;
   }
 
-  /* -------------------------------------------------------- a channel --- */
+  /* ---- Channel --- */
 
-  /* A color per channel, the leaderboards' for the same mode
-     (leaderboard.css). Its class is the channel's key, which Lichess
-     doesn't translate. */
+  /* The leaderboards' color for each mode (leaderboard.css). The class is the channel's key,
+   * which Lichess doesn't translate. */
   main.round.tv-single .tv-channel {
     --cdc-tv: #95c85a;
     --cdc-tv-2: #5d9948;
@@ -186,8 +166,7 @@
     animation-delay: calc(min(sibling-index(), 16) * 25ms);
   }
 
-  /* Only when TV is opened, not on a channel change or TV's reload for the
-     next game (content.js). */
+  /* Only when TV opens, not on a channel change or the reload for the next game (content.js). */
   html.cdc-tv-still main.round.tv-single .subnav .tv-channel {
     animation: none !important;
   }
@@ -266,8 +245,7 @@
     min-width: 0;
   }
 
-  /* The icon, white on the tile: theme.css's where it has one,
-     Lichess's glyph otherwise. */
+  /* White icon on the tile: theme.css's where it has one, else Lichess's glyph. */
   main.round.tv-single .tv-channel > span::before {
     --cdc-mode-color: #fff;
     order: 0 !important;
@@ -283,8 +261,7 @@
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
 
-  /* Atomic, Antichess and Horde are full-color pictures (theme.css), which
-     would sit on the tile as they are: Lichess's own glyphs, in white. */
+  /* Atomic, Antichess and Horde have full-color pictures (theme.css): use Lichess's glyph here. */
   main.round.tv-single
     .tv-channel
     > span:is([data-icon='\e01e'], [data-icon='\e01c'], [data-icon='\e03d'])::before {
@@ -330,8 +307,7 @@
     text-overflow: ellipsis;
   }
 
-  /* On the champion's line (the lower half of the row's 34px of text), so
-     a long channel name keeps the whole width. */
+  /* On the champion's line, so a long channel name keeps the full width. */
   main.round.tv-single .tv-channel .champion rating {
     position: absolute;
     top: calc(50% + 1px);
@@ -360,14 +336,14 @@
   }
 }
 
-/* Wide enough for the names: the full rows. */
+/* Wide enough for the names: full rows. */
 @media (min-width: 1260px) {
   html[data-cdc-has~='tv-channels'] main.round.tv-single {
     --cdc-tv-w: clamp(200px, 14vw, 250px);
   }
 }
 
-/* Narrower: the tiles alone, their names as tooltips (content.js). */
+/* Narrower: tiles only, names as tooltips (content.js). */
 @media (min-width: 1020px) and (max-width: 1259.98px) {
   main.round.tv-single .subnav__inner {
     scrollbar-width: none;
