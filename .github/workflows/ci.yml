@@ -96,6 +96,25 @@ jobs:
             playwright-report/
             test-results/
 
+  firefox:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+
+      # The zip the release sends to Firefox Add-ons.
+      - uses: actions/download-artifact@v8
+        with:
+          name: packages
+          path: packages
+      - run: mkdir -p dist && unzip -q packages/LichessDotCom-v*-firefox.zip -d dist/firefox
+      # Downloads Firefox's current release, then loads the extension into it.
+      - run: pnpm test:firefox
+
   python:
     runs-on: ubuntu-latest
     steps:
