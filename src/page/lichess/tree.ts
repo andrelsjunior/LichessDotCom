@@ -1,5 +1,5 @@
 import { z } from 'zod/mini';
-import { createGuard } from '../../shared/guards.ts';
+import { createGuard } from '#shared/guards.ts';
 
 // A node of Lichess's analysis tree (ui/lib/src/tree). Only the fields we read.
 const TreeNodeSchema = z.object({

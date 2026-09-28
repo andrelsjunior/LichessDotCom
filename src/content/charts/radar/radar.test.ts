@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { setHtml } from '../../../shared/html.ts';
+import { setHtml } from '#shared/html.ts';
 import { bounds, plotPoints, vertex } from './geometry.ts';
 import { radarMarkup } from './render.ts';
 import { DashboardInitSchema } from './schema.ts';

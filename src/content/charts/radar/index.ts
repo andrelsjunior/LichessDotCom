@@ -1,8 +1,8 @@
-import { createElement, queryOne } from '../../../shared/dom.ts';
-import type { Feature } from '../../../shared/features.ts';
-import { setHtml } from '../../../shared/html.ts';
-import { parseJson } from '../../../shared/json.ts';
-import { readPageInitData } from '../../../shared/page-init-data.ts';
+import { createElement, queryOne } from '#shared/dom.ts';
+import type { Feature } from '#shared/features.ts';
+import { setHtml } from '#shared/html.ts';
+import { parseJson } from '#shared/json.ts';
+import { readPageInitData } from '#shared/page-init-data.ts';
 import { radarMarkup } from './render.ts';
 import { DashboardInitSchema } from './schema.ts';
 

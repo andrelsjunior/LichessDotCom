@@ -43,6 +43,17 @@
     "eslint/no-console": ["error", { "allow": ["warn", "error"] }],
     "eslint/no-nested-ternary": "error",
     "eslint/no-param-reassign": "error",
+    "eslint/no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["../*", "../**"],
+            "message": "Import from another folder through a # alias (package.json imports)."
+          }
+        ]
+      }
+    ],
     "eslint/no-var": "error",
     "eslint/prefer-const": "error",
     "eslint/no-shadow": "off",

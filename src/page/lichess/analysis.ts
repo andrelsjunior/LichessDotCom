@@ -1,5 +1,5 @@
 import { z } from 'zod/mini';
-import { createGuard } from '../../shared/guards.ts';
+import { createGuard } from '#shared/guards.ts';
 import { readSite } from './globals.ts';
 import { isTreeNode, type TreeNode } from './tree.ts';
 

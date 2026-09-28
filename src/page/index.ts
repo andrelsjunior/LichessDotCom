@@ -1,4 +1,4 @@
-import { startFeatures } from '../shared/features.ts';
+import { startFeatures } from '#shared/features.ts';
 import { motion } from './motion/index.ts';
 import { sounds } from './sounds/index.ts';
 import { flipLabel } from './flip-label.ts';

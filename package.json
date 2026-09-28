@@ -5,6 +5,14 @@
   "description": "A browser extension that gives lichess.org a modern look and a Game Review.",
   "license": "MIT",
   "type": "module",
+  "imports": {
+    "#background/*": "./src/background/*",
+    "#content/*": "./src/content/*",
+    "#page/*": "./src/page/*",
+    "#shared/*": "./src/shared/*",
+    "#manifest": "./src/manifest.ts",
+    "#scripts/*": "./scripts/*"
+  },
   "scripts": {
     "build": "node scripts/build.ts",
     "dev": "node scripts/build.ts --watch",

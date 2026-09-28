@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { BASE_VERSION } from '../../src/manifest.ts';
+import { BASE_VERSION } from '#manifest';
 import { ROOT } from './paths.ts';
 
 /**

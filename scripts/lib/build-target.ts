@@ -1,7 +1,7 @@
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { build } from 'rolldown';
-import { createManifest, ManifestSchema, OUTPUT, type Target } from '../../src/manifest.ts';
+import { createManifest, ManifestSchema, OUTPUT, type Target } from '#manifest';
 import { bundleCss } from './css-bundle.ts';
 import { assertNoChromeUrls, toFirefoxCss } from './firefox.ts';
 import { fromRoot } from './paths.ts';

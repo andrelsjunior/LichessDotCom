@@ -53,6 +53,10 @@ so the logic can be unit-tested without a page.
 - DOM lookups narrow with `instanceof` through `queryOne`, `queryAll` and
   `closestTo` (`src/shared/dom.ts`).
 - Import with the `.ts` extension, and `import type` for types only.
+- Import from another folder through a `#` alias, never `../`: `#shared/…`,
+  `#content/…`, `#page/…`, `#background/…`, `#scripts/…` and `#manifest`,
+  declared once in `package.json`'s `imports`, which TypeScript, rolldown,
+  vitest and Node all read. `./` is for a file in the same folder.
 
 ## Code
 

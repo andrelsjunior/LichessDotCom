@@ -1,4 +1,4 @@
-import { html, type SafeHtml } from '../../../shared/html.ts';
+import { html, type SafeHtml } from '#shared/html.ts';
 import { formatPoint, plotPoints, polygon, RADIUS, RINGS, vertex } from './geometry.ts';
 import type { Radar } from './schema.ts';
 

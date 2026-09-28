@@ -1,4 +1,4 @@
-import type { Square } from '../../shared/chess/types.ts';
+import type { Square } from '#shared/chess/types.ts';
 
 // The Game Review's arrows, drawn by the board's shape layer with the
 // players' own: the best move, and the engine's move after one played off

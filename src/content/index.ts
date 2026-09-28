@@ -1,4 +1,4 @@
-import { startFeatures } from '../shared/features.ts';
+import { startFeatures } from '#shared/features.ts';
 import { boards } from './boards/index.ts';
 import { fonts } from './bootstrap/fonts.ts';
 import { donate } from './sidebar/donate.ts';
