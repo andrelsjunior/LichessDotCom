@@ -1,6 +1,6 @@
-import type { Box } from './geometry.ts';
+import type { Box } from '#shared/geometry.ts';
 
-// The tab bars whose highlight slides ("sliding tabs" in styles/theme.css).
+// The tab bars whose highlight slides (styles/theme/tooltips-and-tabs.css).
 // The first match wins, and the tabs are the bar's children. A bar Lichess
 // draws anew on a click has nothing to slide, so it isn't listed: the
 // profile's games filter (it comes back with the games), the home lobby's

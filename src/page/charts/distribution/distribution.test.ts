@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/mini';
-import { fakeLayout } from '#shared/charts/fake-layout.ts';
+import { fakeLayout } from '#shared/testing/layout.ts';
 import { distribution } from './index.ts';
 import { binOf, countPlayers, markersOf, onChart } from './players.ts';
 import { columnPath, countScale } from './scales.ts';

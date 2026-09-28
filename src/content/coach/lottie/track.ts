@@ -16,7 +16,7 @@ export type Key<T> = readonly [frame: number, value: T];
 
 export type EasingFactory = () => Easing;
 
-export const easeInOut: EasingFactory = () => ({
+const easeInOut: EasingFactory = () => ({
   o: { x: [0.42], y: [0] },
   i: { x: [0.58], y: [1] },
 });

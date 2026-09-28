@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { queryAll } from '#shared/dom.ts';
+import { rectAt } from '#shared/testing/layout.ts';
 import { leavesPage, tabOffset } from './tab-bars.ts';
 import { createTabBars } from './tabs.ts';
 // Where the original put a chat bar's highlight, step by step.
@@ -11,16 +13,13 @@ interface BoxInput {
   readonly height: number;
 }
 
-const rect = ({ top, left, width, height }: BoxInput): DOMRect =>
-  new DOMRect(left, top, width, height);
-
 /** Gives an element a fixed layout, which happy-dom doesn't compute. */
 function layOut(
   element: Element,
   box: () => BoxInput,
   extra: Record<string, () => number> = {},
 ): void {
-  element.getBoundingClientRect = () => rect(box());
+  element.getBoundingClientRect = () => rectAt(box());
   const sizes: Record<string, () => number> = { offsetWidth: () => box().width, ...extra };
   for (const [name, read] of Object.entries(sizes))
     Object.defineProperty(element, name, { get: read, configurable: true });
@@ -39,11 +38,7 @@ function readBar(bar: HTMLElement, step: string): Record<string, string | null> 
   };
 }
 
-function elements(selector: string): HTMLElement[] {
-  return [...document.querySelectorAll(selector)].filter(
-    (element): element is HTMLElement => element instanceof HTMLElement,
-  );
-}
+const elements = (selector: string): HTMLElement[] => queryAll(document, selector, HTMLElement);
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -146,8 +141,8 @@ describe('sliding tabs', () => {
 describe('tab geometry', () => {
   it('measures a tab within the bar’s padding box, scrolled content included', () => {
     const frame = { clientLeft: 2, clientTop: 1, scrollLeft: 30, scrollTop: 0 };
-    const bar = rect({ top: 10, left: 10, width: 300, height: 40 });
-    const tab = rect({ top: 12, left: 50, width: 60, height: 36 });
+    const bar = rectAt({ top: 10, left: 10, width: 300, height: 40 });
+    const tab = rectAt({ top: 12, left: 50, width: 60, height: 36 });
     expect(tabOffset(bar, tab, frame)).toEqual([68, 1, 60, 36]);
   });
 

@@ -1,5 +1,5 @@
 import { z } from 'zod/mini';
-import { lenient } from '#shared/charts/lenient.ts';
+import { lenient } from '#shared/zod.ts';
 
 // What Lichess's rating history module charts (ui/chart/src/ratingHistory.ts):
 // one series per rating, each point `[year, month from 0, day, rating]`.

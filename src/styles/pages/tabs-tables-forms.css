@@ -23,7 +23,7 @@
   border-color: #fff !important;
 }
 
-/* The underline is the sliding piece (see "sliding tabs" in theme.css). */
+/* The underline is the sliding piece (see "Sliding tabs" in theme/). */
 .tabs-horiz[data-cdc-tabs='line'] > .active {
   border-bottom-color: transparent !important;
 }

@@ -1,11 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { setReadyState } from '#shared/testing/ready-state.ts';
 import { flipLabel } from './flip-label.ts';
 
 const label = (): string | undefined => document.documentElement.dataset.cdcFlipLabel;
-
-const setReadyState = (state: DocumentReadyState): void => {
-  Object.defineProperty(document, 'readyState', { value: state, configurable: true });
-};
 
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['setTimeout', 'Date'] });

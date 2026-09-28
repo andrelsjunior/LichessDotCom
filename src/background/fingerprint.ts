@@ -1,7 +1,7 @@
 import { z } from 'zod/mini';
 
 // A digest of the code the extension loads, read back from its own folder: it
-// changes when a ship rewrites the files Chrome loads unpacked.
+// changes when a build rewrites the files Chrome loads unpacked.
 
 const RunningManifestSchema = z.object({
   background: z.optional(

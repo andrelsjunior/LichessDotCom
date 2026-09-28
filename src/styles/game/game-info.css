@@ -2,7 +2,8 @@
 
 @media (min-width: 1020px) {
   /* Without a chat, the game info is a match card: the time control beside its mode's tile
-   * (TV channel colors, tv.css), pills (content.js splits "3+0 • Rated • Blitz"), players. */
+   * (TV channel colors, tv.css), pills (content/game/game-meta.ts splits "3+0 • Rated •
+   * Blitz"), players. */
   main.round .round__side > .game__meta {
     --cdc-meta: #95c85a;
     --cdc-meta-2: #5d9948;
@@ -120,7 +121,7 @@
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
 
-  /* Atomic, Antichess and Horde have color pictures (theme.css): Lichess's white glyph here. */
+  /* Atomic, Antichess and Horde have color pictures (theme/): Lichess's white glyph here. */
   main.round
     .game__meta__infos:is([data-icon='\e01e'], [data-icon='\e01c'], [data-icon='\e03d'])::before {
     content: attr(data-icon) !important;

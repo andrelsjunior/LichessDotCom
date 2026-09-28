@@ -1,6 +1,6 @@
 import { queryAll } from '#shared/dom.ts';
+import type { Point } from '#shared/geometry.ts';
 import { arrowColor, squareColor } from './colors.ts';
-import type { Point } from './geometry.ts';
 
 // Chessground's own shapes, read back from its svg: a circle per marked
 // square, a line per arrow. Their coordinates are already in square units

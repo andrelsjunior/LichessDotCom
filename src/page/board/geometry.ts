@@ -1,9 +1,8 @@
 import { squareCoords } from '#shared/chess/squares.ts';
 import type { Square } from '#shared/chess/types.ts';
+import type { Point } from '#shared/geometry.ts';
 
 // Board coordinates in squares, from the top left corner as shown.
-
-export type Point = readonly [number, number];
 
 // In squares: the shaft's width, the head's width and length, and how far
 // from the origin square's center the arrow starts.

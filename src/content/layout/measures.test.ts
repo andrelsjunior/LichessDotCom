@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { rectBetween } from '#shared/testing/layout.ts';
 import { squaresInset, syncBoardInset } from './board-inset.ts';
 import { syncControlsHeight } from './controls-height.ts';
 // What the original script measured on the same pages.
@@ -11,12 +12,9 @@ interface Edges {
   readonly left: number;
 }
 
-const rect = ({ top, right, bottom, left }: Edges): DOMRect =>
-  DOMRect.fromRect({ x: left, y: top, width: right - left, height: bottom - top });
-
 function measureAs(selector: string, edges: Edges): void {
   const element = document.querySelector(selector);
-  if (element) element.getBoundingClientRect = () => rect(edges);
+  if (element) element.getBoundingClientRect = () => rectBetween(edges);
 }
 
 const mainStyle = (): string | null =>

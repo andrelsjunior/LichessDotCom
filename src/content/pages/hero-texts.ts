@@ -1,4 +1,4 @@
-// The home hero's text in the languages home.css also names the cards and
+// The home hero's text in the languages styles/home/ also names the cards and
 // speeds in; English otherwise.
 
 export interface HeroText {

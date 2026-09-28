@@ -1,22 +1,13 @@
-import { roundTenth } from '#shared/charts/curve.ts';
+import type { Padding } from '#shared/geometry.ts';
+import { roundTenth } from '#shared/math.ts';
 
 export const MIN_RATING = 400;
 export const BIN_SIZE = 25;
 
-interface Padding {
-  readonly top: number;
-  readonly right: number;
-  readonly bottom: number;
-  readonly left: number;
-}
-
 // Room for the player counts on the left, the shares on the right, the ratings below.
-export const PAD: Padding = { top: 18, right: 48, bottom: 30, left: 50 };
+export const PADDING: Padding = { top: 18, right: 48, bottom: 30, left: 50 };
 // Room above the columns for each marker's pill.
 export const MARKER_ROW = 30;
-
-export const clamp = (value: number, low: number, high: number): number =>
-  Math.max(low, Math.min(high, value));
 
 export interface CountScale {
   readonly step: number;
@@ -75,9 +66,9 @@ interface Frame {
 }
 
 export function layOut({ width, height, counts, markers }: Frame): Geometry {
-  const top = PAD.top + markers * MARKER_ROW;
-  const plotWidth = width - PAD.left - PAD.right;
-  const bottom = height - PAD.bottom;
+  const top = PADDING.top + markers * MARKER_ROW;
+  const plotWidth = width - PADDING.left - PADDING.right;
+  const bottom = height - PADDING.bottom;
   const plotHeight = bottom - top;
   const scale = countScale(Math.max(...counts));
   const maxRating = MIN_RATING + counts.length * BIN_SIZE;
@@ -89,7 +80,7 @@ export function layOut({ width, height, counts, markers }: Frame): Geometry {
     bottom,
     counts: scale,
     binWidth: plotWidth / counts.length,
-    x: rating => PAD.left + ((rating - MIN_RATING) / (maxRating - MIN_RATING)) * plotWidth,
+    x: rating => PADDING.left + ((rating - MIN_RATING) / (maxRating - MIN_RATING)) * plotWidth,
     yCount: players => bottom - (players / scale.max) * plotHeight,
     yShare: share => bottom - share * plotHeight,
   };

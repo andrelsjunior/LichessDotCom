@@ -228,7 +228,7 @@ main.swiss .schedule-next-round input {
     scrollbar-width: thin;
   }
 
-  /* content.js focuses the column so the keyboard scrolls it. */
+  /* content/pages/swiss.ts focuses the column so the keyboard scrolls it. */
   main.swiss .swiss__main:focus {
     outline: none;
   }

@@ -297,7 +297,7 @@
 
 /* ---- Menu --- */
 
-/* Puzzle side menu (these pages, dashboard, history): icons and tile colors, tiles in pages.css.
+/* Puzzle side menu (these pages, dashboard, history): icons and tile colors, tiles in pages/.
    Dashboard links carry their period (/training/dashboard/30/strengths), hence the $= matches. */
 
 .subnav[data-cdc-nav~='puzzles'] a[href$='/training'] {

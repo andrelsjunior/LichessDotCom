@@ -1,12 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { queryOne } from '#shared/dom.ts';
+import { setReadyState } from '#shared/testing/ready-state.ts';
 import { marks, syncMarks } from './marks.ts';
 // What the original script marked on the same pages.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
-
-function setReadyState(state: string): void {
-  Object.defineProperty(document, 'readyState', { value: state, configurable: true });
-}
 
 const navOf = (): string | undefined =>
   queryOne(document, '.subnav', HTMLElement)?.dataset['cdcNav'];

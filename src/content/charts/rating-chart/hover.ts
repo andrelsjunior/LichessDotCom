@@ -1,11 +1,11 @@
 import { tipRow, tipTitle } from '#shared/charts/markup.ts';
 import { hideTip, showTip } from '#shared/charts/tooltip.ts';
-import { pointerX, setAttributes } from '#shared/charts/svg.ts';
 import { queryAll, queryOne } from '#shared/dom.ts';
 import { html } from '#shared/html.ts';
+import { pointerX, setAttributes } from '#shared/svg.ts';
 import type { ChartParts } from './parts.ts';
 import type { SampledSeries } from './sampling.ts';
-import { PAD, type Plot } from './scales.ts';
+import { PADDING, type Plot } from './scales.ts';
 import type { DateFormats } from './time-ticks.ts';
 
 interface Hit {
@@ -70,7 +70,7 @@ export function showSample({ event, plot, parts, formats }: Hover): void {
   showTip(parts.tip, html`${tipTitle(formats.full.format(time))}${rows}`, {
     anchor: x,
     gap: 14,
-    limit: plot.width - PAD.right,
-    top: PAD.top,
+    limit: plot.width - PADDING.right,
+    top: PADDING.top,
   });
 }

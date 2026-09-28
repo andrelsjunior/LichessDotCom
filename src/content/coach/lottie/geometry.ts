@@ -1,12 +1,12 @@
-import type { BezierPath, Point } from './types.ts';
+import type { Point } from '#shared/geometry.ts';
+import { roundTenth } from '#shared/math.ts';
+import type { BezierPath } from './types.ts';
 
 export type Rgb = readonly [red: number, green: number, blue: number];
 
 export const lerp = (from: number, to: number, share: number): number => from + (to - from) * share;
 
-/** A tenth of a pixel is finer than the portraits, and keeps the data small. */
-const roundTenth = (value: number): number => Math.round(value * 10) / 10;
-
+// A tenth of a pixel is finer than the portraits, and keeps the data small.
 const roundPoints = (points: readonly Point[]): Point[] =>
   points.map(([x, y]) => [roundTenth(x), roundTenth(y)]);
 
@@ -17,7 +17,7 @@ export function valueAt<T>(list: readonly T[], index: number): T {
   return value;
 }
 
-/** A `#rrggbb` colour's channels, 0 to 1. */
+/** A `#rrggbb` color's channels, 0 to 1. */
 export function hexToRgb(hex: string): Rgb {
   const channel = (start: number): number => Number.parseInt(hex.slice(start, start + 2), 16) / 255;
   return [channel(1), channel(3), channel(5)];

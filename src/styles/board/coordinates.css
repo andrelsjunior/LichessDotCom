@@ -113,8 +113,9 @@ html:not([data-cdc-board='lichess']) body .is2d coords {
 
 /* ---- Eval bar --- */
 
-/* Lichess's eval bar drawn like the Game Review's, the score from content.js. Registered so it
- * slides. Lichess flips it for Black, which would flip the score: turn the gradient instead. */
+/* Lichess's eval bar drawn like the Game Review's, the score from content/pages/puzzle.ts.
+ * Registered so it slides. Lichess flips it for Black, which would flip the score: turn the
+ * gradient instead. */
 @property --eval-percent {
   syntax: '<percentage>';
   inherits: true;

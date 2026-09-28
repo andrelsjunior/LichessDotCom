@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { queryAll } from '#shared/dom.ts';
+import { flush } from '#shared/testing/timers.ts';
 import { flagEmoji } from './flag-emoji.ts';
 import { createFlagsSync } from './flags.ts';
 // The original's emoji per code, its request, and the flags it set.
 import legacy from './fixtures/legacy-flags.json' with { type: 'json' };
 
-const flush = (): Promise<void> => new Promise(resolve => setTimeout(resolve, 0));
 const readFlags = (): (string | null)[] =>
   queryAll(document, '.ruser, a.user-link', HTMLElement).map(bar => bar.dataset.cdcFlag ?? null);
 

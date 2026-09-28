@@ -75,7 +75,7 @@
     line-height: 1.35;
   }
 
-  /* Up to three lines; review.js drops the second sentence rather than cut it. */
+  /* Up to three lines; the review drops the second sentence rather than cut it. */
   .cdc-bubble__sub {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -118,7 +118,7 @@
     font-weight: 700;
   }
 
-  /* review.js types the comment out word by word: hidden words keep their place,
+  /* The review types the comment out word by word: hidden words keep their place,
      then fade in. */
   .cdc-w--off {
     visibility: hidden;

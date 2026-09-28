@@ -1,8 +1,9 @@
+import type { Point } from '#shared/geometry.ts';
+
 // The part of the Lottie format (lottiefiles.github.io/lottie-docs) the
 // coach's animations use: shape and image layers, groups of paths painted
 // with fills, strokes and linear gradients, each property still or keyframed.
 
-export type Point = readonly [x: number, y: number];
 export type Vector = readonly number[];
 
 /** A cubic Bézier path: its vertices, and each one's tangents relative to it. */

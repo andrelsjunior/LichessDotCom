@@ -1,13 +1,14 @@
 import { gameRatingColor } from '#shared/charts/colors.ts';
-import { chartLocale } from '#shared/charts/locale.ts';
 import { hideTip, showTip } from '#shared/charts/tooltip.ts';
-import { pointerX, setAttributes, sizeSvg } from '#shared/charts/svg.ts';
 import { closestTo, createElement, queryAll, queryOne, setStyleProperty } from '#shared/dom.ts';
 import { setHtml } from '#shared/html.ts';
+import { pageLocale } from '#shared/lang.ts';
+import { clamp } from '#shared/math.ts';
+import { pointerX, setAttributes, sizeSvg } from '#shared/svg.ts';
 import { type NumberFormats, numberFormats, seriesNames, yourRatingLabel } from './formats.ts';
 import { chartShell, marksMarkup, plotMarkup, tipMarkup } from './markup.ts';
 import { binOf, countPlayers, type Marker, markersOf, onChart, type Players } from './players.ts';
-import { BIN_SIZE, clamp, type Geometry, layOut, MARKER_ROW, MIN_RATING, PAD } from './scales.ts';
+import { BIN_SIZE, type Geometry, layOut, MARKER_ROW, MIN_RATING, PADDING } from './scales.ts';
 import type { DistributionData } from './schema.ts';
 
 interface Parts {
@@ -75,8 +76,8 @@ class DistributionChart {
       const { offsetWidth } = mark;
       const left = clamp(
         center - offsetWidth / 2,
-        PAD.left,
-        geometry.width - PAD.right - offsetWidth,
+        PADDING.left,
+        geometry.width - PADDING.right - offsetWidth,
       );
       setStyleProperty(mark, 'transform', `translate(${Math.round(left)}px, ${k * MARKER_ROW}px)`);
     }
@@ -90,7 +91,7 @@ class DistributionChart {
     const { parts, players, color, formats } = this.#setup;
     const { binWidth } = geometry;
     const last = players.counts.length - 1;
-    const bin = clamp(Math.floor((pointerX(event, parts.svg) - PAD.left) / binWidth), 0, last);
+    const bin = clamp(Math.floor((pointerX(event, parts.svg) - PADDING.left) / binWidth), 0, last);
     parts.svg.classList.toggle('cdc-dist__svg--hover', true);
     for (const bar of this.#bars()) {
       const index = Number(bar.dataset.i);
@@ -99,14 +100,14 @@ class DistributionChart {
     }
     const dot = queryOne(parts.svg, '.cdc-dist__dot', SVGElement);
     if (dot) {
-      const cx = geometry.x(MIN_RATING + (bin + 1) * BIN_SIZE);
-      setAttributes(dot, { cx, cy: geometry.yShare(players.shares[bin] ?? 0) });
+      const x = geometry.x(MIN_RATING + (bin + 1) * BIN_SIZE);
+      setAttributes(dot, { cx: x, cy: geometry.yShare(players.shares[bin] ?? 0) });
     }
     const names = seriesNames();
     showTip(parts.tip, tipMarkup({ bin, players, color, names, formats }), {
-      anchor: PAD.left + (bin + 0.5) * binWidth,
+      anchor: PADDING.left + (bin + 0.5) * binWidth,
       gap: 16,
-      limit: geometry.width - PAD.right,
+      limit: geometry.width - PADDING.right,
       top: geometry.top + 24,
     });
   }
@@ -143,7 +144,7 @@ export function mountDistribution(host: HTMLElement, data: DistributionData): vo
   const players = countPlayers(data.freq);
   const color = gameRatingColor(perfKey());
   const markers = markersOf(data, yourRatingLabel());
-  const formats = numberFormats(chartLocale());
+  const formats = numberFormats(pageLocale());
   const root = createElement('div', { className: 'cdc-dist' });
   setStyleProperty(root, '--c', color);
   const total = formats.count.format(players.total);

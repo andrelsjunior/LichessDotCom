@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod/mini';
 import { queryAll } from '#shared/dom.ts';
+import { motion } from './index.ts';
 import { rewriteRules, unreducedQuery } from './queries.ts';
 import { copyStylesheets } from './sheets.ts';
-import { motion } from './index.ts';
 // The queries and sheets as the original rewrote them.
 import legacyJson from './fixtures/legacy.json' with { type: 'json' };
 

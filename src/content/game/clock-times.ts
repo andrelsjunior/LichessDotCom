@@ -3,7 +3,7 @@ import { z } from 'zod/mini';
 // A finished game's clock history, from Lichess's game export
 // (/game/export/<id>?clocks=true): the round data has none.
 
-export const ClockSchema = z.object({ initial: z.number(), increment: z.number() });
+const ClockSchema = z.object({ initial: z.number(), increment: z.number() });
 
 /** A game's time control, in seconds. */
 export type Clock = z.infer<typeof ClockSchema>;

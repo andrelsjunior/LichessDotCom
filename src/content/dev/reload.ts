@@ -1,9 +1,9 @@
-import { isConnected, isUnpacked } from '#content/platform/runtime.ts';
-import type { Feature } from '#shared/features.ts';
 import { DevCheckResponseSchema, type DevCheckRequest } from '#shared/dev-check.ts';
+import type { Feature } from '#shared/features.ts';
+import { isConnected, isUnpacked } from '#content/platform/runtime.ts';
 
 // Unpacked installs only: when the tab gets focus, ask the background worker
-// whether the files on disk changed (a ship pulled main). If so it reloads the
+// whether the files on disk changed (a new build). If so it reloads the
 // extension, and the tab reloads once the new version is in.
 
 const ORPHAN_POLL_MS = 100;

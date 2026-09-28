@@ -83,7 +83,7 @@ main.puzzle .ceval {
   background: none !important;
 }
 
-/* The eval bar is drawn in board.css; its width is --cdc-gauge-w from the layout. */
+/* The eval bar is drawn in board/; its width is --cdc-gauge-w from the layout. */
 main.puzzle .eval-gauge {
   margin-left: var(--cdc-gap, 0px);
 }

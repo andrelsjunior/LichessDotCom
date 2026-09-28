@@ -1,20 +1,14 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { html } from '#shared/html.ts';
+import { describe, expect, it } from 'vitest';
+import type { Point } from '#shared/geometry.ts';
 import { gameRatingColor, seriesColor } from './colors.ts';
-import { type ChartPoint, monotoneCurve, roundTenth } from './curve.ts';
-import { chartLocale } from './locale.ts';
+import { monotoneCurve } from './curve.ts';
 import { chipLabel, gridLine, tipRow } from './markup.ts';
-import { prependSvg, sizeSvg } from './svg.ts';
+import { steps } from './steps.ts';
 import { tipLeft } from './tooltip.ts';
 // The curve as each original script (before the TypeScript port) drew it.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
 
-const points = (list: readonly number[][]): ChartPoint[] => list.map(([x = 0, y = 0]) => [x, y]);
-
-afterEach(() => {
-  document.documentElement.lang = '';
-  document.body.replaceChildren();
-});
+const points = (list: readonly number[][]): Point[] => list.map(([x = 0, y = 0]) => [x, y]);
 
 describe('monotoneCurve', () => {
   it.each(
@@ -37,10 +31,12 @@ describe('monotoneCurve', () => {
   it('draws nothing without a point', () => {
     expect(monotoneCurve([])).toBe('');
   });
+});
 
-  it('rounds to a tenth', () => {
-    expect(roundTenth(12.349)).toBe(12.3);
-    expect(roundTenth(-0.04)).toBe(-0);
+describe('steps', () => {
+  it('counts from one end to the other, fractional steps drifting like a loop', () => {
+    expect(steps(0, 10, 5)).toEqual([0, 5, 10]);
+    expect(steps(0, 0.3, 0.1)).toEqual([0, 0.1, 0.2]);
   });
 });
 
@@ -58,12 +54,6 @@ describe('colors', () => {
     expect(gameRatingColor('constructor')).toBe('#45a3f5');
     expect(gameRatingColor(undefined)).toBe('#45a3f5');
   });
-});
-
-it('leaves the locale to the browser when the page names none', () => {
-  expect(chartLocale()).toBeUndefined();
-  document.documentElement.lang = 'fr';
-  expect(chartLocale()).toBe('fr');
 });
 
 describe('the tooltip', () => {
@@ -87,24 +77,5 @@ describe('markup', () => {
     expect(gridLine({ y: 5, left: 46, right: 626, label: 1500 }).value).toBe(
       '<line class="cdc-rchart__grid" x1="46" x2="626" y1="5" y2="5"/><text class="cdc-rchart__ylabel" x="36" y="5">1500</text>',
     );
-  });
-});
-
-describe('svg', () => {
-  it('sizes an SVG in pixels', () => {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    sizeSvg(svg, 640, 300);
-    expect(svg.getAttribute('viewBox')).toBe('0 0 640 300');
-    expect(svg.getAttribute('width')).toBe('640');
-  });
-
-  it('parses prepended markup as SVG', () => {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.innerHTML = '<g><text>last</text></g>';
-    const group = svg.firstElementChild;
-    if (!group) throw new Error('no group');
-    prependSvg(group, html`<line x1="1"/><text>first</text>`);
-    expect(group.innerHTML).toBe('<line x1="1"></line><text>first</text><text>last</text>');
-    expect(group.firstElementChild?.namespaceURI).toBe('http://www.w3.org/2000/svg');
   });
 });

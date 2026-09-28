@@ -178,7 +178,7 @@
   font-size: 24px !important;
 }
 
-/* Atomic, Antichess and Horde are full-color pictures (theme.css) that whiten into blobs: use
+/* Atomic, Antichess and Horde are full-color pictures (theme/) that whiten into blobs: use
  * Lichess's glyphs on the tile. */
 :is(.community .leaderboards, .tournament-leaderboards)
   h2:is([data-icon='\e01e'], [data-icon='\e01c'], [data-icon='\e03d'])::before {

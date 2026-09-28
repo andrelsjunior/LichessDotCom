@@ -164,7 +164,7 @@ main.swiss .swiss__standing td.rank {
   text-align: center;
 }
 
-/* Medal colors for ranks 1 to 3 (content.js), once a game has a result: before
+/* Medal colors for ranks 1 to 3 (content/pages/swiss.ts), once a game has a result: before
  * that, the order is only the seeding. */
 main.swiss
   .swiss__standing:not(.created):has(.pairings :is(.win, .loss, .draw))

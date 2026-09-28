@@ -2,11 +2,11 @@ import { closestTo, createElement, queryAll, queryOne, setData } from '#shared/d
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 
-// Coach cards (styles/coach.css): Lichess writes the title as plain text in
-// the name ("FM Hans Renette"), and the card shows it as a badge. The
+// Coach cards (styles/coach/cards.css): Lichess writes the title as plain text
+// in the name ("FM Hans Renette"), and the card shows it as a badge. The
 // picture's alt starts with the title, which catches names without one. The
-// cards are server-rendered (and appended by infinite scroll), not snabbdom,
-// so editing the name's text is safe.
+// cards are server-rendered (and appended by infinite scroll), not snabbdom, so
+// editing the name's text is safe.
 
 const TITLES: ReadonlySet<string> = new Set([
   'GM',

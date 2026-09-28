@@ -183,7 +183,7 @@
   line-height: 1;
 }
 
-/* review.js already names the line over the move list. */
+/* The Game Review (page/review/) already names the line over the move list. */
 html.cdc-opening-on main.analyse .explorer-box .data > .title:has(> a) {
   display: none !important;
 }

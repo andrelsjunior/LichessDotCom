@@ -1,9 +1,10 @@
 import { createElement, onDomReady, queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 
-// Donate as a sidebar item of its own (styles/sidebar.css). Lichess's lone
-// Donate link after the nav is missing for patrons and on zen pages, but the
-// flyout's copy is there for everyone except kids: we copy its label and link.
+// Donate as a sidebar item of its own (styles/sidebar/donate-and-buttons.css).
+// Lichess's lone Donate link after the nav is missing for patrons and on zen
+// pages, but the flyout's copy is there for everyone except kids: we copy its
+// label and link.
 
 export function addDonateItem(): void {
   const nav = document.getElementById('topnav');

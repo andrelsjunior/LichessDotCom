@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { addHero, homeHero } from './home-hero.ts';
 import { heroText } from './hero-texts.ts';
+import { addHero, homeHero } from './home-hero.ts';
 // The hero as the original drew it, per language and player.
 import legacy from './fixtures/legacy-home-hero.json' with { type: 'json' };
 

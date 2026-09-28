@@ -1,5 +1,6 @@
 import { createElement, queryOne } from '#shared/dom.ts';
 import { html, setHtml } from '#shared/html.ts';
+import { createSvgElement } from '#shared/svg.ts';
 import { currentNode } from '#page/lichess/analysis.ts';
 import { ENGINE_COLOR, REVIEW_COLOR } from './colors.ts';
 import { squareCenter } from './geometry.ts';
@@ -11,8 +12,6 @@ import { readShapes, type Arrow } from './svg-shapes.ts';
 // Our shapes on the main board: fills under the pieces (.cdc-marks), arrows
 // and checkmate over them (#cdc-shapes). Chessground's own are hidden by the
 // stylesheet once html.cdc-shapes is set.
-
-const SVG_NS = 'http://www.w3.org/2000/svg';
 
 export interface DrawOptions {
   readonly mateLabel: string;
@@ -36,9 +35,7 @@ const isReviewing = (root: Element): boolean =>
 /** Returns the draw: cheap when nothing changed, as it runs on most mutations. */
 export function createShapeDrawer({ mateLabel, redraw }: DrawOptions): () => void {
   const layer = createElement('div', { id: 'cdc-shapes' });
-  const marks = document.createElementNS(SVG_NS, 'svg');
-  marks.setAttribute('class', 'cdc-marks');
-  marks.setAttribute('viewBox', '0 0 8 8');
+  const marks = createSvgElement('svg', { class: 'cdc-marks', viewBox: '0 0 8 8' });
   const matePhase = createMateClock(redraw);
   let drawn: string | null = null;
 

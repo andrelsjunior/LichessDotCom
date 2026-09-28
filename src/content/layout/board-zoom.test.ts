@@ -1,11 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { flush } from '#shared/testing/timers.ts';
 import { boardZoom } from './board-zoom.ts';
 // What the original script did from the same storage and the same drags.
 import legacy from './fixtures/legacy-zoom.json' with { type: 'json' };
 
 const root = document.documentElement;
-
-const flush = (): Promise<void> => new Promise(resolve => setTimeout(resolve, 0));
 
 function zoomState(): { zoom: string; stored: string | null; bodyZoom: string } {
   return {
@@ -13,6 +12,21 @@ function zoomState(): { zoom: string; stored: string | null; bodyZoom: string } 
     stored: localStorage.getItem('cdc-board-zoom'),
     bodyZoom: document.body.style.getPropertyValue('---zoom'),
   };
+}
+
+async function setBodyZoom(value: string): Promise<void> {
+  document.body.style.setProperty('---zoom', value);
+  await flush();
+}
+
+async function press(selector: string, type: string): Promise<void> {
+  document.querySelector(selector)?.dispatchEvent(new Event(type, { bubbles: true }));
+  await flush();
+}
+
+async function release(type: string): Promise<void> {
+  document.dispatchEvent(new Event(type, { bubbles: true }));
+  await flush();
 }
 
 beforeEach(() => {
@@ -47,18 +61,6 @@ describe('boardZoom', () => {
     const steps: unknown[] = [];
     const record = (step: string): void => {
       steps.push({ step, ...zoomState(), resizes });
-    };
-    const setBodyZoom = async (value: string): Promise<void> => {
-      document.body.style.setProperty('---zoom', value);
-      await flush();
-    };
-    const press = async (selector: string, type: string): Promise<void> => {
-      document.querySelector(selector)?.dispatchEvent(new Event(type, { bubbles: true }));
-      await flush();
-    };
-    const release = async (type: string): Promise<void> => {
-      document.dispatchEvent(new Event(type, { bubbles: true }));
-      await flush();
     };
 
     record('loaded');

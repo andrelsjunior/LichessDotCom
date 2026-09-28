@@ -2,8 +2,8 @@ import { queryAll, setData } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 
-// The forum index (styles/forum.css): the categories become cards and their
-// table header goes, so each count gets its column's name ("Topics",
+// The forum index (styles/forum/categories.css): the categories become cards
+// and their table header goes, so each count gets its column's name ("Topics",
 // "Posts", translated) to show as a label. Server-rendered, so it's safe.
 
 function labelCounts(table: HTMLTableElement): void {

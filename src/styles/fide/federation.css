@@ -117,7 +117,7 @@
   text-transform: none !important;
 }
 
-/* Doubled class: theme.css masks the rapid glyph from an :is() list, which takes the
+/* Doubled class: theme/ masks the rapid glyph from an :is() list, which takes the
  * specificity of its most specific entry. */
 .fide-federation__cards .fide-federation__card em::before {
   content: '' !important;

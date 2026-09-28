@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { boards } from './index.ts';
+import { trackListeners } from '#shared/testing/listeners.ts';
+import { setReadyState } from '#shared/testing/ready-state.ts';
+import { flush } from '#shared/testing/timers.ts';
 import { PIECE_CODES } from './catalog.ts';
+import { boards } from './index.ts';
 // What the original script did with the same storage and the same clicks.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
 
@@ -56,8 +59,6 @@ const headless = (): string =>
 const SHELL =
   '<header id="top"><div class="dasher"><button id="user_tag">u</button><div id="dasher_app" class="dropdown"></div></div></header>';
 
-const flush = (): Promise<void> => new Promise(resolve => setTimeout(resolve, 0));
-
 function app(): HTMLElement {
   const element = document.getElementById('dasher_app');
   if (!element) throw new Error('no menu');
@@ -75,18 +76,10 @@ async function draw(markup: string): Promise<void> {
   await flush();
 }
 
-function setReadyState(state: DocumentReadyState): void {
-  Object.defineProperty(document, 'readyState', { value: state, configurable: true });
-}
-
 // Every start adds a click listener to the document: remove them between tests.
 let removeListeners = (): void => {};
 beforeEach(() => {
-  const spy = vi.spyOn(document, 'addEventListener');
-  removeListeners = () => {
-    for (const [type, listener, options] of spy.mock.calls)
-      document.removeEventListener(type, listener, options);
-  };
+  removeListeners = trackListeners(document);
   vi.stubGlobal('chrome', {
     runtime: { getURL: (path: string) => `chrome-extension://abc/${path}` },
   });

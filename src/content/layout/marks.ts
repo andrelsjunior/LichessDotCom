@@ -1,6 +1,7 @@
-import { onEveryTick } from '#content/sync-loop.ts';
 import { isParsing, queryAll, queryOne, setData } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { nonEmpty } from '#shared/text.ts';
+import { onEveryTick } from '#content/sync-loop.ts';
 
 // What some rules would otherwise ask a `:has()`, copied onto the element as a
 // data attribute. A `:has()` holding an attribute selector, a `:not()` or `*`
@@ -13,7 +14,7 @@ interface Mark {
   readonly read: (element: Element) => string | null | undefined;
 }
 
-// Each side menu (pages.css), told apart by a link only it has.
+// Each side menu (styles/pages/headings-menus.css), told apart by a link only it has.
 const NAV_LINKS: Readonly<Record<string, readonly string[]>> = {
   bots: ['/player/bots'],
   broadcast: ['/broadcast/calendar'],
@@ -48,13 +49,13 @@ const MARKS: readonly Mark[] = [
     key: 'cdcNavActive',
     read: main => hrefIn(main, '.subnav a.active'),
   },
-  // A game's mode, by its info's icon (game.css).
+  // A game's mode, by its info's icon (styles/game/game-info.css).
   {
     selector: 'main.round .game__meta',
     key: 'cdcIcon',
     read: meta => iconIn(meta, '.game__meta__infos'),
   },
-  // A leaderboard by its title's icon, a shield by its title's link (leaderboard.css).
+  // A leaderboard by its title's icon, a shield by its title's link (styles/leaderboard/).
   {
     selector: '.community .user-top, .tournament-leaderboards__item',
     key: 'cdcIcon',
@@ -65,7 +66,7 @@ const MARKS: readonly Mark[] = [
     key: 'cdcHref',
     read: shield => hrefIn(shield, ':scope > h2 > a'),
   },
-  // A forum category (forum.css): the index links to it, a category page to
+  // A forum category (styles/forum/): the index links to it, a category page to
   // its topics, a topic back to it, and so does a team's board.
   { selector: 'main.forum .categs tr', key: 'cdcHref', read: row => hrefIn(row, 'h2 a') },
   { selector: 'main.forum-categ', key: 'cdcHref', read: main => hrefIn(main, 'td.subject a') },
@@ -74,13 +75,13 @@ const MARKS: readonly Mark[] = [
     key: 'cdcBack',
     read: main => hrefIn(main, '.box__top h1 > a'),
   },
-  // The forum's search results, by where the search form goes (forum.css).
+  // The forum's search results, by where the search form goes (styles/forum/).
   {
     selector: 'main.search',
     key: 'cdcSearch',
     read: main => main.querySelector(':scope > .box__top form.search')?.getAttribute('action'),
   },
-  // A list of players (friends.css): a user link first on each row, or one
+  // A list of players (styles/friends.css): a user link first on each row, or one
   // row of one cell when it's empty.
   {
     selector: 'main.box.page-small',
@@ -91,10 +92,8 @@ const MARKS: readonly Mark[] = [
 
 export function syncMarks(): void {
   for (const { selector, key, read } of MARKS) {
-    for (const element of queryAll(document, selector, HTMLElement)) {
-      const value = read(element) ?? '';
-      setData(element, key, value === '' ? null : value);
-    }
+    for (const element of queryAll(document, selector, HTMLElement))
+      setData(element, key, nonEmpty(read(element)) ?? null);
   }
 }
 

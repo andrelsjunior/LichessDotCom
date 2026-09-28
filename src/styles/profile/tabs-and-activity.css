@@ -78,7 +78,7 @@
   color: var(--cdc-text-strong) !important;
 }
 
-/* The raised tab slides (see "sliding tabs" in theme.css). */
+/* The raised tab slides (see "Sliding tabs" in theme/). */
 .user-show > .angles[data-cdc-tabs] {
   --cdc-tab-radius: 8px;
 }

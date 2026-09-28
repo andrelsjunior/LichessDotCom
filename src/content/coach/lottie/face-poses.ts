@@ -15,7 +15,7 @@ import { SIDES, type CoachRig } from './rig.ts';
 import { KeyLists, type Key } from './track.ts';
 import type { BezierPath, Vector } from './types.ts';
 
-// The face's keys, pose by pose: the mouth's shapes and colour, and the brows.
+// The face's keys, pose by pose: the mouth's shapes and color, and the brows.
 
 export interface FaceKeys {
   readonly mouth: KeyLists<MouthPart, BezierPath>;
@@ -57,14 +57,14 @@ function writeBrows({ rig, keys }: FaceWriter, frame: number, mood: CoachMood, l
   }
 }
 
-export function writePose(writer: FaceWriter, frame: number, options: PoseOptions): void {
+function writePose(writer: FaceWriter, frame: number, options: PoseOptions): void {
   const { mood, mouth = {}, browLift = 0 } = options;
   const { rig, curl, keys } = writer;
   const pose: MouthPose = { ...REST_MOUTH, ...MOUTH_POSES[mood], ...mouth };
   for (const [part, shape] of mouthShapes({ mouth: rig.mouth, pose, curl })) {
     keys.mouth.add(part, frame, shape);
   }
-  // A thin mouth line has the portrait's colour, an open mouth is dark.
+  // A thin mouth line has the portrait's color, an open mouth is dark.
   const line = hexToRgb(rig.mouth.colors.line ?? INSIDE_COLOR);
   const openness = Math.min(1, (pose.open + pose.raise) / 3.5);
   keys.insideColor.push([frame, [...mixRgb(line, hexToRgb(INSIDE_COLOR), openness), 1]]);

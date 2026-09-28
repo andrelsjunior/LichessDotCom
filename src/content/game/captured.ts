@@ -1,10 +1,10 @@
 import type { Color } from '#shared/chess/types.ts';
-import { queryOne } from '#shared/dom.ts';
+import { createElement, queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { setHtml } from '#shared/html.ts';
+import { createOwnedElement } from '#shared/owned-element.ts';
 import { extensionUrl } from '#content/platform/runtime.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
-import { createOwnedElement } from '#content/ui/owned-element.ts';
 import { CAPTURABLE_ROLES, capturedMarkup, type BarSide, type MaterialPiece } from './material.ts';
 
 // The captured pieces in the game page's and the analysis board's player
@@ -35,8 +35,12 @@ function readVariant(main: HTMLElement): string | undefined {
 
 /** A sync task drawing the captured pieces, with the Neo pieces at `piecesUrl`. */
 export function createCapturedSync(piecesUrl: string): () => void {
-  const topRow = createOwnedElement('cdc-captured cdc-captured--top');
-  const bottomRow = createOwnedElement('cdc-captured cdc-captured--bottom');
+  const ownTopRow = createOwnedElement(() =>
+    createElement('div', { className: 'cdc-captured cdc-captured--top' }),
+  );
+  const ownBottomRow = createOwnedElement(() =>
+    createElement('div', { className: 'cdc-captured cdc-captured--bottom' }),
+  );
   let lastKey = '';
   return () => {
     const main = queryOne(document, 'main.round, main.analyse', HTMLElement);
@@ -47,23 +51,23 @@ export function createCapturedSync(piecesUrl: string): () => void {
     // On the analysis board, only under the players of a game.
     if (main.matches('.analyse') && !main.querySelector(':scope > .cdc-player')) return;
     const variant = readVariant(main);
-    const bottom: Color = wrap.classList.contains('orientation-black') ? 'black' : 'white';
+    const bottomColor: Color = wrap.classList.contains('orientation-black') ? 'black' : 'white';
     const checks = variant === 'threeCheck' ? readChecks(main) : { top: 0, bottom: 0 };
     const markup = capturedMarkup({
       pieces: readPieces(board),
-      bottom,
+      bottom: bottomColor,
       variant,
       checks,
       piecesUrl,
     });
-    const top = topRow(main);
-    const bottomBar = bottomRow(main);
-    if (top.isNew || bottomBar.isNew) lastKey = '';
+    const topRow = ownTopRow(main);
+    const bottomRow = ownBottomRow(main);
+    if (topRow.isNew || bottomRow.isNew) lastKey = '';
     const key = `${markup.top.value}|${markup.bottom.value}`;
     if (key === lastKey) return;
     lastKey = key;
-    setHtml(top.element, markup.top);
-    setHtml(bottomBar.element, markup.bottom);
+    setHtml(topRow.element, markup.top);
+    setHtml(bottomRow.element, markup.bottom);
   };
 }
 

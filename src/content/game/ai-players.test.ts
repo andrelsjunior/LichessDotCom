@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { restoreReadyState, setReadyState } from '#shared/testing/ready-state.ts';
 import { markComputerPlayers, readComputerPlayers } from './ai-players.ts';
 // What the original script set on <html> for each page's init data.
 import legacy from './fixtures/legacy-ai-players.json' with { type: 'json' };
@@ -38,7 +39,7 @@ describe('computer players', () => {
     vi.resetModules();
     const { aiPlayers } = await import('./ai-players.ts');
     aiPlayers.start();
-    Object.defineProperty(document, 'readyState', { value: 'loading', configurable: true });
+    setReadyState('loading');
     aiPlayers.start();
     const script = document.createElement('script');
     script.id = 'page-init-data';
@@ -47,7 +48,7 @@ describe('computer players', () => {
     await Promise.resolve();
     script.remove();
     expect(root.dataset.cdcAi).toBeUndefined();
-    Reflect.deleteProperty(document, 'readyState');
+    restoreReadyState();
     document.dispatchEvent(new Event('DOMContentLoaded'));
     expect(root.dataset.cdcAi).toBe(legacy[0]?.ai);
     expect(root.style.getPropertyValue('--cdc-ai-black')).toBe(legacy[0]?.black);

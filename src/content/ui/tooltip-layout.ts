@@ -1,4 +1,6 @@
-import { EDGE_MARGIN, type Box, type Size } from './geometry.ts';
+import type { Box, Size } from '#shared/geometry.ts';
+import { clamp } from '#shared/math.ts';
+import { EDGE_MARGIN } from './edge-margin.ts';
 
 const GAP = 8;
 
@@ -26,7 +28,7 @@ export function placeTooltip(target: Box, tooltip: Size, viewportWidth: number):
   const below = target.top - GAP - tooltip.height < EDGE_MARGIN;
   const middle = target.left + target.width / 2;
   const maxLeft = viewportWidth - EDGE_MARGIN - tooltip.width;
-  const left = Math.max(EDGE_MARGIN, Math.min(middle - tooltip.width / 2, maxLeft));
+  const left = clamp(middle - tooltip.width / 2, EDGE_MARGIN, maxLeft);
   const top = below ? target.bottom + GAP : target.top - GAP - tooltip.height;
   return { side: below ? 'below' : 'above', top, left, arrow: middle - left };
 }

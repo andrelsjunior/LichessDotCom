@@ -1,7 +1,7 @@
 /* ---- Game info: result and event --- */
 
 @media (min-width: 1020px) {
-  /* How it ended ("Checkmate", split out by content.js) on a banner. */
+  /* How it ended ("Checkmate", split out by content/game/game-meta.ts) on a banner. */
   main.round .round__side > .game__meta section.status {
     display: flex;
     flex-direction: column;

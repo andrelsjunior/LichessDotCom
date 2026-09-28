@@ -1,4 +1,4 @@
-import { monotoneCurve, type ChartPoint } from '#shared/charts/curve.ts';
+import { monotoneCurve } from '#shared/charts/curve.ts';
 import {
   chipLabel,
   gridLine,
@@ -8,13 +8,14 @@ import {
   xAxisLabel,
 } from '#shared/charts/markup.ts';
 import { steps } from '#shared/charts/steps.ts';
+import type { Point } from '#shared/geometry.ts';
 import { html, type SafeHtml } from '#shared/html.ts';
 import type { Names, NumberFormats } from './formats.ts';
 import { type Marker, onChart, type Players } from './players.ts';
-import { BIN_SIZE, columnPath, type Geometry, MARKER_ROW, MIN_RATING, PAD } from './scales.ts';
+import { BIN_SIZE, columnPath, type Geometry, MARKER_ROW, MIN_RATING, PADDING } from './scales.ts';
 
 // The cumulative curve's color, which no rating uses.
-export const CUMULATIVE_COLOR = '#f1f1f0';
+const CUMULATIVE_COLOR = '#f1f1f0';
 
 function chip(color: string, name: string, value: string): SafeHtml {
   const strong = value === '' ? '' : html`<strong>${value}</strong>`;
@@ -45,15 +46,15 @@ function axis(geometry: Geometry, players: Players, formats: NumberFormats): Saf
   const grid = steps(0, counts.max + counts.step / 2, counts.step).map(count =>
     gridLine({
       y: yCount(count),
-      left: PAD.left,
-      right: width - PAD.right,
+      left: PADDING.left,
+      right: width - PADDING.right,
       label: count === 0 ? 0 : formats.compact.format(count),
       extraClass: count === 0 ? ' cdc-dist__base' : '',
     }),
   );
   const shares = [0.25, 0.5, 0.75, 1].map(
     share =>
-      html`<text class="cdc-dist__slabel" x="${width - PAD.right + 10}" y="${yShare(share)}">${formats.wholePercent.format(share)}</text>`,
+      html`<text class="cdc-dist__slabel" x="${width - PADDING.right + 10}" y="${yShare(share)}">${formats.wholePercent.format(share)}</text>`,
   );
   return html`<g class="cdc-rchart__axis">${grid}${ratings}${shares}</g>`;
 }
@@ -64,7 +65,7 @@ function columns(geometry: Geometry, players: Players, lit: number): SafeHtml {
   const bars = players.counts.map((count, i) => {
     const dim = i > lit ? ' cdc-dist__bar--dim' : '';
     const path = columnPath({
-      x: PAD.left + i * binWidth + gap / 2,
+      x: PADDING.left + i * binWidth + gap / 2,
       y: geometry.yCount(count),
       width: Math.max(0.5, binWidth - gap),
       bottom,
@@ -75,9 +76,9 @@ function columns(geometry: Geometry, players: Players, lit: number): SafeHtml {
 }
 
 function cumulativeCurve(geometry: Geometry, players: Players): string {
-  const points: ChartPoint[] = [
+  const points: Point[] = [
     [geometry.x(MIN_RATING), geometry.yShare(0)],
-    ...players.shares.map((share, i): ChartPoint => [
+    ...players.shares.map((share, i): Point => [
       geometry.x(MIN_RATING + (i + 1) * BIN_SIZE),
       geometry.yShare(share),
     ]),
@@ -102,7 +103,7 @@ export function plotMarkup({ geometry, players, markers, lit, color, formats }: 
     const x = geometry.x(onChart(rating, players));
     return html`<line class="cdc-dist__mline" style="--c:${markerColor}" x1="${x}" x2="${x}" y1="${k * MARKER_ROW + 24}" y2="${bottom}"/>`;
   });
-  const hit = hitArea({ x: PAD.left, y: top, width: geometry.plotWidth, height: bottom - top });
+  const hit = hitArea({ x: PADDING.left, y: top, width: geometry.plotWidth, height: bottom - top });
   return html`<defs>${gradient}</defs>${axis(geometry, players, formats)}${columns(geometry, players, lit)}${lines}<path class="cdc-dist__cumul" pathLength="1" d="${cumulativeCurve(geometry, players)}"/><circle class="cdc-dist__dot" r="4.5"/>${hit}`;
 }
 

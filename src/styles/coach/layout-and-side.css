@@ -1,6 +1,6 @@
 /* Coach directory (main.coach-list): a grid of coach cards and a sticky side
  * card. Lichess alternates wide rows; here every coach gets the same card.
- * content.js splits the title badge out of the name. */
+ * content/pages/coach-titles.ts splits the title badge out of the name. */
 
 /* ---- Layout --- */
 

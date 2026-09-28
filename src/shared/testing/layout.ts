@@ -1,7 +1,29 @@
 import { vi } from 'vitest';
 
-// Test support for the charts: happy-dom lays nothing out (every size reads
-// 0) and never calls a ResizeObserver back.
+// happy-dom lays nothing out: every size reads 0, getBoundingClientRect is
+// empty, and a ResizeObserver is never called back.
+
+interface Corner {
+  readonly top: number;
+  readonly left: number;
+  readonly width?: number;
+  readonly height?: number;
+}
+
+/** A DOMRect from its top left corner and its size (0 if left out), to stub getBoundingClientRect. */
+export const rectAt = ({ top, left, width = 0, height = 0 }: Corner): DOMRect =>
+  new DOMRect(left, top, width, height);
+
+interface Edges {
+  readonly top: number;
+  readonly right: number;
+  readonly bottom: number;
+  readonly left: number;
+}
+
+/** A DOMRect from its four edges. */
+export const rectBetween = ({ top, right, bottom, left }: Edges): DOMRect =>
+  new DOMRect(left, top, right - left, bottom - top);
 
 const METRICS = [
   'clientWidth',

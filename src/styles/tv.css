@@ -1,5 +1,5 @@
-/* Lichess TV (main.round.tv-single): game.css's layout, plus the channels (Lichess's
- * `.round__side > .subnav`, hidden by game.css) in a scrolling column left of the board. */
+/* Lichess TV (main.round.tv-single): the game page's layout (game/), plus the channels (Lichess's
+ * `.round__side > .subnav`, hidden by game/) in a scrolling column left of the board. */
 
 @media (min-width: 1020px) {
   html[data-cdc-has~='tv-channels'] main.round.tv-single {
@@ -18,7 +18,7 @@
       'tv user-bot chat' !important;
   }
 
-  /* Crazyhouse: pockets after the board and no column gap, as in game.css; the channels'
+  /* Crazyhouse: pockets after the board and no column gap, as in game/; the channels'
    * column carries its own gap. */
   html[data-cdc-has~='tv-channels'][data-cdc-has~='pocket'] main.round.tv-single {
     grid-template-columns:
@@ -34,7 +34,7 @@
       'tv user-bot .      chat' !important;
   }
 
-  /* Zen mode hides the side, channels included (game.css). */
+  /* Zen mode hides the side, channels included (game/). */
   body.zenable.zen main.round.tv-single {
     --cdc-tv-w: 0px !important;
     --cdc-lead-w: 0px !important;
@@ -77,7 +77,7 @@
 
   /* ---- Channel --- */
 
-  /* The leaderboards' color for each mode (leaderboard.css). The class is the channel's key,
+  /* The leaderboards' color for each mode (leaderboard/). The class is the channel's key,
    * which Lichess doesn't translate. */
   main.round.tv-single .tv-channel {
     --cdc-tv: #95c85a;
@@ -166,7 +166,8 @@
     animation-delay: calc(min(sibling-index(), 16) * 25ms);
   }
 
-  /* Only when TV opens, not on a channel change or the reload for the next game (content.js). */
+  /* Only when TV opens, not on a channel change or the reload for the next game
+   * (content/pages/tv.ts). */
   html.cdc-tv-still main.round.tv-single .subnav .tv-channel {
     animation: none !important;
   }
@@ -245,7 +246,7 @@
     min-width: 0;
   }
 
-  /* White icon on the tile: theme.css's where it has one, else Lichess's glyph. */
+  /* White icon on the tile: ours (theme/) where there is one, else Lichess's glyph. */
   main.round.tv-single .tv-channel > span::before {
     --cdc-mode-color: #fff;
     order: 0 !important;
@@ -261,7 +262,7 @@
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
 
-  /* Atomic, Antichess and Horde have full-color pictures (theme.css): use Lichess's glyph here. */
+  /* Atomic, Antichess and Horde have full-color pictures (theme/): use Lichess's glyph here. */
   main.round.tv-single
     .tv-channel
     > span:is([data-icon='\e01e'], [data-icon='\e01c'], [data-icon='\e03d'])::before {
@@ -343,7 +344,7 @@
   }
 }
 
-/* Narrower: tiles only, names as tooltips (content.js). */
+/* Narrower: tiles only, names as tooltips (content/pages/tv.ts). */
 @media (min-width: 1020px) and (max-width: 1259.98px) {
   main.round.tv-single .subnav__inner {
     scrollbar-width: none;

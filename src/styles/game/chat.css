@@ -33,7 +33,7 @@
     box-shadow: inset 0 -2px 0 #fff;
   }
 
-  /* The underline slides (see "sliding tabs" in theme.css). */
+  /* The underline slides (see "Sliding tabs" in theme/). */
   main.round .mchat__tabs[data-cdc-tabs] .mchat__tab-active {
     box-shadow: none;
   }

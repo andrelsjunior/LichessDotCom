@@ -1,8 +1,8 @@
 /* Player lists (following, blocks, favourite opponents) as friend cards. Lichess renders a
  * table: user link, best rating (absent when ratings are hidden), games, last seen. */
 
-/* content.js tags these lists (`data-cdc-list`): a `:has()` over rules ending on `tr` and `td`
- * slowed every board move. Covers the empty list too (one "None" cell). */
+/* content/layout/marks.ts tags these lists (`data-cdc-list`): a `:has()` over rules ending on
+ * `tr` and `td` slowed every board move. Covers the empty list too (one "None" cell). */
 main.box.page-small[data-cdc-list='players'] {
   /* ---- Header --- */
 

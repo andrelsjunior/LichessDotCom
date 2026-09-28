@@ -1,4 +1,5 @@
-import { type ChartPoint, monotoneCurve } from '#shared/charts/curve.ts';
+import { monotoneCurve } from '#shared/charts/curve.ts';
+import type { Point } from '#shared/geometry.ts';
 import type { SampledSeries } from './sampling.ts';
 import type { Plot } from './scales.ts';
 
@@ -12,7 +13,7 @@ export interface SeriesPaths {
 }
 
 export function seriesPaths(plot: Plot, row: SampledSeries): SeriesPaths {
-  const points = plot.times.flatMap((time, j): ChartPoint[] => {
+  const points = plot.times.flatMap((time, j): Point[] => {
     const value = row.values[j];
     return value === null || value === undefined ? [] : [[plot.x(time), plot.y(value)]];
   });

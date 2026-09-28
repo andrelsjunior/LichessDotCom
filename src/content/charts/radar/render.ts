@@ -18,10 +18,10 @@ function grid(themes: number): SafeHtml {
 // sits at its spoke's end (--cdc-x / --cdc-y), nudged outwards along it
 // (--cdc-ox / --cdc-oy).
 function label(name: string, value: number, i: number, themes: number): SafeHtml {
-  const [ux, uy] = vertex(i, themes, 1);
+  const [unitX, unitY] = vertex(i, themes, 1);
   const style =
-    `--cdc-x:${(50 + 50 * ux).toFixed(2)}%;--cdc-y:${(50 + 50 * uy).toFixed(2)}%;` +
-    `--cdc-ox:${ux.toFixed(3)};--cdc-oy:${uy.toFixed(3)}`;
+    `--cdc-x:${(50 + 50 * unitX).toFixed(2)}%;--cdc-y:${(50 + 50 * unitY).toFixed(2)}%;` +
+    `--cdc-ox:${unitX.toFixed(3)};--cdc-oy:${unitY.toFixed(3)}`;
   return html`<div class="cdc-radar__label" style="${style}"><span class="cdc-radar__name">${name}</span><span class="cdc-radar__value">${Math.round(value)}</span></div>`;
 }
 

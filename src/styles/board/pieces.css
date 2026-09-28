@@ -1,5 +1,6 @@
-/* Board, pieces and highlights. A board or piece set picked in the user menu (boards.js) comes
- * as variables on <html>; `data-cdc-board` / `data-cdc-pieces` = 'lichess' leaves it to Lichess. */
+/* Board, pieces and highlights. A board or piece set picked in the user menu (content/boards/)
+ * comes as variables on <html>; `data-cdc-board` / `data-cdc-pieces` = 'lichess' leaves it to
+ * Lichess. */
 
 :root {
   --cdc-sq-light: #ebecd0;
@@ -9,7 +10,8 @@
   /* Opaque, so it covers the square on both colors. */
   --cdc-premove: #f19082;
   /* The board's share of the room its layout gives it: all of it until resized (`--cdc-zoom`,
-   * 0-100, from content.js), down to a quarter, like Lichess's `---board-scale`. */
+   * 0-100, from content/layout/board-zoom.ts), down to a quarter, like Lichess's
+   * `---board-scale`. */
   --cdc-board-scale: calc(var(--cdc-zoom, 100) / 100 * 0.75 + 0.25);
 }
 

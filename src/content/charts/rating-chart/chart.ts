@@ -1,8 +1,15 @@
-import { closestTo, createElement, queryAll, queryOne, setData } from '#shared/dom.ts';
+import {
+  closestTo,
+  createElement,
+  queryAll,
+  queryOne,
+  setData,
+  setStyleProperty,
+} from '#shared/dom.ts';
 import { setHtml } from '#shared/html.ts';
-import { chartLocale } from '#shared/charts/locale.ts';
-import { prependSvg, setAttributes, sizeSvg } from '#shared/charts/svg.ts';
+import { pageLocale } from '#shared/lang.ts';
 import { readStored, StorageKey, writeStored } from '#shared/storage.ts';
+import { prependSvg, setAttributes, sizeSvg } from '#shared/svg.ts';
 import {
   type HistorySpan,
   initialRange,
@@ -17,7 +24,7 @@ import { chartShell, gradientId, plotMarkup, ratingGrid } from './markup.ts';
 import { type ChartParts, findParts } from './parts.ts';
 import { seriesPaths } from './paths.ts';
 import { sampleRange } from './sampling.ts';
-import { HEIGHT, type Layout, PAD, type Plot, scalePlot } from './scales.ts';
+import { HEIGHT, type Layout, PADDING, type Plot, scalePlot } from './scales.ts';
 import type { Series } from './series.ts';
 import { createThumbPlacer } from './thumb.ts';
 import { type DateFormats, dateFormats, timeTicks } from './time-ticks.ts';
@@ -30,7 +37,7 @@ function historySpan(series: readonly Series[]): HistorySpan {
 
 // The CSS animates `d`, so a path's shape goes in its style, not its attribute.
 function setPath(path: SVGElement | null, data: string): void {
-  path?.style.setProperty('d', `path("${data}")`);
+  if (path) setStyleProperty(path, 'd', `path("${data}")`);
 }
 
 interface Setup {
@@ -74,7 +81,7 @@ class RatingChart {
     };
     this.#layout = layout;
     const plot = scalePlot(layout, this.#hidden);
-    const axis = { start, end: layout.end, width: layout.width - PAD.left - PAD.right };
+    const axis = { start, end: layout.end, width: layout.width - PADDING.left - PADDING.right };
     sizeSvg(svg, layout.width, HEIGHT);
     setHtml(svg, plotMarkup(plot, timeTicks(axis, this.#formats)));
     svg.classList.toggle('cdc-rchart__svg--intro', animate);
@@ -173,7 +180,7 @@ export function mountChart(host: HTMLElement, series: readonly Series[]): void {
   const span = historySpan(series);
   // Before anything is added: should a blocked storage throw, Lichess's chart stays.
   const range = initialRange(readStored(StorageKey.ratingChartRange, RangeKeySchema), span);
-  const formats = dateFormats(chartLocale());
+  const formats = dateFormats(pageLocale());
   const root = createElement('div', { className: 'cdc-rchart' });
   setHtml(root, chartShell());
   host.append(root);

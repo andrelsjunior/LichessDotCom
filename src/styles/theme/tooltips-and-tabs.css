@@ -1,7 +1,7 @@
 /* ---- Tooltips --- */
 
-/* content.js's tooltip, in place of the browser's title on buttons. Above the
- * button unless there's no room; a shortcut key gets a key cap. */
+/* Our tooltip (content/ui/tooltip.ts), in place of the browser's title on buttons.
+ * Above the button unless there's no room; a shortcut key gets a key cap. */
 .cdc-tooltip {
   position: fixed;
   z-index: 10000;
@@ -61,7 +61,7 @@
 
 /* ---- Sliding tabs --- */
 
-/* One highlight per tab bar, sliding to the picked tab. content.js sets
+/* One highlight per tab bar, sliding to the picked tab. content/ui/tab-bar.ts sets
  * data-cdc-tabs (pill or line), --cdc-tab-{x,y,w,h}, and data-cdc-tabs-still on
  * a reflow. Each bar's CSS styles it (--cdc-tab-bg, -shadow, -radius, -line). */
 [data-cdc-tabs] {

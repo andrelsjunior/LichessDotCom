@@ -1,7 +1,7 @@
 /* ---- Community menu --- */
 
 /* The side menu these pages share with the rating stats, bots and FIDE players: each link's
- * icon and color (the tiles are in pages.css). */
+ * icon and color (the tiles are in pages/). */
 .subnav a[href$='/player'] {
   --cdc-nav-icon: url('chrome-extension://__MSG_@@extension_id__/img/icons/leaderboard.svg');
   --cdc-nav-color: #f7c631;

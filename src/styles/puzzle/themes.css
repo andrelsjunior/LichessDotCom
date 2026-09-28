@@ -119,7 +119,7 @@ main.puzzle .puzzle__session a.current {
 }
 
 /* Next puzzle: Lichess paints it in the link color (our green), so it looked solved.
-   A grey chip with the dashboard's replay triangle (--cdc-play, dashboard.css) instead. */
+   A grey chip with the dashboard's replay triangle (--cdc-play, dashboard/) instead. */
 main.puzzle .puzzle__session a.session-new {
   background: var(--cdc-btn-grey) !important;
   box-shadow: var(--cdc-btn-grey-shadow);

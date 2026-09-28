@@ -1,19 +1,8 @@
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { queryOne } from '#shared/dom.ts';
 import { syncForumLabels } from './forum.ts';
 // The forum index as the original left it.
 import legacy from './fixtures/legacy-forum.json' with { type: 'json' };
-
-beforeAll(() => {
-  // happy-dom has no rows on a table section.
-  const section: unknown = Object.getPrototypeOf(document.createElement('thead'));
-  if (typeof section === 'object' && section !== null && !('rows' in section))
-    Object.defineProperty(section, 'rows', {
-      get(this: Element) {
-        return this.querySelectorAll(':scope > tr');
-      },
-    });
-});
 
 afterEach(() => {
   document.body.innerHTML = '';

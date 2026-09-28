@@ -180,7 +180,7 @@ main.swiss-home .swisses .team .uflair {
   vertical-align: -0.3em;
 }
 
-/* Rounds (content.js adds the progress bar), then the time control. */
+/* Rounds (content/pages/swiss.ts adds the progress bar), then the time control. */
 main.swiss-home .swisses td.infos {
   display: flex;
   flex-direction: column;

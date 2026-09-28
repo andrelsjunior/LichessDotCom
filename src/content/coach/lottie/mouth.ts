@@ -1,8 +1,10 @@
+import type { Point } from '#shared/geometry.ts';
+import { clamp } from '#shared/math.ts';
 import type { CurlStyle } from './constants.ts';
 import { lerp, openPath, outline, valueAt } from './geometry.ts';
 import type { MouthPose } from './poses.ts';
 import type { RigMouth } from './rig.ts';
-import type { BezierPath, Point } from './types.ts';
+import type { BezierPath } from './types.ts';
 
 // The mouth in a pose: the lips, the opening, the teeth and the tongue as
 // shapes, plus the corners' hooks on the coaches who have them.
@@ -108,7 +110,7 @@ function curlPath(corner: MouthPoint, direction: -1 | 1, { pose, style }: CurlOp
   const { x, openingTop: y } = corner;
   // A corner pulled down flattens its hook.
   const turn = pose.lift + (direction < 0 ? pose.liftLeft : pose.liftRight);
-  const rise = style.rise * Math.max(0, Math.min(1.2, 1 - turn / 2));
+  const rise = style.rise * clamp(1 - turn / 2, 0, 1.2);
   return openPath([
     [x - direction * style.inner * pose.width, y + 0.5 + 0.2 * turn],
     [x, y],

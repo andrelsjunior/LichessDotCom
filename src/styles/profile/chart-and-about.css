@@ -8,8 +8,8 @@
   border: none !important;
 }
 
-/* No chart (logged out, a new account, or ratingchart.js had no data): one card,
- * its stats spread over the width. */
+/* No chart (logged out, a new account, or content/charts/rating-chart/ had no data): one
+ * card, its stats spread over the width. */
 .user-show
   > #us_profile:is(
     :not(:has(> .rating-history-container)),

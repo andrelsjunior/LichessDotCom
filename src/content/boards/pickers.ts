@@ -1,6 +1,6 @@
 import { z } from 'zod/mini';
-import { extensionUrl } from '#content/platform/runtime.ts';
 import { readStored, StorageKey, writeStored } from '#shared/storage.ts';
+import { extensionUrl } from '#content/platform/runtime.ts';
 import { applyBoard, applyPieces } from './appearance.ts';
 import { BOARDS, boardTilePath, PIECE_SETS, piecePath, validPick, type Choice } from './catalog.ts';
 

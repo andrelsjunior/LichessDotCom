@@ -138,7 +138,8 @@ html[dir='rtl'] main.forum table.categs tr:hover td.subject::after {
   transform: scaleX(-1) translateX(4px);
 }
 
-/* Topic and post counts as chips; content.js copies the column names into data-cdc-label. */
+/* Topic and post counts as chips; content/pages/forum.ts copies the column names into
+ * data-cdc-label. */
 main.forum table.categs td.right {
   display: inline-flex !important;
   flex: none;

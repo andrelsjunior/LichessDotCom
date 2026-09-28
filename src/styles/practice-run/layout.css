@@ -1,7 +1,7 @@
 /* Practice lessons (/practice/...): a gamebook lesson (.gamebook) or a drill against
  * the engine (.practice-box). Both become one panel beside the board: the lesson
  * card with its steps, then the coach or the drill's goal. Loads after
- * analysis.css, whose main.analyse grid it reshapes. */
+ * analysis/, whose main.analyse grid it reshapes. */
 
 /* ---- Lesson header --- */
 

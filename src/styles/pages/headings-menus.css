@@ -69,7 +69,8 @@ h3 {
 }
 
 /* Menus with an icon tile per link; each page sets `--cdc-nav-icon` and `--cdc-nav-color`.
- * content.js tags the menu (`data-cdc-nav`), as a `:has()` here slowed every board move. */
+ * content/layout/marks.ts tags the menu (`data-cdc-nav`), as a `:has()` here slowed every
+ * board move. */
 .subnav:is(
     [data-cdc-nav~='bots'],
     [data-cdc-nav~='broadcast'],

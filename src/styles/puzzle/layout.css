@@ -93,7 +93,7 @@
     align-content: start;
   }
 
-  /* Coordinates sit outside the board (board.css): a gutter for ranks, a strip for files. */
+  /* Coordinates sit outside the board (board/): a gutter for ranks, a strip for files. */
   body:is(.coords-in, .coords-out) main.puzzle {
     --cdc-coords-l: calc(0.6 * var(--cdc-coords-size, 13px) + 10px);
     --cdc-coords-off: calc(1.2 * var(--cdc-coords-size, 13px) + 8px);
@@ -127,7 +127,8 @@
     margin-bottom: 0 !important;
   }
 
-  /* Chips on one row: a long session scrolls sideways (content.js keeps the latest in view). */
+  /* Chips on one row: a long session scrolls sideways (content/pages/puzzle.ts keeps the latest
+   * in view). */
   main.puzzle .puzzle__session {
     flex-wrap: nowrap !important;
     gap: 6px;

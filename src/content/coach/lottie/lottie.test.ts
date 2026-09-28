@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { COACH_MOODS } from '#shared/coach.ts';
+import type { Point } from '#shared/geometry.ts';
+import { canonicalJson, sha256Hex } from '#shared/testing/digest.ts';
 import { buildCoachAnimations } from './build.ts';
 import { eulerianCircuit } from './circuit.ts';
 import { CURLS } from './constants.ts';
@@ -9,7 +11,6 @@ import { mouthShapes } from './mouth.ts';
 import { MOUTH_POSES, REST_MOUTH, type MouthPose } from './poses.ts';
 import { RigFileSchema, type CoachRig } from './rig.ts';
 import { easeOut, numberTrack, pathTrack, vectorTrack } from './track.ts';
-import type { Point } from './types.ts';
 // The rig the original builder ran on, what it built from it (a SHA-256 of
 // each animation, in canonical JSON, and the timeline in full), and what its
 // helpers returned on the inputs below.
@@ -23,24 +24,6 @@ function rigOf(coach: number): CoachRig {
   const rig = rigs[String(coach)];
   if (!rig) throw new Error(`no rig for coach ${coach}`);
   return rig;
-}
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
-
-/** JSON with sorted keys, so objects built in another order compare equal (and -0 is 0). */
-const canonical = (value: unknown): string =>
-  JSON.stringify(value, (_key, item: unknown) =>
-    isRecord(item)
-      ? Object.fromEntries(
-          Object.entries(item).toSorted(([first], [second]) => (first < second ? -1 : 1)),
-        )
-      : item,
-  );
-
-async function sha256(text: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 /** How many objects are reachable more than once: lottie-web breaks on shared ones. */
@@ -71,9 +54,9 @@ describe('buildCoachAnimations', () => {
     async (key, expected) => {
       const coach = Number(key);
       const built = buildCoachAnimations(rigOf(coach), coach);
-      expect(await sha256(canonical(built.face))).toBe(expected.face);
-      expect(await sha256(canonical(built.lids))).toBe(expected.lids);
-      expect(await sha256(canonical(built.blink))).toBe(expected.blink);
+      expect(await sha256Hex(canonicalJson(built.face))).toBe(expected.face);
+      expect(await sha256Hex(canonicalJson(built.lids))).toBe(expected.lids);
+      expect(await sha256Hex(canonicalJson(built.blink))).toBe(expected.blink);
       expect(built.meta).toEqual(expected.meta);
       expect(built.face.layers.map(layer => layer.nm)).toEqual(expected.layers.face);
     },
@@ -96,7 +79,7 @@ describe('RigFileSchema', () => {
       { ...rig, mouth: { ...rig.mouth, curves: { ...rig.mouth.curves, lo: [1, 2] } } },
     ],
     [
-      'a colour that is not #rrggbb',
+      'a color that is not #rrggbb',
       { ...rig, mouth: { ...rig.mouth, colors: { teeth: 'white', line: null } } },
     ],
     ['a third brow', { ...rig, brows: [...rig.brows, rig.brows[0]] }],
@@ -124,14 +107,14 @@ describe('eulerianCircuit', () => {
 describe('geometry', () => {
   it('draws the splines and outlines the original drew', () => {
     const { ins, outs } = spline(topPoints);
-    expect(canonical([ins, outs])).toBe(canonical(helpers.spline));
+    expect(canonicalJson([ins, outs])).toBe(canonicalJson(helpers.spline));
     const short = spline([
       [0, 0],
       [3, 4],
     ]);
-    expect(canonical([short.ins, short.outs])).toBe(canonical(helpers.spline2));
-    expect(canonical(outline(topPoints, bottomPoints))).toBe(canonical(helpers.outline));
-    expect(canonical(openPath(topPoints))).toBe(canonical(helpers.openPath));
+    expect(canonicalJson([short.ins, short.outs])).toBe(canonicalJson(helpers.spline2));
+    expect(canonicalJson(outline(topPoints, bottomPoints))).toBe(canonicalJson(helpers.outline));
+    expect(canonicalJson(openPath(topPoints))).toBe(canonicalJson(helpers.openPath));
   });
 
   it('keeps an open curve sharp at its ends', () => {
@@ -141,7 +124,7 @@ describe('geometry', () => {
     );
   });
 
-  it('reads #rrggbb colours as 0 to 1', () => {
+  it('reads #rrggbb colors as 0 to 1', () => {
     expect(hexToRgb('#de8664')).toEqual(helpers.rgb);
     expect(hexToRgb('#ff0000')).toEqual([1, 0, 0]);
   });
@@ -156,16 +139,16 @@ describe('tracks', () => {
       [10.001, 9],
       [20, 5],
     ]);
-    expect(canonical(numbers)).toBe(canonical(helpers.trackNumbers));
+    expect(canonicalJson(numbers)).toBe(canonicalJson(helpers.trackNumbers));
     expect(
-      canonical(
+      canonicalJson(
         vectorTrack([
           [0, [1, 2]],
           [5, [1, 2]],
           [9, [1, 2]],
         ]),
       ),
-    ).toBe(canonical(helpers.trackSame));
+    ).toBe(canonicalJson(helpers.trackSame));
     const vectors = vectorTrack(
       [
         [4, [100, 0, 100]],
@@ -173,12 +156,12 @@ describe('tracks', () => {
       ],
       easeOut,
     );
-    expect(canonical(vectors)).toBe(canonical(helpers.trackVectors));
+    expect(canonicalJson(vectors)).toBe(canonicalJson(helpers.trackVectors));
     const paths = pathTrack([
       [0, openPath(topPoints)],
       [6, openPath(bottomPoints)],
     ]);
-    expect(canonical(paths)).toBe(canonical(helpers.trackShapes));
+    expect(canonicalJson(paths)).toBe(canonicalJson(helpers.trackShapes));
   });
 
   it('keeps one key per hundredth of a frame, the last written', () => {
@@ -205,14 +188,14 @@ describe('tracks', () => {
 const shapesOf = (coach: number, pose: Partial<MouthPose>): Map<string, unknown> =>
   mouthShapes({ mouth: rigOf(coach).mouth, pose: posed(pose), curl: CURLS.get(coach) ?? null });
 const shapes = (coach: number, pose: Partial<MouthPose>): string =>
-  canonical(Object.fromEntries(shapesOf(coach, pose)));
+  canonicalJson(Object.fromEntries(shapesOf(coach, pose)));
 
 describe('features in a pose', () => {
   it('shapes the mouth as the original did', () => {
-    expect(shapes(1, MOUTH_POSES.shock)).toBe(canonical(helpers.mouthShock1));
-    expect(shapes(3, MOUTH_POSES.happy)).toBe(canonical(helpers.mouthHappy3));
+    expect(shapes(1, MOUTH_POSES.shock)).toBe(canonicalJson(helpers.mouthShock1));
+    expect(shapes(3, MOUTH_POSES.happy)).toBe(canonicalJson(helpers.mouthHappy3));
     const talking = { ...MOUTH_POSES.doubt, open: 2.1, width: 0.8, close: 0.7, round: 0.15 };
-    expect(shapes(3, talking)).toBe(canonical(helpers.mouthDoubt3Talking));
+    expect(shapes(3, talking)).toBe(canonicalJson(helpers.mouthDoubt3Talking));
   });
 
   it('gives the corners hooks on the coaches who have them only', () => {
@@ -230,8 +213,8 @@ describe('features in a pose', () => {
 
   it('shapes the lids as the original did', () => {
     const doubt = lidShapes(rigOf(2).eyes[1], 0.42);
-    expect(canonical([doubt.lid, doubt.edge])).toBe(canonical(helpers.lidsDoubt2));
+    expect(canonicalJson([doubt.lid, doubt.edge])).toBe(canonicalJson(helpers.lidsDoubt2));
     const shut = lidShapes(rigOf(4).eyes[0], 1);
-    expect(canonical([shut.lid, shut.edge])).toBe(canonical(helpers.lidsShut4));
+    expect(canonicalJson([shut.lid, shut.edge])).toBe(canonicalJson(helpers.lidsShut4));
   });
 });

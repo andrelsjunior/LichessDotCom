@@ -52,6 +52,11 @@ export function writeStoredJson(key: string, value: unknown, to: Area = 'local')
   writeStored(key, JSON.stringify(value), to);
 }
 
+/** Removes a value; like a write, a blocked storage only costs the value. */
 export function removeStored(key: string, from: Area = 'local'): void {
-  area(from).removeItem(key);
+  try {
+    area(from).removeItem(key);
+  } catch {
+    // Storage disabled.
+  }
 }

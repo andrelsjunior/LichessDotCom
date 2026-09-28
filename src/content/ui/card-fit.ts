@@ -1,4 +1,6 @@
-import { EDGE_MARGIN, type Box, type Size } from './geometry.ts';
+import type { Box, Size } from '#shared/geometry.ts';
+import { clamp } from '#shared/math.ts';
+import { EDGE_MARGIN } from './edge-margin.ts';
 
 // Lichess picks the hover card's side (below, above, beside the name) from its
 // size when placed, and keeps the last side tried when none fits. Ours is
@@ -7,7 +9,7 @@ import { EDGE_MARGIN, type Box, type Size } from './geometry.ts';
 
 const NAME_GAP = 10;
 
-export interface Position {
+export interface CardPlacement {
   readonly top: number;
   readonly left: number;
 }
@@ -16,24 +18,17 @@ export interface Position {
  * Where the card should go to fit the window: below the name, else above,
  * else against the edge. Null when it already fits.
  */
-export function fitCard(card: Box, anchor: Box | null, viewport: Size): Position | null {
+export function fitCard(card: Box, anchor: Box | null, viewport: Size): CardPlacement | null {
   const maxTop = viewport.height - EDGE_MARGIN - card.height;
   const maxLeft = viewport.width - EDGE_MARGIN - card.width;
   const fitsHeight = card.top >= EDGE_MARGIN && card.top <= maxTop;
   if (fitsHeight && card.left >= EDGE_MARGIN && card.left <= maxLeft) return null;
-  let top = Math.max(EDGE_MARGIN, Math.min(card.top, maxTop));
+  let top = clamp(card.top, EDGE_MARGIN, maxTop);
   // Above or below the name (not beside it): stay clear of it if possible.
   if (anchor && card.left < anchor.right && card.right > anchor.left) {
     if (anchor.bottom + NAME_GAP <= maxTop) top = anchor.bottom + NAME_GAP;
     else if (anchor.top - NAME_GAP - card.height >= EDGE_MARGIN)
       top = anchor.top - NAME_GAP - card.height;
   }
-  return { top, left: Math.max(EDGE_MARGIN, Math.min(card.left, maxLeft)) };
+  return { top, left: clamp(card.left, EDGE_MARGIN, maxLeft) };
 }
-
-/** A hover card rating's text without Lichess's column padding (no-break spaces). */
-export const ratingText = (text: string): string => text.replaceAll('\u00a0', '').trim();
-
-/** Unrated ("?") and never played ("-") chips are dimmed. */
-export const ratingState = (text: string): 'none' | 'rated' =>
-  text === '?' || text === '-' ? 'none' : 'rated';

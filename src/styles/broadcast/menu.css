@@ -2,7 +2,7 @@
 
 /* ---- Menu --- */
 
-/* Side menu icons and tile colors (tiles in pages.css; the FIDE pages share this menu).
+/* Side menu icons and tile colors (tiles in pages/; the FIDE pages share this menu).
    "My broadcasts" and another user's end with their name; the last two lists are admin-only. */
 .subnav[data-cdc-nav~='broadcast'] a[href$='/broadcast'] {
   --cdc-nav-icon: url('chrome-extension://__MSG_@@extension_id__/img/icons/today.svg');
@@ -128,7 +128,7 @@
 }
 
 /* Round games: the hovered or current one is a lighter row (Lichess tints it all green).
-   Its green stays on the edge and number, as on a round's page (analysis.css). */
+   Its green stays on the edge and number, as on a round's page (analysis/). */
 main.analyse.has-relay-tour .relay-tour__side .relay-game:hover {
   background: #ffffff0f !important;
 }
@@ -137,7 +137,7 @@ main.analyse.has-relay-tour .relay-tour__side .relay-game--current {
   background: #ffffff14 !important;
 }
 
-/* Tour tabs: Lichess's gold outline slides to the picked tab ("sliding tabs" in theme.css),
+/* Tour tabs: Lichess's gold outline slides to the picked tab ("Sliding tabs" in theme/),
    drawn over the tabs' own grey outlines. */
 .relay-tour__tabs[data-cdc-tabs] {
   --cdc-tab-radius: var(---ui-roundness, 7px);

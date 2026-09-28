@@ -3,7 +3,7 @@
 /* ---- Post cards --- */
 
 /* The lists and "You may also like" under a post share one card. Scoped to
- * them: home.css styles the home page's blog cards. */
+ * them: home/ styles the home page's blog cards. */
 :is(.ublog-index, .ublog-post) .ublog-post-cards {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
   gap: 16px !important;
@@ -174,7 +174,7 @@
   color: #fff !important;
 }
 
-/* The green one slides (see "sliding tabs" in theme.css). */
+/* The green one slides (see "Sliding tabs" in theme/). */
 .ublog-index .btn-rack[data-cdc-tabs] {
   --cdc-tab-radius: 6px;
   --cdc-tab-bg: var(--cdc-btn-green);

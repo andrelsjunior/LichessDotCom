@@ -2,7 +2,7 @@
 
 @media (min-width: 1020px) {
   /* Lichess's own Donate link is missing for patrons and on zen pages (a game):
-   * content.js copies the flyout's one into #cdc-donate, under Tools. */
+   * content/sidebar/donate.ts copies the flyout's one into #cdc-donate, under Tools. */
   #topnav div a.community-patron,
   #top .site-title-nav__donate {
     display: none !important;

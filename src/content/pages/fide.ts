@@ -1,7 +1,7 @@
 import { setData, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 
-// The FIDE players' and federations' rank (styles/fide.css) counts the rows
+// The FIDE players' and federations' rank (styles/fide/) counts the rows
 // on the page, so a list opened on a later page (/fide?page=3) must start
 // from that page's first row, and hand out no medals.
 

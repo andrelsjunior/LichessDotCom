@@ -1,5 +1,5 @@
-import { z } from 'zod/mini';
 import { describe, expect, it, vi } from 'vitest';
+import { z } from 'zod/mini';
 import { CoachMoodSchema } from '#shared/coach.ts';
 import { delayUntil, nextBlink } from './blinks.ts';
 import { syllableEnd } from './expression.ts';

@@ -69,8 +69,8 @@ function countMissing(start: Army, onBoard: Army): Army {
 const materialOf = (army: Army): number =>
   CAPTURABLE_ROLES.reduce((sum, role) => sum + army[role] * VALUE[role], 0);
 
-function group(src: string, count: number): SafeHtml {
-  const piece = html`<img src="${src}" alt="" draggable="false">`;
+function group(pieceUrl: string, count: number): SafeHtml {
+  const piece = html`<img src="${pieceUrl}" alt="" draggable="false">`;
   return html`<div class="cdc-captured__group">${Array.from({ length: count }, () => piece)}</div>`;
 }
 
@@ -84,12 +84,12 @@ interface RowOptions {
 }
 
 function rowMarkup({ color, missing, lead, checks, piecesUrl }: RowOptions): SafeHtml {
-  const src = (role: CapturableRole | 'king'): string =>
+  const pieceUrl = (role: CapturableRole | 'king'): string =>
     `${piecesUrl}${COLOR_LETTER[color]}${LETTER[role]}.webp`;
   const groups = CAPTURABLE_ROLES.filter(role => missing[role] > 0).map(role =>
-    group(src(role), missing[role]),
+    group(pieceUrl(role), missing[role]),
   );
-  const kings = checks > 0 && group(src('king'), checks);
+  const kings = checks > 0 && group(pieceUrl('king'), checks);
   const score = lead > 0 && html`<span class="cdc-captured__score">+${lead}</span>`;
   return html`${groups}${kings}${score}`;
 }

@@ -1,10 +1,10 @@
-import { onEveryTick } from '#content/sync-loop.ts';
 import { queryOne, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { onEveryTick } from '#content/sync-loop.ts';
 
 // The right-hand panel stacks the moves, the controls and the chat in fixed
-// grid rows (game.css, analysis.css), so the controls' row needs a definite
-// height: `--cdc-controls-h`.
+// grid rows (styles/game/layout.css, styles/analysis/layout.css), so the
+// controls' row needs a definite height: `--cdc-controls-h`.
 
 export function syncControlsHeight(): void {
   const main = queryOne(document, 'main.round, main.analyse', HTMLElement);

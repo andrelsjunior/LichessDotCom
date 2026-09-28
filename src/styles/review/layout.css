@@ -1,6 +1,6 @@
-/* Game Review. review.js sets a state class on <html>: cdc-review-normal (Lichess's analysis
-   and a Game Review button), -summary, -moves (move by move) or -live (the free board),
-   plus cdc-evalbar-on and data-cdc-cls (the current move's classification). */
+/* Game Review (page/review/). It sets a state class on <html>: cdc-review-normal (Lichess's
+   analysis and a Game Review button), -summary, -moves (move by move) or -live (the free
+   board), plus cdc-evalbar-on and data-cdc-cls (the current move's classification). */
 
 @media (min-width: 1020px) {
   html.cdc-review main.analyse {

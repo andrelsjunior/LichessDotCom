@@ -1,13 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ReadyStateSchema, setReadyState } from '#shared/testing/ready-state.ts';
 import { chooseCoach, coachChoice } from './coach-choice.ts';
 import { fontFaces, fonts } from './fonts.ts';
 import { reloadIfInjectedLate } from './late-reload.ts';
 // What the original script did in the same cases.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
-
-function setReadyState(state: string): void {
-  Object.defineProperty(document, 'readyState', { value: state, configurable: true });
-}
 
 beforeEach(() => {
   localStorage.clear();
@@ -23,7 +20,7 @@ describe('fonts', () => {
 
   it.each(legacy.fonts)('adds them after Lichess’s, page $readyState', ({ readyState, after }) => {
     document.head.innerHTML = '<style id="lichess">x</style>';
-    setReadyState(readyState);
+    setReadyState(ReadyStateSchema.parse(readyState));
     fonts.start();
     const added = document.head.children.length > 1;
     expect(added).toBe(readyState !== 'loading');
@@ -61,7 +58,7 @@ describe('late reload', () => {
       vi.stubGlobal('location', { reload });
       vi.spyOn(Date, 'now').mockReturnValue(now);
       if (stored !== null) sessionStorage.setItem('cdc-late-reload', stored);
-      setReadyState(readyState);
+      setReadyState(ReadyStateSchema.parse(readyState));
       expect(reloadIfInjectedLate()).toBe(reloaded);
       expect(reload).toHaveBeenCalledTimes(reloads);
       expect(sessionStorage.getItem('cdc-late-reload')).toBe(storedAfter);

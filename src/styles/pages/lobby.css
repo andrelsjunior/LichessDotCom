@@ -144,7 +144,7 @@
 }
 
 /* "Create a game" as the big green Play button. The doubled class beats the metal-button
- * hover in theme.css; the icon stays white where Lichess tints it green. */
+ * hover in theme/; the icon stays white where Lichess tints it green. */
 .lobby__start__button--hook.button.button-metal {
   background: var(--cdc-btn-green) !important;
   color: #fff !important;

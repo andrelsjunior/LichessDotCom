@@ -1,11 +1,11 @@
 import { createElement, onDomReady, queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { pageLang } from '#shared/lang.ts';
+import { nonEmpty } from '#shared/text.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
-import { nonEmpty } from '#content/ui/text.ts';
 import { heroText, type HeroText } from './hero-texts.ts';
 
-// The home page's hero card (styles/home.css), in the page's language.
+// The home page's hero card (styles/home/hero.css), in the page's language.
 
 export function buildHero(text: HeroText, user: string | undefined): HTMLElement {
   const hero = createElement('section', { className: 'cdc-hero' });

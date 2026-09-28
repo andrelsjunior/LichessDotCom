@@ -4,12 +4,12 @@ import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 import { computerRatings } from './ai-players.ts';
 
-// The game's info where there's no chat (styles/game.css). Lichess writes its
-// lines as runs of text ("3+0 • Rated • Blitz"), so each part gets a span, to
-// be a pill or a line of its own; the players' names get one too, to be cut
-// short on their own, and the ratings lose their brackets to be chips. It's
-// server-rendered, so editing it is safe; each piece is marked once done, as
-// Lichess may put new ones in.
+// The game's info where there's no chat (styles/game/game-info.css). Lichess
+// writes its lines as runs of text ("3+0 • Rated • Blitz"), so each part gets a
+// span, to be a pill or a line of its own; the players' names get one too, to
+// be cut short on their own, and the ratings lose their brackets to be chips.
+// It's server-rendered, so editing it is safe; each piece is marked once done,
+// as Lichess may put new ones in.
 
 /** The parts of a line of the game info. */
 export const infoParts = (text: string): string[] =>

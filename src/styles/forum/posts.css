@@ -312,7 +312,7 @@ main.forum-topic .forum-post__blocked > button {
   margin: 8px 0 !important;
 }
 
-/* board.css draws the coordinates outside the board on desktop: leave the embed's
+/* board/ draws the coordinates outside the board on desktop: leave the embed's
    board room for them, or they overlap the player below and get cut off. */
 @media (min-width: 1020px) {
   body:is(.coords-in, .coords-out) main.forum-topic .forum-post__message .lpv__board {

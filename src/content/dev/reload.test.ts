@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { trackListeners } from '#shared/testing/listeners.ts';
 import { devReload } from './reload.ts';
 // What the original script sent and reloaded, on the same clock.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
@@ -16,13 +17,7 @@ function setVisibility(state: string): void {
 
 let removeListeners = (): void => {};
 beforeEach(() => {
-  const spies = [vi.spyOn(document, 'addEventListener'), vi.spyOn(window, 'addEventListener')];
-  removeListeners = () => {
-    for (const [type, listener, options] of spies[0]?.mock.calls ?? [])
-      document.removeEventListener(type, listener, options);
-    for (const [type, listener, options] of spies[1]?.mock.calls ?? [])
-      window.removeEventListener(type, listener, options);
-  };
+  removeListeners = trackListeners(document, window);
   vi.useFakeTimers({ now: 0 });
 });
 afterEach(() => {

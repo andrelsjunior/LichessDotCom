@@ -1,7 +1,7 @@
 /* ---- Shapes and mate --- */
 
-/* board.js redraws the main board's shapes (square fills in .cdc-marks, arrows in #cdc-shapes).
- * Hidden only once its layers are up, so a board it misses keeps Lichess's. */
+/* page/board/ redraws the main board's shapes (square fills in .cdc-marks, arrows in
+ * #cdc-shapes). Hidden only once its layers are up, so a board it misses keeps Lichess's. */
 html.cdc-shapes main .main-board svg.cg-shapes > g {
   display: none;
 }
@@ -18,7 +18,7 @@ svg.cdc-marks {
   pointer-events: none;
 }
 
-/* Boards board.js skips (mini boards, previews): Lichess's green brush in our orange. */
+/* Boards page/board/ skips (mini boards, previews): Lichess's green brush in our orange. */
 .cg-shapes [stroke='#15781B'] {
   stroke: #ffaa00 !important;
 }

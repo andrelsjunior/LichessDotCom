@@ -44,8 +44,8 @@ describe('geometry', () => {
 
   it('keeps every point inside the rim, even a flat set', () => {
     expect(bounds([5, 5, 5])).toEqual([-5, 15]);
-    for (const [px, py] of plotPoints([100, 2000, 1500])) {
-      expect(Math.hypot(px, py)).toBeLessThanOrEqual(100.0001);
+    for (const [x, y] of plotPoints([100, 2000, 1500])) {
+      expect(Math.hypot(x, y)).toBeLessThanOrEqual(100.0001);
     }
   });
 });

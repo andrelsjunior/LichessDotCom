@@ -108,7 +108,7 @@
     color: #fff !important;
   }
 
-  /* Icons from img/icons. Sections are matched by position and links by how their
+  /* Icons from public/img/icons. Sections are matched by position and links by how their
    * href ends: Lichess localizes the labels and some paths (/fr/training). */
   #topnav section:nth-of-type(1) > a {
     --cdc-nav-icon: url('chrome-extension://__MSG_@@extension_id__/img/icons/play-white.svg');

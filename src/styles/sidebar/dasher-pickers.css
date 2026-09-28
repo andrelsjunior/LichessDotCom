@@ -32,7 +32,8 @@
   background: var(--cdc-menu-hover) !important;
 }
 
-/* Extension / Lichess tabs (boards.js), their pill sliding (TAB_BARS in content.js). */
+/* Extension / Lichess tabs (content/boards/panel.ts), their pill sliding
+ * (content/ui/tab-bars.ts). */
 #dasher_app .cdc-src-tabs {
   --cdc-tab-bg: var(--cdc-bg-raised-hover);
   --cdc-tab-radius: 6px;

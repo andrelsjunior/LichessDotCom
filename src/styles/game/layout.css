@@ -7,9 +7,9 @@
     --cdc-coords-off: 0px;
     --cdc-gap: 24px;
     /* The board is sized as if the panel were at its minimum; the panel then takes the
-     * rest, up to 500px (as in analysis.css). */
+     * rest, up to 500px (as in analysis/). */
     --cdc-panel-min: 300px;
-    /* As big as the window allows, times the resize handle's scale (board.css). `dvh`, as
+    /* As big as the window allows, times the resize handle's scale (board/). `dvh`, as
      * `100vh` overshoots on phones and the Meta Quest. `--cdc-lead-w` is TV's left column. */
     --cdc-board: max(
       320px,
@@ -34,7 +34,7 @@
     );
     --cdc-bar-bot: calc(var(--cdc-bar) + var(--cdc-coords-off));
     --cdc-chat-h: min(clamp(180px, 32vh, 340px), calc(var(--cdc-board) * 0.45));
-    --cdc-ctrl-h: var(--cdc-controls-h, 48px); /* measured by content.js */
+    --cdc-ctrl-h: var(--cdc-controls-h, 48px); /* content/layout/controls-height.ts */
 
     display: grid !important;
     grid-template-columns: var(--cdc-board) var(--cdc-panel-w) !important;
@@ -154,7 +154,8 @@
     order: -1;
   }
 
-  /* Keyed on `data-cdc-has` (content.js): a `:has()` here would rerun on every move. */
+  /* Keyed on `data-cdc-has` (content/layout/has-flags.ts): a `:has()` here would rerun on
+   * every move. */
   html[data-cdc-has~='clock-extras-top'] main.round .ruser-top,
   html[data-cdc-has~='clock-extras-bottom'] main.round .ruser-bottom {
     --cdc-clock-room: 212px;

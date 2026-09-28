@@ -111,7 +111,7 @@
   color: color-mix(in srgb, var(--cdc-tsht) 70%, #fff);
 }
 
-/* The tile's color beats the mode icon's own (theme.css). */
+/* The tile's color beats the mode icon's own (theme/). */
 .tsht icon::before {
   --cdc-mode-color: currentColor;
 }

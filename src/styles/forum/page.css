@@ -4,7 +4,8 @@
 /* ---- Colors --- */
 
 /* A color and an emoji per category. Slugs aren't localized, so rules key on the links
-   content.js copies onto rows and pages (data-cdc-href, data-cdc-back, data-cdc-search). */
+   content/layout/marks.ts copies onto rows and pages (data-cdc-href, data-cdc-back,
+   data-cdc-search). */
 main.forum,
 main.forum .categs tr {
   --cdc-fc: #95c85a;

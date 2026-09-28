@@ -8,7 +8,13 @@ export default defineConfig({
     projects: [
       {
         extends: true,
-        test: { name: 'extension', include: ['src/**/*.test.ts'], environment: 'happy-dom' },
+        test: {
+          name: 'extension',
+          include: ['src/**/*.test.ts'],
+          environment: 'happy-dom',
+          // happy-dom's gaps, filled once for every test file.
+          setupFiles: ['src/shared/testing/setup.ts'],
+        },
       },
       {
         extends: true,
@@ -18,7 +24,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts', 'scripts/**/*.ts'],
-      exclude: ['**/*.test.ts', '**/fixtures/**'],
+      exclude: ['**/*.test.ts', '**/fixtures/**', 'src/shared/testing/**'],
       reporter: ['text-summary', 'html', 'lcov'],
     },
   },

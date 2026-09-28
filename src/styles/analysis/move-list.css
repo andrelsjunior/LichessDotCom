@@ -47,7 +47,7 @@
     line-height: 30px !important;
   }
 
-  /* The review's list has its own stripes (review.css). */
+  /* The review's list has its own stripes (review/). */
   html:not(.cdc-review-moves) main.analyse .tview2-column > index:nth-of-type(even),
   html:not(.cdc-review-moves) main.analyse .tview2-column > index:nth-of-type(even) + move,
   html:not(.cdc-review-moves) main.analyse .tview2-column > index:nth-of-type(even) + move + move {

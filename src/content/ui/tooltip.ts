@@ -3,8 +3,8 @@ import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 import { placeTooltip, splitShortcut } from './tooltip-layout.ts';
 
-// Styled tooltips on the page's buttons (styles/theme.css), instead of the
-// browser's slow, unstyled `title`. On hover the title moves to
+// Styled tooltips on the page's buttons (styles/theme/tooltips-and-tabs.css),
+// instead of the browser's slow, unstyled `title`. On hover the title moves to
 // `data-cdc-tip`, so the native one never shows. Snabbdom only sets the title
 // again if it changes, and the next hover moves it again.
 
@@ -17,7 +17,7 @@ const CHAIN_MS = 400;
 
 function hoverTarget(event: MouseEvent): HTMLElement | null {
   const target = closestTo(event.target, TARGETS, HTMLElement);
-  // TV's channels only need theirs while their names are hidden (tv.css).
+  // TV's channels only need theirs while their names are hidden (styles/tv.css).
   if (target?.matches('a') && !matchMedia('(max-width: 1259.98px)').matches) return null;
   return target;
 }

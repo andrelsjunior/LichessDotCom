@@ -1,6 +1,6 @@
-import { extensionUrl } from '#content/platform/runtime.ts';
 import { setData } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { extensionUrl } from '#content/platform/runtime.ts';
 import { watchDasher } from './dasher.ts';
 import { createPickers } from './pickers.ts';
 

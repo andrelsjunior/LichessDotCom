@@ -2,7 +2,7 @@
 
 @media (min-width: 1020px) {
   /* The bubble's tail sits under the coach's mouth (--cdc-tip, 64% of the portrait's
-     height) and the bubble grows both ways from it; review.js measures --cdc-bubble-h. */
+     height) and the bubble grows both ways from it; the review measures --cdc-bubble-h. */
   .cdc-coach {
     --cdc-coach-h: 114px;
     --cdc-tip: calc(var(--cdc-coach-h) * 0.64);
@@ -126,7 +126,7 @@
     background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-4.webp');
   }
 
-  /* The rig (coach.js): Lottie lids, brows and mouth over the plate, the portrait with its
+  /* The rig (content/coach/): Lottie lids, brows and mouth over the plate, the portrait with its
      brows and mouth painted out. Without the rig, the plain portrait shows. */
   .cdc-coach__rig,
   .cdc-coach__rig > span {

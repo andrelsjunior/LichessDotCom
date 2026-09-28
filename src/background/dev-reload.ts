@@ -2,11 +2,11 @@ import { z } from 'zod/mini';
 import { DevCheckRequestSchema, type DevCheckResponse } from '#shared/dev-check.ts';
 import { fingerprint } from './fingerprint.ts';
 
-// Unpacked installs only. A ship pulls main into the folder Chrome loads, so
-// when a Lichess tab asks, the files on disk are compared with the ones running
-// and the extension reloads if they changed. The running fingerprint is kept
-// in chrome.storage, which the store's package goes without: loaded unpacked,
-// that package just doesn't reload itself.
+// Unpacked installs only. A build (`pnpm dev`, `pnpm build`) rewrites the
+// folder Chrome loads, so when a Lichess tab asks, the files on disk are
+// compared with the ones running and the extension reloads if they changed.
+// The running fingerprint is kept in chrome.storage, which the store's package
+// goes without: loaded unpacked, that package just doesn't reload itself.
 
 const LOADED_KEY = 'dev:loaded';
 const LoadedSchema = z.object({ [LOADED_KEY]: z.optional(z.string()) });

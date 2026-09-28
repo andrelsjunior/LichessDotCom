@@ -1,17 +1,14 @@
-/** A point in a chart's pixels. */
-export type ChartPoint = readonly [x: number, y: number];
-
-/** A tenth of a pixel is as fine as a path needs, and keeps it short. */
-export const roundTenth = (value: number): number => Math.round(value * 10) / 10;
+import type { Point } from '#shared/geometry.ts';
+import { roundTenth } from '#shared/math.ts';
 
 interface Segment {
-  readonly from: ChartPoint;
-  readonly to: ChartPoint;
+  readonly from: Point;
+  readonly to: Point;
   readonly width: number;
   readonly slope: number;
 }
 
-function segmentsOf(points: readonly ChartPoint[]): Segment[] {
+function segmentsOf(points: readonly Point[]): Segment[] {
   const segments: Segment[] = [];
   for (let k = 1; k < points.length; k++) {
     const from = points[k - 1];
@@ -40,7 +37,7 @@ function tangentBetween(before: Segment | undefined, after: Segment | undefined)
  * An SVG path through the points as a monotone cubic (d3's curveMonotoneX):
  * smooth, yet never above or below the points it joins.
  */
-export function monotoneCurve(points: readonly ChartPoint[]): string {
+export function monotoneCurve(points: readonly Point[]): string {
   const [first] = points;
   if (!first) return '';
   // A lone point still needs some length to draw its round cap.

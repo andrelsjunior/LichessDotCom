@@ -1,6 +1,6 @@
-/* The rating history chart, drawn in SVG by ratingchart.js (profile, rating
- * stats page). Lichess's chart, the inner container, is hidden only once ours
- * is in (.cdc-rchart-on on the outer one). */
+/* The rating history chart, drawn in SVG by content/charts/rating-chart/ (profile,
+ * rating stats page). Lichess's chart, the inner container, is hidden only once
+ * ours is in (.cdc-rchart-on on the outer one). */
 
 .rating-history-container.cdc-rchart-on > .rating-history-container {
   display: none !important;
@@ -55,7 +55,7 @@
   background: #ffffff0a;
 }
 
-/* The active range's pill: one element that slides, placed by ratingchart.js. */
+/* The active range's pill: one element that slides, placed by rating-chart/thumb.ts. */
 .cdc-rchart__thumb {
   position: absolute;
   top: 0;

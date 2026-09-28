@@ -1,7 +1,7 @@
 import { queryOne, setData, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import { nonEmpty } from '#shared/text.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
-import { nonEmpty } from '#content/ui/text.ts';
 import {
   formatSpent,
   gameIdFrom,
@@ -12,8 +12,8 @@ import {
 } from './clock-times.ts';
 
 // Move times, once a game is over: the time spent on each move, with a bar
-// scaled to the longest think (styles/game.css). The move list is snabbdom's:
-// we only add attributes, and put them back whenever it re-renders.
+// scaled to the longest think (styles/game/game-over.css). The move list is
+// snabbdom's: we only add attributes, and put them back whenever it re-renders.
 
 // Right after the game ends, the export can fail or lag the last move: we
 // try again, a second apart.

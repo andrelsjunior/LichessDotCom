@@ -35,7 +35,7 @@
     background: #ffffff0f;
   }
 
-  /* Each player's king on a square of the picked board (boards.js); Neo, like the
+  /* Each player's king on a square of the picked board (content/boards/); Neo, like the
    * captured pieces. */
   main.round .game__meta__players .player::before {
     content: '' !important;
@@ -87,8 +87,8 @@
     text-shadow: 0 1px 1px #0000004d;
   }
 
-  /* The name truncates on its own (content.js wraps it in a span); flair, flag and
-   * rating follow, the rating at the row's end. */
+  /* The name truncates on its own (content/game/game-meta.ts wraps it in a span); flair,
+   * flag and rating follow, the rating at the row's end. */
   main.round .game__meta__players .user-link {
     display: flex;
     flex: 1 1 auto;

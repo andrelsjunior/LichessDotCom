@@ -1,7 +1,7 @@
 /* ---- Drill --- */
 
 @media (min-width: 1020px) {
-  /* The goal is in the underboard, which analysis.css hides, and a drill needs it:
+  /* The goal is in the underboard, which analysis/ hides, and a drill needs it:
    * it comes back as a card above the moves, read out by the Game Review's coach. */
   html[data-cdc-has~='practice'][data-cdc-has~='practice-box'] main.analyse .analyse__underboard {
     --cdc-coach-h: 78px;
@@ -18,8 +18,9 @@
     background: var(--cdc-bg-panel);
   }
 
-  /* The coach's face (img/coaches/coach-<n>.webp, the number set by content.js).
-   * Face and bubble share the card's bottom row, so the mouth is at a fixed height. */
+  /* The coach's face (public/img/coaches/coach-<n>.webp, the number set by
+   * content/bootstrap/coach-choice.ts). Face and bubble share the card's bottom row, so the
+   * mouth is at a fixed height. */
   html[data-cdc-has~='practice'][data-cdc-has~='practice-box']
     main.analyse
     .analyse__underboard::before {
@@ -72,7 +73,7 @@
     transform-origin: 0 calc(100% - var(--cdc-coach-h) * 0.36);
   }
 
-  /* The tail, as in review.css, its point at the coach's mouth. */
+  /* The tail, as in review/, its point at the coach's mouth. */
   html[data-cdc-has~='practice'][data-cdc-has~='practice-box']
     main.analyse
     .analyse__underboard

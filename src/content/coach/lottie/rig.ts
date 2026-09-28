@@ -1,8 +1,8 @@
 import { z } from 'zod/mini';
 
-// img/coaches/rig.json: the features tools/coach-rig/extract.py traced out of
-// each coach's portrait, in the portrait's pixels, by coach number. Only what
-// the animations use is read.
+// public/img/coaches/rig.json: the features tools/coach-rig/extract.py traced
+// out of each coach's portrait, in the portrait's pixels, by coach number. Only
+// what the animations use is read.
 
 const HexColorSchema = z.string().check(z.regex(/^#[0-9a-f]{6}$/i));
 const PairSchema = z.tuple([z.number(), z.number()]);
@@ -55,7 +55,7 @@ const EyeSchema = z
   .check(z.refine(({ x, top, bottom }) => sameLength([x, top, bottom])));
 
 /** Each pair is the portrait's left, then its right. */
-export const CoachRigSchema = z.object({
+const CoachRigSchema = z.object({
   mouth: MouthSchema,
   brows: z.tuple([BrowSchema, BrowSchema]),
   eyes: z.tuple([EyeSchema, EyeSchema]),

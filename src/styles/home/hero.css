@@ -1,5 +1,6 @@
 /* Home page (main.lobby): Lichess's blocks as cards on a 12-column grid, under our hero
-   (.cdc-hero, added by content.js). A signed-in user's timeline sits in the side column. */
+   (.cdc-hero, added by content/pages/home-hero.ts). A signed-in user's timeline sits in the
+   side column. */
 
 @media (min-width: 1020px) {
   html[data-cdc-has~='lobby'] #main-wrap {

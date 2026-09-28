@@ -1,6 +1,6 @@
 /* The rating distribution (/stat/rating/distribution/<perf>), drawn in SVG by
- * distribution.js. Reuses ratingchart.css's chips, grid and tooltip. Lichess's
- * canvas is hidden only once ours is in (.cdc-dist-on). */
+ * page/charts/distribution/. Reuses ratingchart.css's chips, grid and tooltip.
+ * Lichess's canvas is hidden only once ours is in (.cdc-dist-on). */
 
 /* ---- Page --- */
 
@@ -12,7 +12,7 @@
   line-height: 1.5;
 }
 
-/* The rating's icon (theme.css's), a little smaller. */
+/* The rating's icon (from theme/), a little smaller. */
 .rating-stats .desc::before {
   flex: none;
   margin: 0 !important;

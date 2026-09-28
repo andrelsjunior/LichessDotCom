@@ -5,9 +5,9 @@ import { onEveryTick } from '#content/sync-loop.ts';
 import { finishedGame, type FinishedGame } from './move-times.ts';
 import { newGameLabel } from './time-control.ts';
 
-// A "New 10 min" button next to Rematch (styles/game.css). Lichess only
-// offers "New opponent" for lobby and pool games; elsewhere we add a button
-// doing what it does, a lobby seek like this game (`/?hook_like=<id>`).
+// A "New 10 min" button next to Rematch (styles/game/game-over.css). Lichess
+// only offers "New opponent" for lobby and pool games; elsewhere we add a
+// button doing what it does, a lobby seek like this game (`/?hook_like=<id>`).
 // Either one gets the time control as its label.
 
 export function syncNewGame(game: FinishedGame | null): void {

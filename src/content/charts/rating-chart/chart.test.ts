@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod/mini';
-import { fakeLayout } from '#shared/charts/fake-layout.ts';
 import { queryOne } from '#shared/dom.ts';
 import { StorageKey } from '#shared/storage.ts';
+import { fakeLayout } from '#shared/testing/layout.ts';
 import { ratingChart } from './index.ts';
 // The original script's chart through the same clicks, hovers and resizes.
 import legacy from './fixtures/legacy-chart.json' with { type: 'json' };

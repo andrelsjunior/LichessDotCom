@@ -75,8 +75,9 @@
 
   /* ---- Board tools --- */
 
-  /* content.js's tools in the gap right of the board: the cog, and the flip button while
-   * the pointer is over the board. The cog replaces the move bar's menu button. */
+  /* Our board tools (content/game/board-tools.ts) in the gap right of the board: the cog, and
+   * the flip button while the pointer is over the board. The cog replaces the move bar's menu
+   * button. */
   main.round :is(i5d, rm6) bo3 .board-menu-toggle-btn {
     display: none !important;
   }
@@ -178,7 +179,7 @@ html.light #zenzone .zen-home {
 }
 
 /* Lichess draws clock faces behind the clock (`z-index: -1`) and from 800px lifts only the
- * bottom one over the page background (painted by theme.css): the top one vanished. */
+ * bottom one over the page background (painted by theme/): the top one vanished. */
 @media (min-width: 799.3px) and (max-width: 1019.98px),
   (max-width: 1019.98px) and (orientation: landscape) {
   main.round .rclock-top {

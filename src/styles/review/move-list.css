@@ -1,7 +1,7 @@
 /* ---- Move list --- */
 
 @media (min-width: 1020px) {
-  /* Stripes per move number (data-cdc-even, from review.js): the comment cards in
+  /* Stripes per move number (data-cdc-even, from the review): the comment cards in
      between vary in height. */
   html.cdc-review-moves main.analyse .tview2-column > [data-cdc-even] {
     background: #2a2926 !important;
@@ -117,7 +117,7 @@
 
   /* ---- Opening --- */
 
-  /* review.js appends the opening's name to Lichess's panel (a flex column); order puts
+  /* The review appends the opening's name to Lichess's panel (a flex column); order puts
      it between the engine and the moves. Signed out, there's none. */
   #cdc-opening {
     display: none;

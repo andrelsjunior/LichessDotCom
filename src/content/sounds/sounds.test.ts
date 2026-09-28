@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod/mini';
+import { flush } from '#shared/testing/timers.ts';
 import { sounds } from './index.ts';
 // What the original script fetched and posted, with the same failures.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
@@ -8,8 +9,6 @@ const PostedSchema = z.object({
   type: z.string(),
   sounds: z.record(z.string(), z.instanceof(ArrayBuffer)),
 });
-
-const flush = (): Promise<void> => new Promise(resolve => setTimeout(resolve, 0));
 
 const FAILING = new Set(['sounds/castle.mp3', 'sounds/game-end.mp3']);
 

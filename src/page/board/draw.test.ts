@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { queryOne } from '#shared/dom.ts';
+import { createShapeDrawer } from './draw.ts';
 import { renderBoard } from './fixtures/board-markup.ts';
 import { LegacySchema } from './fixtures/schema.ts';
-import { createShapeDrawer } from './draw.ts';
 import { setReviewArrows } from './review-arrows.ts';
 // What the original script drew for each frame, in this order.
 import legacyJson from './fixtures/legacy.json' with { type: 'json' };

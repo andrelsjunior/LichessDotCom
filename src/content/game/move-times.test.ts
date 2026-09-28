@@ -1,11 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { queryAll, queryOne } from '#shared/dom.ts';
+import { flush } from '#shared/testing/timers.ts';
 import { formatSpent, gameIdFrom, spentTimes } from './clock-times.ts';
 import { createMoveTimes } from './move-times.ts';
 // What the original script showed for each game, and how it wrote times.
 import legacy from './fixtures/legacy-move-times.json' with { type: 'json' };
-
-const flush = (): Promise<void> => new Promise(resolve => setTimeout(resolve, 0));
 
 const readMoves = (): { time: string | null; share: string | null }[] =>
   queryAll(document, 'kwdb:not(.empty)', HTMLElement).map(move => ({

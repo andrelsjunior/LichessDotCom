@@ -1,6 +1,6 @@
-import { extensionUrl } from '#content/platform/runtime.ts';
 import type { SoundFiles } from '#shared/protocol.ts';
 import { SOUND_NAMES, type SoundName } from '#shared/sounds.ts';
+import { extensionUrl } from '#content/platform/runtime.ts';
 
 // Lichess's CSP only lets audio play from its own domains, blob: and data:,
 // not from the extension. So the bundled sounds are read here, where the

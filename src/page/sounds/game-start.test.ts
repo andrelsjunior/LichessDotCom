@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/mini';
-import type { SoundName } from '#shared/sounds.ts';
 import { createElement } from '#shared/dom.ts';
+import type { SoundName } from '#shared/sounds.ts';
+import { setReadyState } from '#shared/testing/ready-state.ts';
 import { freshGameId, watchGameStart } from './game-start.ts';
 import { createSession, type SoundSession } from './session.ts';
 // Whether the original played the game start for each page, in this order.
@@ -25,10 +26,6 @@ function addInitData(text: string): void {
 function listen(session: SoundSession, played: SoundName[]): void {
   session.playOurs = name => played.push(name);
 }
-
-const setReadyState = (state: DocumentReadyState): void => {
-  Object.defineProperty(document, 'readyState', { value: state, configurable: true });
-};
 
 afterEach(() => {
   document.body.replaceChildren();

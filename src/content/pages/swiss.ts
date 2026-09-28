@@ -2,7 +2,7 @@ import { queryAll, queryOne, setData, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 
-// Swiss tournaments (styles/swiss.css, swiss-show.css). Their pages are
+// Swiss tournaments (styles/swiss/, styles/swiss-show/). Their pages are
 // server-rendered, so styling Lichess's elements is safe.
 
 const MEDALS: ReadonlySet<string> = new Set(['1', '2', '3']);

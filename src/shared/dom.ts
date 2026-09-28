@@ -80,8 +80,20 @@ export function setData(
   }
 }
 
-/** Sets a CSS custom property only when it changes. */
-export function setStyleProperty(element: HTMLElement, name: string, value: string | null): void {
+/**
+ * Sets a data attribute that reads as empty when absent: an empty value
+ * clears one already there, but doesn't add it.
+ */
+export function setDataText(element: HTMLElement | SVGElement, key: string, value: string): void {
+  if ((element.dataset[key] ?? '') !== value) element.dataset[key] = value;
+}
+
+/** Sets an inline style property (a custom one, or any other) only when it changes. */
+export function setStyleProperty(
+  element: HTMLElement | SVGElement,
+  name: string,
+  value: string | null,
+): void {
   const current = element.style.getPropertyValue(name);
   if (value === null) {
     if (current !== '') element.style.removeProperty(name);

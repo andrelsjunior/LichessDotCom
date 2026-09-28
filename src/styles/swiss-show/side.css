@@ -67,7 +67,7 @@ main.swiss .swiss__meta section[data-icon]:first-child p + p a {
   color: var(--cdc-text-dim) !important;
 }
 
-/* The rounds as a progress bar; content.js sets --cdc-progress. */
+/* The rounds as a progress bar; content/pages/swiss.ts sets --cdc-progress. */
 main.swiss .swiss__meta p[style*='--cdc-progress']::after {
   content: '';
   display: block;

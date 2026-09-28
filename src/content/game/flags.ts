@@ -1,8 +1,7 @@
 import { z } from 'zod/mini';
-import { queryAll } from '#shared/dom.ts';
+import { queryAll, setDataText } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
-import { setDataText } from '#content/ui/data-text.ts';
 import { flagEmoji } from './flag-emoji.ts';
 
 // Country flags in the player bars (styles/playerbar.css). The round data has

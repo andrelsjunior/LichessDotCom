@@ -1,11 +1,12 @@
+import type { Point } from '#shared/geometry.ts';
+import { clamp } from '#shared/math.ts';
+
 // The radar's shape, in viewBox units: the SVG scales, so only proportions matter.
 
 export const RADIUS = 100;
 export const RINGS = 4;
 // The smallest share of the radius a point is drawn at, so a low score stays visible.
 const MIN_SHARE = 0.06;
-
-export type Point = readonly [number, number];
 
 /** Corner `index` of a regular polygon, starting at the top as Chart.js does. */
 export function vertex(index: number, corners: number, radius: number): Point {
@@ -34,9 +35,9 @@ export function bounds(values: readonly number[]): readonly [number, number] {
 
 /** Where each value sits on its spoke. */
 export function plotPoints(values: readonly number[]): Point[] {
-  const [lo, hi] = bounds(values);
+  const [low, high] = bounds(values);
   return values.map((value, i) => {
-    const share = Math.min(Math.max((value - lo) / (hi - lo), MIN_SHARE), 1);
+    const share = clamp((value - low) / (high - low), MIN_SHARE, 1);
     return vertex(i, values.length, RADIUS * share);
   });
 }

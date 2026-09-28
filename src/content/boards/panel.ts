@@ -25,7 +25,7 @@ export function markPanel(panel: HTMLElement, picker: Picker): void {
     item.classList.toggle('active', item.dataset.id === current);
 }
 
-export function showView(panel: HTMLElement, view: View): void {
+function showView(panel: HTMLElement, view: View): void {
   setData(panel, 'cdcView', view);
   for (const tab of queryAll(panel, '.cdc-src-tabs button', HTMLElement))
     tab.classList.toggle('active', tab.dataset.view === view);

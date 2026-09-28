@@ -1,18 +1,12 @@
 import { steps } from '#shared/charts/steps.ts';
+import type { Padding } from '#shared/geometry.ts';
 import { DAY_MS } from './dates.ts';
 import type { SampledSeries, Samples } from './sampling.ts';
 
-interface Padding {
-  readonly top: number;
-  readonly right: number;
-  readonly bottom: number;
-  readonly left: number;
-}
-
 // Room for the ratings on the left and the dates below.
-export const PAD: Padding = { top: 14, right: 14, bottom: 28, left: 46 };
+export const PADDING: Padding = { top: 14, right: 14, bottom: 28, left: 46 };
 export const HEIGHT = 300;
-const PLOT_HEIGHT = HEIGHT - PAD.top - PAD.bottom;
+const PLOT_HEIGHT = HEIGHT - PADDING.top - PADDING.bottom;
 
 const STEPS: readonly number[] = [5, 10, 20, 25, 50, 100, 150, 200, 250, 300, 400, 500, 1000];
 
@@ -56,14 +50,15 @@ export function scalePlot(layout: Layout, hidden: ReadonlySet<number>): Plot {
   const shown = layout.rows.filter(row => !hidden.has(row.index));
   const values = shown.flatMap(row => row.values.filter(value => value !== null));
   const ratings = niceTicks(Math.min(...values), Math.max(...values));
-  const plotWidth = layout.width - PAD.left - PAD.right;
+  const plotWidth = layout.width - PADDING.left - PADDING.right;
   const span = Math.max(DAY_MS, layout.end - layout.start);
   return {
     ...layout,
     shown,
     ratings,
-    bottom: PAD.top + PLOT_HEIGHT,
-    x: time => PAD.left + ((time - layout.start) / span) * plotWidth,
-    y: rating => PAD.top + (1 - (rating - ratings.min) / (ratings.max - ratings.min)) * PLOT_HEIGHT,
+    bottom: PADDING.top + PLOT_HEIGHT,
+    x: time => PADDING.left + ((time - layout.start) / span) * plotWidth,
+    y: rating =>
+      PADDING.top + (1 - (rating - ratings.min) / (ratings.max - ratings.min)) * PLOT_HEIGHT,
   };
 }

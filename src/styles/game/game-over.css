@@ -7,7 +7,8 @@
     content: '.';
   }
 
-  /* Move times (content.js): a bar growing left, then the time; White's above, Black's below.
+  /* Move times (content/game/move-times.ts): a bar growing left, then the time; White's above,
+   * Black's below.
    * Absolute against the list so they scroll with it; with no `top`, each stays on its row. */
   main.round :is(i5d, rm6) :is(aPp, l4x)[data-cdc-times] {
     position: relative;
@@ -83,7 +84,7 @@
   }
 
   /* Game Review: Lichess's analysis link, always the last button. It opens the analysis
-   * page, where review.js starts the review. */
+   * page, where page/review/ starts the review. */
   html {
     --cdc-t-review: 'Game Review';
   }

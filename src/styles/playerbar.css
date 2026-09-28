@@ -36,7 +36,7 @@
     background: var(--cdc-avatar);
   }
 
-  /* The computer's side (data-cdc-ai, from content.js) gets the monitor avatar. */
+  /* The computer's side (data-cdc-ai, from content/game/ai-players.ts) gets the monitor avatar. */
   html[data-cdc-ai~='white']:not([data-cdc-has~='round-black']) main.round .ruser-bottom::before,
   html[data-cdc-ai~='white'][data-cdc-has~='round-black'] main.round .ruser-top::before,
   html[data-cdc-ai~='black']:not([data-cdc-has~='round-black']) main.round .ruser-top::before,
@@ -131,7 +131,7 @@
     content: ')';
   }
 
-  /* Country flag right after the name (data-cdc-flag, from content.js). */
+  /* Country flag right after the name (data-cdc-flag, from content/game/flags.ts). */
   :is(main.round .ruser, main.analyse > .cdc-player) :is(rating, good, bad) {
     order: 2;
   }
@@ -145,7 +145,8 @@
 
   /* ---- Captured pieces --- */
 
-  /* Built by content.js: the pieces taken, grouped by type, then the material lead. */
+  /* Built by content/game/captured.ts: the pieces taken, grouped by type, then the material
+   * lead. */
   :is(main.round, main.analyse) > .cdc-captured {
     justify-self: start;
     align-self: start;

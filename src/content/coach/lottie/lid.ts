@@ -1,8 +1,9 @@
+import type { Point } from '#shared/geometry.ts';
 import { LID_SKIN } from './constants.ts';
 import { lerp, openPath, outline, valueAt } from './geometry.ts';
 import { verticalGradient } from './primitives.ts';
 import type { RigEye } from './rig.ts';
-import type { BezierPath, GradientFillItem, Point } from './types.ts';
+import type { BezierPath, GradientFillItem } from './types.ts';
 
 // An upper lid: its shapes at any closure, and its skin.
 

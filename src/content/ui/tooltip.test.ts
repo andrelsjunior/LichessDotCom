@@ -1,4 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { rectAt } from '#shared/testing/layout.ts';
 import { splitShortcut } from './tooltip-layout.ts';
 import { listenForTooltips, Tooltip } from './tooltip.ts';
 // The tooltips as the original placed them.
@@ -10,9 +11,6 @@ interface BoxInput {
   readonly width: number;
   readonly height: number;
 }
-
-const rect = ({ top, left, width, height }: BoxInput): DOMRect =>
-  new DOMRect(left, top, width, height);
 const shown = (): Element | null => document.querySelector('.cdc-tooltip.cdc-tooltip--on');
 
 function addButton(
@@ -22,7 +20,7 @@ function addButton(
   document.body.insertAdjacentHTML('beforeend', `<main><button ${attrs}></button></main>`);
   const button = document.querySelector('main:last-of-type > button');
   if (!(button instanceof HTMLElement)) throw new Error('no button');
-  button.getBoundingClientRect = () => rect(box);
+  button.getBoundingClientRect = () => rectAt(box);
   return button;
 }
 
@@ -44,7 +42,7 @@ beforeEach(() => {
   // The buttons have their own box (addButton); this one is the tooltip's.
   const size = legacy.size;
   vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
-    rect({ top: 0, left: 0, ...size }),
+    rectAt({ top: 0, left: 0, ...size }),
   );
 });
 

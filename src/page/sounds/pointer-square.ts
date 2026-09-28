@@ -1,15 +1,9 @@
 import { squareAt } from '#shared/chess/squares.ts';
 import type { Color, Square } from '#shared/chess/types.ts';
-
-interface Rect {
-  readonly left: number;
-  readonly top: number;
-  readonly width: number;
-  readonly height: number;
-}
+import type { Box } from '#shared/geometry.ts';
 
 export interface PointerOnBoard {
-  readonly rect: Rect;
+  readonly rect: Pick<Box, 'left' | 'top' | 'width' | 'height'>;
   readonly x: number;
   readonly y: number;
   readonly orientation: Color;

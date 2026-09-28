@@ -1,9 +1,10 @@
 import { closestTo, queryAll, setData } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
-import { fitCard, ratingState, ratingText } from './card-fit.ts';
+import { fitCard } from './card-fit.ts';
+import { ratingState, ratingText } from './card-ratings.ts';
 
-// The profile hover card (styles/powertip.css). Lichess rebuilds its HTML on
+// The profile hover card (styles/powertip/). Lichess rebuilds its HTML on
 // every hover, so an observer catches each new one before it's painted:
 // polling would show Lichess's markup first.
 

@@ -1,4 +1,5 @@
-import { BIN_SIZE, clamp, MIN_RATING } from './scales.ts';
+import { clamp } from '#shared/math.ts';
+import { BIN_SIZE, MIN_RATING } from './scales.ts';
 import type { DistributionData } from './schema.ts';
 
 /** The players per column, and what the chart reads off them. */

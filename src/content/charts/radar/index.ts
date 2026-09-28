@@ -8,8 +8,8 @@ import { DashboardInitSchema } from './schema.ts';
 
 // The puzzle dashboard's theme radar (/training/dashboard). Lichess draws it
 // with Chart.js into a canvas, out of reach of CSS; we draw it again in SVG
-// from the same data. styles/dashboard.css only hides Lichess's canvas once
-// ours is in, so if the data ever changes shape the page keeps theirs.
+// from the same data. styles/dashboard/radar.css only hides Lichess's canvas
+// once ours is in, so if the data ever changes shape the page keeps theirs.
 
 function draw(text: string | null): void {
   const host = queryOne(document, '.puzzle-dashboard__global', HTMLElement);

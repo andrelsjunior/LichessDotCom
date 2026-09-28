@@ -126,7 +126,7 @@
     background: #ffffff14;
   }
 
-  /* A light tile under a black king, painted by the king (see puzzle.css). */
+  /* A light tile under a black king, painted by the king (see puzzle/). */
   main.analyse .gamebook .feedback.play .no-square > piece.black {
     border-radius: 8px;
     background-color: #ffffffd9;

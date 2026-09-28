@@ -3,11 +3,11 @@ import { closestTo, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { readStored, removeStored, StorageKey, writeStored } from '#shared/storage.ts';
 
-// The board's size (game.css, analysis.css, puzzle.css): as big as the window
-// allows unless resized by hand. Lichess's own zoom pref may date from its
-// layout, so it's not used: a drag on the board's handle starts from our size,
-// and the `---zoom` it sets on <body> is copied to `--cdc-zoom` and kept under
-// our own key. Dragged back to full, the key goes.
+// The board's size: all the room the game, analysis or puzzle layout gives it,
+// unless resized by hand (styles/board/pieces.css). Lichess's own zoom pref may
+// date from its layout, so it's not used: a drag on the board's handle starts
+// from our size, and the `---zoom` it sets on <body> is copied to `--cdc-zoom`
+// and kept under our own key. Dragged back to full, the key goes.
 
 const FULL = 100;
 

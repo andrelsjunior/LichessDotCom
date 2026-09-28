@@ -1,10 +1,10 @@
-import { extensionUrl } from '#content/platform/runtime.ts';
 import { setData, setStyleProperty } from '#shared/dom.ts';
+import { extensionUrl } from '#content/platform/runtime.ts';
 import { BOARDS, boardPath, PIECE_CODES, PIECE_SETS, piecePath } from './catalog.ts';
 
-// The pick goes on <html> for styles/board.css. The default green board is
-// board.css's own drawing, crisper than an image, and the Neo pieces are its
-// fallbacks: only the other boards and sets set variables.
+// The pick goes on <html> for styles/board/pieces.css. The default green board
+// is that stylesheet's own drawing, crisper than an image, and the Neo pieces
+// are its fallbacks: only the other boards and sets set variables.
 
 type Variables = Readonly<Record<string, string | null>>;
 

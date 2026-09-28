@@ -1,5 +1,5 @@
 /* Puzzle dashboard (/training/dashboard): a header with the range picker, stat tiles, and
- * the theme radar, redrawn by dashboard.js. */
+ * the theme radar, redrawn by content/charts/radar/. */
 
 /* The replay tile's triangle; its check reuses `--cdc-check` (dropdowns). */
 :root {

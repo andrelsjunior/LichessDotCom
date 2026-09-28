@@ -6,9 +6,9 @@ import { parseJson } from '#shared/json.ts';
 import { readPageInitData } from '#shared/page-init-data.ts';
 
 // The color(s) the computer plays, in `data-cdc-ai` on <html>: its player bar
-// gets the "Play the computer" monitor as its avatar (playerbar.css). Lichess
-// draws that bar like an anonymous player's; only the game's data tells them
-// apart. Its level's rating goes in `--cdc-ai-<color>` for the bar, and to
+// gets the "Play the computer" monitor as its avatar (styles/playerbar.css).
+// Lichess draws that bar like an anonymous player's; only the game's data tells
+// them apart. Its level's rating goes in `--cdc-ai-<color>` for the bar, and to
 // the game info (game-meta.ts).
 
 // Lichess gives its levels no rating: these are the usual estimates of what

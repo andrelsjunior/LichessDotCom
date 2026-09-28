@@ -10,7 +10,7 @@
     --cdc-v-room: 56px;
     /* Board sized as if the panel were at its minimum; the panel takes the rest, up to 500px. */
     --cdc-panel-min: 300px;
-    /* Resizable like the game page's board (game.css). */
+    /* Resizable like the game page's board (game/). */
     --cdc-board: max(
       320px,
       calc(
@@ -28,7 +28,7 @@
     );
     --cdc-stage: calc(var(--cdc-board) + 2 * var(--cdc-bar) + var(--cdc-coords-off));
     --cdc-chat-h: min(clamp(180px, 30vh, 320px), calc(var(--cdc-board) * 0.4));
-    --cdc-ctrl-h: var(--cdc-controls-h, 48px); /* measured by content.js */
+    --cdc-ctrl-h: var(--cdc-controls-h, 48px); /* content/layout/controls-height.ts */
 
     display: grid !important;
     grid-template-columns: auto var(--cdc-board) calc(var(--cdc-panel-w) + var(--cdc-gap)) !important;
@@ -53,7 +53,7 @@
     margin: var(--cdc-bar) 0 0 !important;
   }
 
-  /* Placed like the Game Review's bar (review.css), which replaces it: level with the squares. */
+  /* Placed like the Game Review's bar (review/), which replaces it: level with the squares. */
   main.analyse .eval-gauge {
     --cdc-gauge-w: 26px;
     grid-area: gauge !important;
@@ -63,8 +63,9 @@
 
   /* ---- Player bars --- */
 
-  /* A game gets the game page's player bars (playerbar.css): ours for the players (content.js),
-   * Lichess's clock strips grown into bars. The board shrinks; a lesson has none. */
+  /* A game gets the game page's player bars (playerbar.css): ours for the players
+   * (content/analysis/players.ts), Lichess's clock strips grown into bars. The board shrinks;
+   * a lesson has none. */
   html:is([data-cdc-has~='analyse-players'], [data-cdc-has~='analyse-clock']):not(
       [data-cdc-has~='practice']
     )
@@ -82,7 +83,7 @@
     --cdc-coords-off: calc(1.2 * var(--cdc-coords-size, 13px) + 8px);
   }
 
-  /* Room for the ranks left of the board (board.css). */
+  /* Room for the ranks left of the board (board/). */
   body:is(.coords-in, .coords-out) main.analyse {
     --cdc-gauge-gap: calc(0.6 * var(--cdc-coords-size, 13px) + 18px);
   }
@@ -286,7 +287,7 @@
     box-shadow: inset 0 -2px 0 #fff;
   }
 
-  /* The underline slides (see "sliding tabs" in theme.css). */
+  /* The underline slides (see "Sliding tabs" in theme/). */
   main.analyse > .mchat .mchat__tabs[data-cdc-tabs] .mchat__tab-active {
     box-shadow: none;
   }

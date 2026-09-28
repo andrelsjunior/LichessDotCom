@@ -98,7 +98,7 @@
   color: var(--cdc-green-hover) !important;
 }
 
-/* The title badge itself comes from theme.css. */
+/* The title badge itself comes from theme/. */
 #powerTip .upt__info__top .user-link .utitle {
   margin-inline-end: 4px;
 }
@@ -164,7 +164,7 @@
 /* ---- Ratings --- */
 
 /* The eight best perfs as chips, four to a row, in the dim grey of board ratings.
-   content.js strips the non-breaking spaces Lichess pads them with. */
+   content/ui/powertip.ts strips the non-breaking spaces Lichess pads them with. */
 #powerTip .upt__info__ratings {
   grid-column: 1 / -1;
   display: grid !important;

@@ -1,5 +1,5 @@
 import { z } from 'zod/mini';
-import { lenient } from '#shared/charts/lenient.ts';
+import { lenient } from '#shared/zod.ts';
 
 // The distribution page's init data (ui/chart/src/ratingDistribution.ts).
 export const DistributionSchema = z.object({

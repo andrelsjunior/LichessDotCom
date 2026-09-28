@@ -262,7 +262,7 @@ main.forum-topic .markdown-editor .header-tab.active::after {
   display: none;
 }
 
-/* The pill slides from one to the other (see "sliding tabs" in theme.css). */
+/* The pill slides from one to the other (see "Sliding tabs" in theme/). */
 main.forum-topic .markdown-editor .header[data-cdc-tabs] {
   --cdc-tab-radius: 999px;
   --cdc-tab-shadow: none;

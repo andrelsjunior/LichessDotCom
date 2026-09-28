@@ -79,8 +79,19 @@ function fakeChrome({ manifest, storage = true, files }: FakeOptions): Fake {
 }
 
 const realSetTimeout = setTimeout;
-// crypto.subtle answers from another thread: wait in real time.
-const settle = (): Promise<void> => new Promise(resolve => realSetTimeout(resolve, 30));
+const pause = (ms: number): Promise<void> => new Promise(resolve => realSetTimeout(resolve, ms));
+
+// crypto.subtle answers from another thread, in real time: wait for what the
+// worker is about to do rather than for a fixed delay.
+async function until(done: () => boolean): Promise<void> {
+  for (let waited = 0; !done(); waited += 5) {
+    if (waited > 5000) throw new Error('the worker never answered');
+    await pause(5);
+  }
+}
+
+// For a step that must not produce anything: long enough to see a stray answer.
+const settle = (): Promise<void> => pause(30);
 
 async function ask(
   fake: Fake,
@@ -90,7 +101,9 @@ async function ask(
   let kept: unknown;
   for (const listener of fake.listeners.message)
     kept = listener(message, {}, (response: unknown) => responses.push(response));
-  await settle();
+  // A listener that keeps the channel open answers later.
+  if (kept === true) await until(() => responses.length > 0);
+  else await settle();
   return kept === undefined ? { responses } : { kept, responses };
 }
 
@@ -132,7 +145,7 @@ describe('the background worker', () => {
     const fake = await startWorker({ manifest: CHROME_MANIFEST, files: disk });
     const listeners = count(fake);
     for (const listener of fake.listeners.installed) listener({ reason: 'install' });
-    await settle();
+    await until(() => fake.session['dev:loaded'] !== undefined);
     const loaded = fake.session['dev:loaded'];
     const steps: unknown[] = [];
     const reloads = (): number => fake.log.filter(entry => entry.event === 'reload').length;

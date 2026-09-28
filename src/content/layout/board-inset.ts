@@ -1,12 +1,13 @@
-import { onEveryTick } from '#content/sync-loop.ts';
 import { queryOne, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
+import type { Box } from '#shared/geometry.ts';
+import { onEveryTick } from '#content/sync-loop.ts';
 
 // Chessground shrinks the board to whole pixels per square and leaves the rest
 // as an inset inside its wrapper. `--cdc-inset-{t,r,b,l}` let the player bars
 // and the eval bar line up with the squares rather than the wrapper.
 
-type Edges = Pick<DOMRectReadOnly, 'top' | 'right' | 'bottom' | 'left'>;
+type Edges = Pick<Box, 'top' | 'right' | 'bottom' | 'left'>;
 
 export type Inset = Readonly<Record<'t' | 'r' | 'b' | 'l', number>>;
 

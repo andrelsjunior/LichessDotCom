@@ -1,7 +1,7 @@
 /* Lichess's top header as a fixed left sidebar, from 1020px.
  * Below that, Lichess's hamburger menu is left alone. */
 
-/* content.js's Donate item belongs to the desktop sidebar only. */
+/* Our Donate item (content/sidebar/donate.ts) belongs to the desktop sidebar only. */
 #cdc-donate {
   display: none;
 }

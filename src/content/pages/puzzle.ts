@@ -1,11 +1,10 @@
 import type { Color } from '#shared/chess/types.ts';
-import { queryOne, setData } from '#shared/dom.ts';
+import { queryOne, setData, setDataText } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
-import { setDataText } from '#content/ui/data-text.ts';
 
-// Lichess's eval bar drawn like the Game Review's (styles/board.css), and the
-// puzzle's session chips.
+// Lichess's eval bar drawn like the Game Review's
+// (styles/board/coordinates.css), and the puzzle's session chips.
 
 export interface GaugeScore {
   /** Short: "1.2", "M3", or '' when there's no score. */
