@@ -8,16 +8,24 @@ are kept. 700 MB of a month is about 230k of them:
       | zstdcat | python3 tools/game-rating/extract.py - openings/ > moves.jsonl
 (zstdcat complains that the slice ends mid-frame: expected.) openings/
 holds lichess-org/chess-openings' a.tsv … e.tsv, for the book moves. Then
-fit.py turns moves.jsonl into the tables in review.js.
+fit.py turns moves.jsonl into src/page/review/rating/model.json.
 
-Each move is judged as src/review.js does (the same win% curve, the win%
+Each move is judged as src/page/review/judge does (the same win% curve, the win%
 it lost, book moves by Lichess's opening names), and put in the same phase: the
 phase of the position it was played from, by Lichess's own divider
 (scalachess Divider.scala), a middlegame move being "tactics" when the
-position had a tactic in it (see `tactical`). The two must stay in step.
+position had a tactic in it (see `tactical`, src/page/review/rating/tactical.ts).
+The two must stay in step.
 """
-import io, json, math, multiprocessing, os, sys
-import chess, chess.pgn
+import io
+import json
+import math
+import multiprocessing
+import os
+import sys
+
+import chess
+import chess.pgn
 
 VALUES = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK: 5, chess.QUEEN: 9, chess.KING: 100}
 
@@ -74,7 +82,7 @@ def division(boards):
 def hanging(b):
     """A piece (not a pawn or the king) either side could win: attacked, and
     undefended or attacked by something cheaper. Pins are ignored, as in
-    review.js's `attackers`."""
+    the review's `attackerValues` (src/page/review/chess/material.ts)."""
     for sq, p in b.piece_map(mask=b.knights | b.bishops | b.rooks | b.queens).items():
         hits = [VALUES[b.piece_type_at(s)] for s in b.attackers(not p.color, sq)]
         if not hits:

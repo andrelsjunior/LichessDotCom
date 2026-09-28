@@ -1,11 +1,11 @@
 """Step 2 of the Game Review's game rating calibration: fits, on extract.py's
 output, how often a player of each rating loses how much win% on a move,
-and writes it into src/review.js (its RATING_MODEL line).
+and writes it into src/page/review/rating/model.json.
 
 Needs numpy and scipy:
-    python3 tools/game-rating/fit.py moves.jsonl
+    python3 tools/game-rating/fit.py moves.jsonl && pnpm format
 
-The model, per speed: a move falls in one of review.js's loss bands (best,
+The model, per speed: a move falls in one of the review's loss bands (best,
 excellent, good, inaccuracy, mistake, blunder), with odds that depend on the
 player's rating, the phase the move was played in (opening, tactics,
 strategy, endgame) and whether the mover was lost, level or winning (in a
@@ -15,8 +15,12 @@ around the player's rating, with a width (tau) fitted on held-out games:
 the posterior's mean is the game rating. Without a rating (an anonymous
 player), the population is the prior.
 """
-import json, math, os, re, sys
+import json
+import math
+import os
+import sys
 from collections import defaultdict
+
 import numpy as np
 from scipy.optimize import minimize
 
@@ -24,7 +28,7 @@ SPEEDS = ['bullet', 'blitz', 'rapid', 'classical']
 SPEED_OF = {'ultraBullet': 'bullet', 'bullet': 'bullet', 'blitz': 'blitz', 'rapid': 'rapid',
             'classical': 'classical', 'correspondence': 'classical'}
 PHASES = 'otse'  # opening, tactics, strategy, endgame
-BANDS = [0.5, 2, 5, 10, 20]  # review.js's loss thresholds
+BANDS = [0.5, 2, 5, 10, 20]  # the review's loss thresholds (rating/rate-game.ts)
 LO, HI = -1.6, 2.2  # the quadratic's range in x = (R - 1500) / 500, linear beyond
 GRID = np.arange(100, 3201, 10)
 
@@ -135,7 +139,7 @@ def main(path):
         # Without a rating, the population is the prior: how well the
         # estimate then tells the players' ratings.
         e0 = np.array([estimate(ll, mu, math.hypot(sd, tau)) for ll in lls])
-        model[s] = dict(theta=theta, tau=tau, mu=mu, sd=sd, pd=pd)
+        model[s] = {'theta': theta, 'tau': tau, 'mu': mu, 'sd': sd, 'pd': pd}
         report.append(f'{s}: {len(rows)} player-games, tau {tau}, unrated r {np.corrcoef(e0, rt)[0, 1]:.2f}, '
                       f'estimate - rating: sd {diffs.std():.0f}, 5-95% {np.percentile(diffs, 5):.0f} .. {np.percentile(diffs, 95):.0f}')
     # The phase verdicts, from best to blunder: shares of all phases played.
@@ -152,14 +156,10 @@ def main(path):
         'cuts': cuts,
         'theta': {s: [[r3(k) for k in c] for c in model[s]['theta']] for s in SPEEDS},
     }
-    path = os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'review.js')
-    with open(path) as f:
-        src = f.read()
-    line = '  const RATING_MODEL = ' + json.dumps(out, separators=(',', ':')) + ';'
-    src, n = re.subn(r'^  const RATING_MODEL = .*;$', lambda _: line, src, count=1, flags=re.M)
-    assert n == 1, 'no RATING_MODEL line in review.js'
+    # Written compact: `pnpm format` lays it out as the repo's formatter wants.
+    path = os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'page', 'review', 'rating', 'model.json')
     with open(path, 'w') as f:
-        f.write(src)
+        f.write(json.dumps(out, separators=(',', ':')) + '\n')
 
 
 if __name__ == '__main__':
