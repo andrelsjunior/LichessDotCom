@@ -58,6 +58,7 @@
     "eslint/prefer-const": "error",
     "eslint/no-shadow": "off",
     "import/no-cycle": "error",
+    "promise/valid-params": "off",
     "import/no-duplicates": "error",
     "import/no-self-import": "error",
     "typescript/await-thenable": "error",

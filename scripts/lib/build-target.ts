@@ -14,6 +14,13 @@ const SCRIPTS = [
   { input: 'src/page/index.ts', output: OUTPUT.page },
 ];
 
+// The coach imports lottie's typed light player; bundle its production build.
+const ALIASES = {
+  'lottie-web/build/player/lottie_light': fromRoot(
+    'node_modules/lottie-web/build/player/lottie_light.min.js',
+  ),
+};
+
 // Third-party code bundled into the scripts ships with its license.
 const LICENSES = [{ from: 'node_modules/lottie-web/LICENSE.md', to: 'licenses/lottie-web.md' }];
 
@@ -21,7 +28,7 @@ export interface BuildOptions {
   readonly target: Target;
   readonly out: string;
   readonly version: string;
-  /** No source maps: what the stores get. */
+  /** Minified, without source maps: what the stores get. */
   readonly release: boolean;
 }
 
@@ -32,7 +39,13 @@ async function bundleScripts({ out, release }: BuildOptions): Promise<void> {
         input: fromRoot(input),
         platform: 'browser',
         logLevel: 'warn',
-        output: { file: path.join(out, output), format: 'iife', sourcemap: !release },
+        resolve: { alias: ALIASES },
+        output: {
+          file: path.join(out, output),
+          format: 'iife',
+          sourcemap: !release,
+          minify: release,
+        },
       }),
     ),
   );
