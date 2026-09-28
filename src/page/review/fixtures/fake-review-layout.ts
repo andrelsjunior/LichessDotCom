@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 
 // Test support: sizes for what the review measures, as a desktop layout would
 // give them (happy-dom lays nothing out). A comment of more than 22 words
-// overflows its bubble, so its droppable sentence goes.
+// overflows its bubble, so its droppable sentence is dropped.
 
 type Metric = 'clientWidth' | 'clientHeight' | 'scrollHeight' | 'offsetWidth' | 'offsetHeight';
 

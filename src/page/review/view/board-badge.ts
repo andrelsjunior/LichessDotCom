@@ -9,7 +9,7 @@ import { classSvg } from '#page/review/classes/icon-svg.ts';
 // piece went to, and the arrows the review draws.
 
 export interface BadgeInput {
-  readonly cls: MoveClass;
+  readonly moveClass: MoveClass;
   /** The move that led to the board's position, in Lichess's notation. */
   readonly uci: string;
   readonly san: string;
@@ -29,10 +29,10 @@ export function screenCoords(square: string, orientation: Color): readonly [numb
   return orientation === 'white' ? [file, 7 - rank] : [7 - file, rank];
 }
 
-export function badgeMarkup({ cls, uci, san, orientation }: BadgeInput): SafeHtml {
+export function badgeMarkup({ moveClass, uci, san, orientation }: BadgeInput): SafeHtml {
   const [column, row] = screenCoords(landingSquare(uci, san), orientation);
   const style = `left:${(column + 1) * 12.5}%;top:${row * 12.5}%`;
-  return html`<div class="cdc-badge" style="${style}">${classSvg(cls)}</div>`;
+  return html`<div class="cdc-badge" style="${style}">${classSvg(moveClass)}</div>`;
 }
 
 function arrow(uci: string, brush: ReviewArrow['brush']): ReviewArrow[] {
@@ -43,7 +43,7 @@ function arrow(uci: string, brush: ReviewArrow['brush']): ReviewArrow[] {
 
 export interface ArrowsInput {
   /** The verdict on the board, if any. */
-  readonly cls: MoveClass | null;
+  readonly moveClass: MoveClass | null;
   /** The engine's best move instead of the one played. */
   readonly best: string | null;
   /** The engine's move from the position on the board, off the game's moves. */
@@ -51,8 +51,8 @@ export interface ArrowsInput {
 }
 
 /** The best move when the one played needed a correction, and the engine's move off the game. */
-export function reviewArrowsFor({ cls, best, engine }: ArrowsInput): ReviewArrow[] {
-  const arrows = cls && best && !GOOD.has(cls) ? arrow(best, 'best') : [];
+export function reviewArrowsFor({ moveClass, best, engine }: ArrowsInput): ReviewArrow[] {
+  const arrows = moveClass && best && !GOOD.has(moveClass) ? arrow(best, 'best') : [];
   if (engine) arrows.push(...arrow(engine, 'engine'));
   return arrows;
 }

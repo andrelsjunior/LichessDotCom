@@ -89,8 +89,8 @@ export const GOOD: ReadonlySet<MoveClass> = new Set<MoveClass>([
 ]);
 
 /** The moves the coach corrects: everything below good. */
-export const isError = (cls: MoveClass): boolean =>
-  !GOOD.has(cls) && cls !== 'excellent' && cls !== 'good';
+export const isError = (moveClass: MoveClass): boolean =>
+  !GOOD.has(moveClass) && moveClass !== 'excellent' && moveClass !== 'good';
 
 const MOODS: Partial<Record<MoveClass, CoachMood>> = {
   brilliant: 'delight',
@@ -104,4 +104,4 @@ const MOODS: Partial<Record<MoveClass, CoachMood>> = {
 };
 
 /** How the coach's face reacts to a verdict; null keeps it neutral. */
-export const classMood = (cls: MoveClass): CoachMood | null => MOODS[cls] ?? null;
+export const classMood = (moveClass: MoveClass): CoachMood | null => MOODS[moveClass] ?? null;

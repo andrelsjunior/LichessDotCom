@@ -9,10 +9,10 @@ import {
   isExplorer,
   type MasterOpening,
   MasterOpeningSchema,
-  method,
   type Player,
 } from './controller.ts';
 import { readSite } from './globals.ts';
+import { method } from './method.ts';
 import { isTreeNode, type TreeNode } from './tree.ts';
 
 // Lichess's analysis controller, `site.analysis` on analysis pages only, as
@@ -21,10 +21,9 @@ import { isTreeNode, type TreeNode } from './tree.ts';
 
 export type { GameData, MasterOpening, Player } from './controller.ts';
 
-type Toggle = (value?: boolean) => unknown;
-const isToggle = createGuard(method<Toggle>());
-const isRedraw = createGuard(method<() => unknown>());
-const isPlayUci = createGuard(method<(uci: string) => unknown>());
+const isToggle = createGuard(method<[value?: boolean]>());
+const isRedraw = createGuard(method<[]>());
+const isPlayUci = createGuard(method<[uci: string]>());
 
 function narrowNode(value: unknown): TreeNode {
   if (!isTreeNode(value)) throw new Error('Lichess’s analysis tree has an unexpected node');

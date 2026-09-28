@@ -4,12 +4,12 @@ import { nonEmpty } from '#shared/text.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 import {
   formatSpent,
-  gameIdFrom,
   GameExportSchema,
   spentTimes,
   type Clock,
   type GameExport,
 } from './clock-times.ts';
+import { gameIdFrom } from './game-id.ts';
 
 // Move times, once a game is over: the time spent on each move, with a bar
 // scaled to the longest think (styles/game/game-over.css). The move list is

@@ -6,7 +6,7 @@ import type { ReviewLanguage } from '#page/review/i18n/types.ts';
 // bubble has its final size at once. The UI owns the typing's timer; this
 // only draws a given moment of it.
 
-/** A sentence of the comment; a droppable one goes when the bubble lacks room. */
+/** A sentence of the comment. A droppable one is left out when the bubble lacks room. */
 export interface CommentPart {
   readonly text: string;
   readonly droppable: boolean;
@@ -17,7 +17,7 @@ export interface StreamState {
   readonly key: string;
   /** Words shown so far; Infinity for all of them. */
   readonly shown: number;
-  /** The droppable sentence didn't fit: it stays out of every redraw of this comment. */
+  /** The droppable sentence didn't fit, so every redraw of this comment leaves it out. */
   readonly dropped: boolean;
 }
 

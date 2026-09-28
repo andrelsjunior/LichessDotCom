@@ -1,10 +1,14 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/mini';
-import { PositionRecordSchema } from '#page/review/evaluation/score.ts';
+import type { PositionRecord } from '#page/review/evaluation/score.ts';
+import { StoredRecordCodec } from '#page/review/evaluation/stored.ts';
 import { en } from '#page/review/i18n/en.ts';
 import { UNIT_CASES } from '#page/review/fixtures/unit-cases.ts';
 import { builtSession } from '#page/review/fixtures/unit-review.ts';
+import { MODES, ModeSchema } from '#page/review/session.ts';
+import { PanelActionSchema } from './actions.ts';
 import { badgeMarkup, landingSquare, reviewArrowsFor, screenCoords } from './board-badge.ts';
+import { type AvatarInput, avatarMarkup, takeReaction } from './coach-avatar.ts';
 import { barPosition, type BarInput } from './eval-bar.ts';
 import { indexAt } from './graph.ts';
 import { graphMarkup, knownRuns } from './graph-markup.ts';
@@ -35,7 +39,7 @@ describe('the graph', () => {
   );
 
   it('splits the known positions into runs', () => {
-    const record = { cp: 0, wp: 50, wp2: null, best: null };
+    const record = { cp: 0, whiteWinChance: 50, secondLineWinChance: null, best: null };
     expect(knownRuns([record, record, null, record, null, null, record])).toEqual([
       [0, 1],
       [3],
@@ -54,7 +58,8 @@ describe('the graph', () => {
 });
 
 describe('markup', () => {
-  const RecordSchema = z.nullable(PositionRecordSchema);
+  // The chips' records, as the original was given them.
+  const RecordSchema = z.nullable(StoredRecordCodec);
 
   it.each(UNIT_CASES.chips.map((record, i) => [i, record, legacy.chips[i]]))(
     'draws score chip %i as the original did',
@@ -63,10 +68,19 @@ describe('markup', () => {
     },
   );
 
+  // The original wrote no back button as ''.
+  const BackSchema = z.union([
+    ModeSchema,
+    z.pipe(
+      z.literal(''),
+      z.transform(() => null),
+    ),
+  ]);
+
   it.each(UNIT_CASES.headers.map(([title = '', back = ''], i) => [title, back, legacy.headers[i]]))(
     'draws the header “%s” (back to %s) as the original did',
     (title, back, expected) => {
-      expect(header(title, back, en).value).toBe(expected);
+      expect(header(title, BackSchema.parse(back), en).value).toBe(expected);
     },
   );
 
@@ -96,10 +110,10 @@ describe('markup', () => {
   });
 });
 
-const record = (wp: number): { cp: number; wp: number; wp2: null; best: null } => ({
+const record = (whiteWinChance: number): PositionRecord => ({
   cp: 0,
-  wp,
-  wp2: null,
+  whiteWinChance,
+  secondLineWinChance: null,
   best: null,
 });
 
@@ -124,26 +138,26 @@ describe('the board', () => {
     expect(screenCoords('a1', 'white')).toEqual([0, 7]);
     expect(screenCoords('a1', 'black')).toEqual([7, 0]);
     expect(
-      badgeMarkup({ cls: 'best', uci: 'g1f3', san: 'Nf3', orientation: 'white' }).value,
+      badgeMarkup({ moveClass: 'best', uci: 'g1f3', san: 'Nf3', orientation: 'white' }).value,
     ).toMatch(/^<div class="cdc-badge" style="left:75%;top:62\.5%">/);
   });
 
   it('draws the best move for a move that needed it, and the engine’s off the game', () => {
-    expect(reviewArrowsFor({ cls: 'mistake', best: 'e2e4', engine: null })).toEqual([
+    expect(reviewArrowsFor({ moveClass: 'mistake', best: 'e2e4', engine: null })).toEqual([
       { orig: 'e2', dest: 'e4', brush: 'best' },
     ]);
-    expect(reviewArrowsFor({ cls: 'best', best: 'e2e4', engine: 'g8f6' })).toEqual([
+    expect(reviewArrowsFor({ moveClass: 'best', best: 'e2e4', engine: 'g8f6' })).toEqual([
       { orig: 'g8', dest: 'f6', brush: 'engine' },
     ]);
-    expect(reviewArrowsFor({ cls: null, best: null, engine: 'zz' })).toEqual([]);
+    expect(reviewArrowsFor({ moveClass: null, best: null, engine: 'zz' })).toEqual([]);
   });
 
   it('shows the eval bar’s score for the position on the board', () => {
-    expect(bar({})?.wp).toBe(60);
-    expect(bar({ bestBefore: record(10) })?.wp).toBe(10);
-    expect(bar({ onMainline: false, offGame: record(70) })?.wp).toBe(70);
+    expect(bar({})?.whiteWinChance).toBe(60);
+    expect(bar({ bestBefore: record(10) })?.whiteWinChance).toBe(10);
+    expect(bar({ onMainline: false, offGame: record(70) })?.whiteWinChance).toBe(70);
     // A move off the game waits for its engine with the last score.
-    expect(bar({ onMainline: false, last: record(33) })?.wp).toBe(33);
+    expect(bar({ onMainline: false, last: record(33) })?.whiteWinChance).toBe(33);
     expect(
       bar({ reviewing: false, onMainline: false, offGame: record(70), last: record(33) }),
     ).toBeNull();
@@ -192,5 +206,35 @@ describe('the panel', () => {
     expect(overflows({ scrollHeight: 45, clientHeight: 36, lineHeight: '18px' })).toBe(false);
     expect(overflows({ scrollHeight: 46, clientHeight: 36, lineHeight: '18px' })).toBe(true);
     expect(overflows({ scrollHeight: 46, clientHeight: 36, lineHeight: 'normal' })).toBe(true);
+  });
+});
+
+describe('the coach', () => {
+  it('pops its marks once per move and verdict', () => {
+    const coach = { id: 2, reacted: '', avatar: null };
+    expect(takeReaction(coach, 'blunder', '/?')).toBe(true);
+    expect(takeReaction(coach, 'blunder', '/?')).toBe(false);
+    expect(takeReaction(coach, 'blunder', '/?WG')).toBe(true);
+    // A verdict the face doesn't react to has no marks.
+    expect(takeReaction(coach, 'good', '/?WG.>')).toBe(false);
+    expect(takeReaction(coach, null, '/?')).toBe(false);
+  });
+
+  it('draws the same avatar for the same input', () => {
+    const input: AvatarInput = { coachId: 2, moveClass: 'blunder', react: true, label: 'Coach' };
+    const markup = avatarMarkup(input).value;
+    expect(avatarMarkup(input).value).toBe(markup);
+    expect(markup).toContain('cdc-coach__avatar--react');
+    expect(markup).toContain('data-cdc-coach-id="2" data-cdc-mood="shock"');
+  });
+});
+
+describe('the buttons', () => {
+  it('read their actions, and nothing else', () => {
+    expect(MODES).toEqual(['normal', 'summary', 'moves', 'live']);
+    for (const action of [...MODES, 'play', 'best', 'coach'])
+      expect(PanelActionSchema.safeParse(action).success).toBe(true);
+    expect(PanelActionSchema.safeParse('replay').success).toBe(false);
+    expect(PanelActionSchema.safeParse(undefined).success).toBe(false);
   });
 });

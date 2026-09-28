@@ -1,5 +1,6 @@
 import { setData, setStyleProperty } from '#shared/dom.ts';
 import { html, setHtml } from '#shared/html.ts';
+import { clamp } from '#shared/math.ts';
 import type { Analysis } from '#page/lichess/analysis.ts';
 import { formatEval } from '#page/review/evaluation/format.ts';
 import type { GraphKind, Review, Session } from '#page/review/session.ts';
@@ -28,7 +29,7 @@ function measure(container: HTMLElement): Box {
 
 /** The position under the pointer's x, from the graph's left edge. */
 export function indexAt(pointerX: number, box: Box, last: number): number {
-  return Math.max(0, Math.min(last, Math.round(((pointerX - box.padX / 2) / box.width) * last)));
+  return clamp(Math.round(((pointerX - box.padX / 2) / box.width) * last), 0, last);
 }
 
 // What each container's graph shows now. Its listeners are added once: the
@@ -60,7 +61,7 @@ function hover(container: HTMLElement, event: MouseEvent): void {
   setStyleProperty(tip, 'display', 'block');
   const x = box.padX / 2 + (index / (lastIndex(review) || 1)) * box.width;
   const right = container.clientWidth - box.padX / 2 - tip.offsetWidth;
-  const left = Math.max(box.padX / 2, Math.min(right, x - tip.offsetWidth / 2));
+  const left = clamp(x - tip.offsetWidth / 2, box.padX / 2, right);
   setStyleProperty(tip, 'left', `${left}px`);
 }
 
@@ -118,7 +119,7 @@ export function movesGraph(session: Session, analysis: Analysis, force = false):
     graphBox.replaceChildren();
     return;
   }
-  if (!force && graphBox.dataset.v === String(version)) return;
-  setData(graphBox, 'v', String(version));
+  if (!force && graphBox.dataset.cdcVersion === String(version)) return;
+  setData(graphBox, 'cdcVersion', String(version));
   mountGraph(session, analysis, { container: graphBox, kind: 'moves' });
 }

@@ -89,12 +89,12 @@
     top: 6px;
     width: 18px;
     height: 18px;
-    background: var(--i) center / contain no-repeat;
+    background: var(--cdc-class-icon) center / contain no-repeat;
   }
 
   /* A badged move takes its color (the last book move too). */
   html.cdc-review-moves main.analyse .tview2 > move[data-cdc-badge] {
-    color: var(--c) !important;
+    color: var(--cdc-class-color) !important;
   }
 
   /* The free board keeps Lichess's list, variations included: the badge goes inline
@@ -107,12 +107,12 @@
     height: 16px;
     margin-right: 4px;
     vertical-align: -3px;
-    background: var(--i) center / contain no-repeat;
+    background: var(--cdc-class-icon) center / contain no-repeat;
   }
 
   html.cdc-review-live main.analyse .tview2 move[data-cdc-badge],
   html.cdc-review-moves main.analyse .tview2 interrupt move[data-cdc-badge] {
-    color: var(--c) !important;
+    color: var(--cdc-class-color) !important;
   }
 
   /* ---- Opening --- */
@@ -151,7 +151,7 @@
     flex: none;
     width: 18px;
     height: 18px;
-    background: var(--i) center / contain no-repeat;
+    background: var(--cdc-class-icon) center / contain no-repeat;
   }
 
   /* The ECO code as a small book-colored pill. */

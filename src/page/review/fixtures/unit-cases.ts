@@ -1,4 +1,5 @@
 import type { PositionRecord } from '#page/review/evaluation/score.ts';
+import { fnv } from './fnv.ts';
 
 // Test support: the inputs the game analysis's functions were recorded on,
 // in the original script and in the port.
@@ -8,9 +9,12 @@ const range = (from: number, to: number): number[] =>
 
 /** A quick pass's record: the full depth's, a little off, without its second line or best move. */
 export function roughOf(record: PositionRecord, index: number): PositionRecord {
-  if ('mate' in record) return { mate: record.mate, wp: record.wp, wp2: null, best: null };
+  const rough = { secondLineWinChance: null, best: null };
+  if ('mate' in record)
+    return { mate: record.mate, whiteWinChance: record.whiteWinChance, ...rough };
   const cp = record.cp + ((index * 37) % 90) - 45;
-  return { cp, wp: 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1), wp2: null, best: null };
+  const whiteWinChance = 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
+  return { cp, whiteWinChance, ...rough };
 }
 
 interface BuildStep {
@@ -122,6 +126,7 @@ const JOBS: readonly JobCase[] = [
   { game: 'opera', mode: 'summary', ply: 0, deep: range(0, 31), rough: range(0, 34), cloudAt: 30 },
 ];
 
+// A record in the original's format, as it was given the score chips.
 const record = (
   fields: Partial<Record<'cp' | 'mate' | 'wp', number>>,
 ): Record<string, unknown> => ({
@@ -177,9 +182,7 @@ export const LIVE_TREE = {
 
 /** A record for a position, from its FEN alone. */
 export function recordFor(fen: string, best: string | null): PositionRecord {
-  let hash = 2166136261;
-  for (let i = 0; i < fen.length; i++) hash = Math.imul(hash ^ fen.charCodeAt(i), 16777619);
-  const cp = ((hash >>> 0) % 600) - 300;
-  const wp = 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
-  return { cp, wp, wp2: wp - 10, best };
+  const cp = (fnv(fen) % 600) - 300;
+  const whiteWinChance = 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
+  return { cp, whiteWinChance, secondLineWinChance: whiteWinChance - 10, best };
 }

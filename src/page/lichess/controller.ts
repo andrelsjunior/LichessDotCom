@@ -1,18 +1,14 @@
 import { z } from 'zod/mini';
 import { createGuard } from '#shared/guards.ts';
 import { lenient } from '#shared/zod.ts';
+import { method } from './method.ts';
 
 // The shape of Lichess's analysis controller (ui/analyse/src/ctrl.ts), as
 // far as the extension uses it. Its methods are checked once; the members
 // Lichess reassigns as the user moves (node, path…) stay unknown here and
 // are narrowed on every read (see analysis.ts).
 
-const isFunction = (value: unknown): boolean => typeof value === 'function';
-
-/** A function member: its signature is Lichess's word, only its presence is checked. */
-export const method = <T>(): z.ZodMiniCustom<T, T> => z.custom<T>(isFunction);
-
-const TreeSchema = z.object({ nodeAtPath: method<(path: string) => unknown>() });
+const TreeSchema = z.object({ nodeAtPath: method<[path: string]>() });
 
 const ControllerSchema = z.object({
   data: z.unknown(),
@@ -22,9 +18,9 @@ const ControllerSchema = z.object({
   nodeList: z.unknown(),
   mainline: z.unknown(),
   onMainline: z.unknown(),
-  jumpToMain: method<(ply: number) => unknown>(),
-  userJump: method<(path: string) => unknown>(),
-  getOrientation: method<() => unknown>(),
+  jumpToMain: method<[ply: number]>(),
+  userJump: method<[path: string]>(),
+  getOrientation: method<[]>(),
   playUci: z.optional(z.unknown()),
   redraw: z.optional(z.unknown()),
   synthetic: z.optional(z.unknown()),
@@ -76,8 +72,8 @@ export const MasterOpeningSchema = z.object({
 export type MasterOpening = z.infer<typeof MasterOpeningSchema>;
 
 const ExplorerSchema = z.object({
-  fetchMasterOpening: z.optional(method<(fen: string) => unknown>()),
-  isAuth: z.optional(method<() => unknown>()),
+  fetchMasterOpening: z.optional(method<[fen: string]>()),
+  isAuth: z.optional(method<[]>()),
 });
 
 export const isExplorer = createGuard(ExplorerSchema);

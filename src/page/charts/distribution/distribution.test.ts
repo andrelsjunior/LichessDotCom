@@ -3,7 +3,7 @@ import { z } from 'zod/mini';
 import { fakeLayout } from '#shared/testing/layout.ts';
 import { distribution } from './index.ts';
 import { binOf, countPlayers, markersOf, onChart } from './players.ts';
-import { columnPath, countScale } from './scales.ts';
+import { columnPath, countScale, layOut, MIN_RATING, PADDING } from './scales.ts';
 import { DistributionSchema } from './schema.ts';
 // What the original script (before the TypeScript port) made of the same inputs.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
@@ -77,6 +77,19 @@ describe('scales', () => {
       expect(columnPath({ x, y, width: w, bottom })).toBe(output);
     },
   );
+
+  it('ends the rating axis where the players’ last column ends', () => {
+    const players = countPlayers([5, 10, 20, 10]);
+    const geometry = layOut({
+      width: 640,
+      height: 360,
+      counts: players.counts,
+      maxRating: players.maxRating,
+      markers: 0,
+    });
+    expect(geometry.x(MIN_RATING)).toBe(PADDING.left);
+    expect(geometry.x(onChart(3000, players))).toBe(640 - PADDING.right);
+  });
 });
 
 describe('players', () => {

@@ -48,7 +48,7 @@ export function startStream(session: Session): void {
   });
   if (drop && overflows(fit())) {
     drop.remove();
-    // The words typed so far, without it: the ones still on show.
+    // Recount the words typed so far, now that the dropped sentence is gone.
     const shown =
       stream.state.shown === Infinity
         ? Infinity
@@ -62,9 +62,9 @@ export function startStream(session: Session): void {
 }
 
 /**
- * A new width: a comment already typed out is laid out afresh, whole, so a
- * sentence dropped for want of room comes back. Mid-way it stays as it is:
- * its words would be counted anew.
+ * On a new width, a comment that is fully typed out is laid out again whole,
+ * so a sentence dropped for lack of room can come back. A comment still being
+ * typed is left as it is, or its words would be counted again.
  */
 export function refitStream(session: Session): void {
   const { stream } = session;

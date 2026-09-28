@@ -104,7 +104,7 @@ function jumpTo(ctrl: FakeController, path: string): void {
   ctrl.onMainline = ctrl.nodeList.every((node, i) => ctrl.mainline[i] === node);
 }
 
-// A move already in the tree is gone to; a new one is added after the others.
+// Playing a move already in the tree jumps to it; a new move is added after its siblings.
 function play(ctrl: FakeController, uci: string): void {
   const id = nodeId(uci);
   let child = ctrl.node.children.find(candidate => candidate.id === id);

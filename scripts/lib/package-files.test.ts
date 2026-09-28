@@ -1,7 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
-import { afterAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   isPackageName,
   isPackaged,
@@ -9,22 +6,16 @@ import {
   packageName,
   selectSourceFiles,
 } from './package-files.ts';
+import { tempDirs, writeFiles } from './testing.ts';
 
-const fixtures: string[] = [];
+const newDir = tempDirs('cdc-package-');
 
+// Each file holds its own name.
 async function fixture(files: readonly string[]): Promise<string> {
-  const dir = await mkdtemp(path.join(tmpdir(), 'cdc-package-'));
-  fixtures.push(dir);
-  for (const name of files) {
-    await mkdir(path.dirname(path.join(dir, name)), { recursive: true });
-    await writeFile(path.join(dir, name), name);
-  }
+  const dir = await newDir();
+  await writeFiles(dir, Object.fromEntries(files.map(name => [name, name])));
   return dir;
 }
-
-afterAll(async () => {
-  await Promise.all(fixtures.map(dir => rm(dir, { recursive: true, force: true })));
-});
 
 describe('packageName', () => {
   it('keeps the names the releases have always had', () => {

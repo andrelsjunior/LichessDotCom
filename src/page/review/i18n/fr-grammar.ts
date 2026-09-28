@@ -13,9 +13,9 @@ const ROLE_NAMES: Readonly<Record<Role, string>> = {
   king: 'roi',
 };
 
-export const isFeminine = ({ role }: Piece): boolean => role === 'rook' || role === 'queen';
+const isFeminine = ({ role }: Piece): boolean => role === 'rook' || role === 'queen';
 
-export const pieceName = (piece: Piece): string => pieceToken(piece) + ROLE_NAMES[piece.role];
+const pieceName = (piece: Piece): string => pieceToken(piece) + ROLE_NAMES[piece.role];
 
 /** "la [dame]", "le [fou]". */
 export const definite = (piece: Piece): string =>

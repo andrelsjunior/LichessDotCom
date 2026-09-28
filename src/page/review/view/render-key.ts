@@ -6,9 +6,9 @@ import { reviewMove } from './navigation.ts';
 // What the panel shows, as one string: it's drawn again only when that
 // changes (the render runs every 150 ms).
 
-// The summary and the closed panel show the analysis's progress in steps (a
-// twentieth of the graph known, the next percent at full depth); the
-// move-by-move review, only the move on the board.
+// The summary and the closed panel show the analysis's progress, which counts
+// in steps: each twentieth of the graph known, each percent at full depth. The
+// move-by-move review depends only on the move on the board.
 function progressKey(session: Session, analysis: Analysis): string {
   const { view } = session;
   if (view.mode === 'moves') return '';

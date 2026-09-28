@@ -1,21 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SoundPlayer } from '#page/lichess/sound.ts';
+import { fakeSoundPlayer } from './fixtures/sound-player.ts';
 import { sounds } from './index.ts';
 import { toBlobUrls, whenSoundPlayerReady } from './install.ts';
-
-function fakePlayer(): { sound: SoundPlayer; played: unknown[] } {
-  const played: unknown[] = [];
-  const sound: SoundPlayer = {
-    paths: new Map(),
-    theme: 'standard',
-    play: name => {
-      played.push(name);
-      return Promise.resolve();
-    },
-    move: () => Promise.resolve(),
-  };
-  return { sound, played };
-}
 
 const post = (data: unknown): void => {
   window.dispatchEvent(new MessageEvent('message', { data, source: window }));
@@ -58,7 +45,7 @@ describe('whenSoundPlayerReady', () => {
     whenSoundPlayerReady(ready);
     await vi.advanceTimersByTimeAsync(120);
     expect(ready).not.toHaveBeenCalled();
-    const { sound } = fakePlayer();
+    const { sound } = fakeSoundPlayer();
     Object.assign(window, { site: { sound } });
     await vi.advanceTimersByTimeAsync(50);
     expect(ready).toHaveBeenCalledWith(sound);
@@ -68,7 +55,7 @@ describe('whenSoundPlayerReady', () => {
     const ready = vi.fn<(sound: SoundPlayer) => void>();
     whenSoundPlayerReady(ready);
     await vi.advanceTimersByTimeAsync(30_050);
-    Object.assign(window, { site: { sound: fakePlayer().sound } });
+    Object.assign(window, { site: { sound: fakeSoundPlayer().sound } });
     await vi.advanceTimersByTimeAsync(1000);
     expect(ready).not.toHaveBeenCalled();
   });
@@ -78,7 +65,7 @@ describe('sounds', () => {
   it('asks for the sounds, then hooks Lichess’s player with the first ones posted', () => {
     stubBlobUrls();
     const postMessage = vi.spyOn(window, 'postMessage').mockImplementation(() => {});
-    const { sound, played } = fakePlayer();
+    const { sound, calls } = fakeSoundPlayer();
     Object.assign(window, { site: { sound } });
     sounds.start();
     expect(postMessage).toHaveBeenCalledWith({ type: 'cdc:page-ready' }, location.origin);
@@ -88,6 +75,9 @@ describe('sounds', () => {
     expect(sound.cdcHooked).toBe(true);
     sound.play('capture');
     sound.play('berserk');
-    expect(played).toEqual(['cdc-capture', 'berserk']);
+    expect(calls).toEqual([
+      ['play', 'cdc-capture', 1],
+      ['play', 'berserk', 1],
+    ]);
   });
 });

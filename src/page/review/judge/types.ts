@@ -17,13 +17,17 @@ export interface PlayedPosition extends GamePosition {
   readonly san: string;
 }
 
+/** A position reached by a move: every one but the start. */
+export const isPlayed = <T extends GamePosition>(position: T): position is T & PlayedPosition =>
+  position.uci !== undefined && position.san !== undefined;
+
 /** A judged move: its verdict, and what the coach explains it from. */
-export interface MoveReview {
+export interface MoveVerdict {
   readonly ply: number;
   readonly san: string;
   readonly uci: string;
   readonly color: Color;
-  readonly cls: MoveClass;
+  readonly moveClass: MoveClass;
   /** Win probability the mover gave away, 0 to 100. */
   readonly loss: number;
   /** The verdict came from mate distances: a mate slowed down, or let in sooner. */
@@ -37,7 +41,7 @@ export interface MoveReview {
   readonly position: PlayedPosition;
   readonly previousPosition: GamePosition;
   /** The opponent's move just before: a miss fails to punish it. */
-  readonly previousMove: MoveReview | null;
+  readonly previousMove: MoveVerdict | null;
 }
 
 export interface JudgeInput {
@@ -46,7 +50,7 @@ export interface JudgeInput {
   /** The engine's records of the two positions. */
   readonly before: PositionRecord;
   readonly after: PositionRecord;
-  readonly previousMove?: MoveReview | null | undefined;
+  readonly previousMove?: MoveVerdict | null | undefined;
   /** Every move up to this one is theory. */
   readonly book: boolean;
   readonly chess960: boolean;

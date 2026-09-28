@@ -19,18 +19,18 @@ describe('move classes', () => {
   it('come in the original’s order and colors', () => {
     expect(MOVE_CLASSES).toEqual(legacy.classes.map(({ key }) => key));
     for (const { key, color } of legacy.classes) {
-      const cls = MOVE_CLASSES.find(candidate => candidate === key);
-      expect(cls && CLASS_COLORS[cls]).toBe(color);
+      const moveClass = MOVE_CLASSES.find(candidate => candidate === key);
+      expect(moveClass && CLASS_COLORS[moveClass]).toBe(color);
     }
   });
 
   it('draw the original’s icons, inline and as a CSS image', () => {
     for (const { key, svg, img } of legacy.classes) {
-      const cls = MOVE_CLASSES.find(candidate => candidate === key);
-      if (!cls) throw new Error(`unknown class ${key}`);
-      expect(classSvg(cls).value).toBe(svg);
-      expect(classImage(cls)).toBe(img);
-      expect(classIcon(cls).value).toBe(`<span class="cdc-cls-icon">${svg}</span>`);
+      const moveClass = MOVE_CLASSES.find(candidate => candidate === key);
+      if (!moveClass) throw new Error(`unknown class ${key}`);
+      expect(classSvg(moveClass).value).toBe(svg);
+      expect(classImage(moveClass)).toBe(img);
+      expect(classIcon(moveClass).value).toBe(`<span class="cdc-cls-icon">${svg}</span>`);
     }
   });
 
@@ -43,9 +43,9 @@ describe('move classes', () => {
     expect([...GOOD]).toEqual(sets.GOOD);
     expect(RANK).toEqual(sets.RANK);
     const moods = Object.fromEntries(
-      MOVE_CLASSES.flatMap(cls => {
-        const mood = classMood(cls);
-        return mood ? [[cls, mood]] : [];
+      MOVE_CLASSES.flatMap(moveClass => {
+        const mood = classMood(moveClass);
+        return mood ? [[moveClass, mood]] : [];
       }),
     );
     expect(moods).toEqual(sets.MOODS);

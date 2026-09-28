@@ -1,15 +1,15 @@
 import type { Analysis } from '#page/lichess/analysis.ts';
-import { firstChild } from '#page/lichess/tree.ts';
+import { firstChild, parentPath } from '#page/lichess/tree.ts';
 import { normalizeUci } from '#page/review/chess/notation.ts';
 import { judgeAt } from '#page/review/live/judging.ts';
-import type { BestShown, ReviewMove, Session } from '#page/review/session.ts';
+import type { BestShown, JudgedMove, Session } from '#page/review/session.ts';
 
 // Moving through the game: the review's buttons, its graph and its player.
 
 const PLAY_STEP_MS = 1200;
 
 /** The move on the board: the game's, from the review, or one played off it (judged as it comes). */
-export function reviewMove(session: Session, analysis: Analysis): ReviewMove | null {
+export function reviewMove(session: Session, analysis: Analysis): JudgedMove | null {
   const { review } = session.view;
   const { path } = analysis;
   if (!review || !path) return null;
@@ -18,10 +18,10 @@ export function reviewMove(session: Session, analysis: Analysis): ReviewMove | n
 }
 
 /** The engine's best move, when it's on the board in place of the move played (the Best button). */
-export function bestShown(session: Session, analysis: Analysis): ReviewMove | null {
+export function bestShown(session: Session, analysis: Analysis): JudgedMove | null {
   const shown = session.view.bestOf;
   const { path, node } = analysis;
-  if (!shown || path === shown.path || path !== shown.path.slice(0, -2) + node.id) return null;
+  if (!shown || path === shown.path || path !== parentPath(shown.path) + node.id) return null;
   return normalizeUci(node.uci, analysis.chess960) === shown.move.best ? shown.move : null;
 }
 
@@ -46,7 +46,7 @@ export function showBest(session: Session, analysis: Analysis): void {
   if (!move?.best || !analysis.canPlayUci) return;
   const best: BestShown = { path: analysis.path, move };
   view.bestOf = best;
-  goTo(analysis, analysis.path.slice(0, -2));
+  goTo(analysis, parentPath(analysis.path));
   analysis.playUci(move.best);
   analysis.redraw();
 }
@@ -61,7 +61,7 @@ export function stepPath(session: Session, analysis: Analysis, direction: 1 | -1
   const from = shown && bestShown(session, analysis) ? shown.path : path;
   if (direction < 0) {
     if (from !== path) return from;
-    return from ? from.slice(0, -2) : null;
+    return from ? parentPath(from) : null;
   }
   const next = firstChild(analysis.nodeAtPath(from));
   return next ? from + next.id : null;
@@ -93,9 +93,9 @@ export function togglePlay(session: Session, analysis: Analysis): void {
 }
 
 /**
- * The move-by-move review stands in for Lichess's tools and controls: left
- * open, their menu took its move list, and "practice with computer" would
- * play moves, both with their buttons hidden.
+ * Closes Lichess's tools for the move-by-move review, which hides their
+ * buttons. Left open, their menu would take the review's move list, and
+ * "practice with computer" would play moves on its own.
  */
 export function closeTools(analysis: Analysis): void {
   analysis.closeActionMenu();

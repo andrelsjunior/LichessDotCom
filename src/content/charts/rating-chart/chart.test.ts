@@ -3,6 +3,7 @@ import { z } from 'zod/mini';
 import { queryOne } from '#shared/dom.ts';
 import { StorageKey } from '#shared/storage.ts';
 import { fakeLayout } from '#shared/testing/layout.ts';
+import { RANGE_KEYS } from './dates.ts';
 import { ratingChart } from './index.ts';
 // The original script's chart through the same clicks, hovers and resizes.
 import legacy from './fixtures/legacy-chart.json' with { type: 'json' };
@@ -20,9 +21,6 @@ type Action = z.infer<typeof ActionSchema>;
 let plotWidth = 640;
 
 // The sizes the original's recording used.
-const RANGE_KEYS = ['1M', '3M', '6M', 'YTD', '1Y', 'ALL'];
-
-// The sizes the original's recording used.
 function stubLayout() {
   return fakeLayout((element, metric) => {
     const range = element.dataset.range;
@@ -31,7 +29,7 @@ function stubLayout() {
     if (range === undefined) return 0;
     if (metric === 'offsetWidth') return 30 + 4 * range.length;
     if (metric === 'offsetHeight') return 28;
-    if (metric === 'offsetLeft') return 3 + 44 * RANGE_KEYS.indexOf(range);
+    if (metric === 'offsetLeft') return 3 + 44 * RANGE_KEYS.findIndex(key => key === range);
     return metric === 'offsetTop' ? 3 : 0;
   });
 }

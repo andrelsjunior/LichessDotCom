@@ -107,7 +107,7 @@ export interface ReviewLanguage {
   /** The verdict over the coach's comment; {m} marks the move. */
   readonly classSentences: Readonly<Record<MoveClass, string>>;
   /** "3 Best", "3 meilleurs coups": the counts over the Game Review button. */
-  readonly countLabel: (cls: CountedClass, count: number) => string;
+  readonly countLabel: (moveClass: CountedClass, count: number) => string;
   /** The language's typographic rules, applied to the coach's text. */
   readonly typography: (text: string) => string;
   /** The line naming a book move's opening. */

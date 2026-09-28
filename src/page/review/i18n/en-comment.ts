@@ -12,9 +12,11 @@ const ROLE_NAMES: Readonly<Record<Role, string>> = {
 };
 
 const name = (piece: Piece): string => pieceToken(piece) + ROLE_NAMES[piece.role];
-const one = (piece: Piece): string => `a ${name(piece)}`;
+/** "a [knight]". */
+const indefinite = (piece: Piece): string => `a ${name(piece)}`;
 const side = (color: Color): string => (color === 'white' ? 'White' : 'Black');
-const sides = (color: Color): string => (color === 'white' ? 'White’s' : 'Black’s');
+/** "White’s": a side as a possessive. */
+const possessive = (color: Color): string => (color === 'white' ? 'White’s' : 'Black’s');
 
 export const trajectoryEn: TrajectorySentences = {
   advantages: ['', 'a slight edge', 'a clear advantage', 'a winning position', 'a forced mate'],
@@ -41,7 +43,7 @@ export const factsEn: FactSentences = {
   canForceMate: (color, reply) => `${side(color)} can now force mate, starting with ${reply}.`,
   wouldForceMate: (best, moves) => `${best} would have forced mate in ${moves}.`,
   missedPunishment: (color, best) =>
-    `${sides(color)} last move was a mistake, and ${best} would have punished it.`,
+    `${possessive(color)} last move was a mistake, and ${best} would have punished it.`,
   leftUndefended: ({ piece, square, reply }) =>
     `The ${name(piece)} on ${square} is left undefended: ${reply} wins it.`,
   answersAndWins: (color, { piece, square, reply }) =>
@@ -49,16 +51,16 @@ export const factsEn: FactSentences = {
   strongerCapture: (best, piece) => `${best}, taking the ${name(piece)}, was stronger.`,
   morePrecise: best => `${best} was more precise.`,
   betterMove: best => `${best} was the better move.`,
-  punishesAtOnce: color => `It punishes ${sides(color)} mistake right away.`,
+  punishesAtOnce: color => `It punishes ${possessive(color)} mistake right away.`,
   offered: (piece, color) =>
     `The ${name(piece)} is offered, and ${side(color)} can’t safely take it.`,
   keepsAdvantage: 'Every other move would have let the advantage slip.',
   holdsPosition: color => `Every other move would have left ${side(color)} worse off.`,
-  promotes: piece => `The pawn promotes to ${one(piece)}.`,
+  promotes: piece => `The pawn promotes to ${indefinite(piece)}.`,
   castles: 'The king is safe, and the rook joins the game.',
   takesBack: square => `It takes back on ${square}.`,
-  winsForFree: piece => `It wins ${one(piece)} for free.`,
-  winsMaterial: (won, given) => `It wins ${one(won)} for ${one(given)}.`,
+  winsForFree: piece => `It wins ${indefinite(piece)} for free.`,
+  winsMaterial: (won, given) => `It wins ${indefinite(won)} for ${indefinite(given)}.`,
   checkForces: color => `The check forces ${side(color)} to respond.`,
   littleMorePrecise: best => `${best} was a little more precise.`,
 };

@@ -1,10 +1,12 @@
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { build } from 'rolldown';
 import { createManifest, ManifestSchema, OUTPUT, type Target } from '#manifest';
 import { bundleCss } from './css-bundle.ts';
 import { assertNoChromeUrls, toFirefoxCss } from './firefox.ts';
+import { assertLicensed, LICENSES } from './licenses.ts';
 import { fromRoot } from './paths.ts';
+import { replaceDir } from './replace-dir.ts';
 
 export const TARGETS: readonly Target[] = ['chrome', 'chrome-store', 'firefox'];
 
@@ -21,9 +23,6 @@ const ALIASES = {
   ),
 };
 
-// Third-party code bundled into the scripts ships with its license.
-const LICENSES = [{ from: 'node_modules/lottie-web/LICENSE.md', to: 'licenses/lottie-web.md' }];
-
 export interface BuildOptions {
   readonly target: Target;
   readonly out: string;
@@ -32,8 +31,17 @@ export interface BuildOptions {
   readonly release: boolean;
 }
 
-async function bundleScripts({ out, release }: BuildOptions): Promise<void> {
-  await Promise.all(
+/** Promise.all that waits for every task before it fails, so none is left writing. */
+async function settleAll<T>(tasks: readonly Promise<T>[]): Promise<T[]> {
+  const results = await Promise.allSettled(tasks);
+  for (const result of results) if (result.status === 'rejected') throw result.reason;
+  return results.flatMap(result => (result.status === 'fulfilled' ? [result.value] : []));
+}
+
+/** Bundles the scripts, and returns the modules bundled into them. */
+async function bundleScripts({ out, release }: BuildOptions): Promise<string[]> {
+  // A failed build removes its staging folder: no bundle may still be writing into it.
+  const bundles = await settleAll(
     SCRIPTS.map(({ input, output }) =>
       build({
         input: fromRoot(input),
@@ -48,6 +56,9 @@ async function bundleScripts({ out, release }: BuildOptions): Promise<void> {
         },
       }),
     ),
+  );
+  return bundles.flatMap(({ output }) =>
+    output.flatMap(file => (file.type === 'chunk' ? file.moduleIds : [])),
   );
 }
 
@@ -64,15 +75,22 @@ async function checkFirefoxBuild(out: string): Promise<void> {
   assertNoChromeUrls(files);
 }
 
-/** Builds one target into `out`, from scratch. */
-export async function buildTarget(options: BuildOptions): Promise<void> {
+async function buildInto(options: BuildOptions): Promise<void> {
   const { target, out, version } = options;
-  await rm(out, { recursive: true, force: true });
-  await mkdir(out, { recursive: true });
   await cp(fromRoot('public'), out, { recursive: true });
   for (const { from, to } of LICENSES) await cp(fromRoot(from), path.join(out, to));
-  await Promise.all([bundleScripts(options), bundleStyles(options)]);
+  const moduleIds = await bundleScripts(options);
+  assertLicensed(moduleIds);
+  await bundleStyles(options);
   const manifest = ManifestSchema.parse(createManifest(target, version));
   await writeFile(path.join(out, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   if (target === 'firefox') await checkFirefoxBuild(out);
+}
+
+/**
+ * Builds one target from scratch into `out`, swapped in whole once done: a
+ * failed build leaves `out` as it was.
+ */
+export async function buildTarget(options: BuildOptions): Promise<void> {
+  await replaceDir(options.out, staging => buildInto({ ...options, out: staging }));
 }

@@ -1,7 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { z } from 'zod/mini';
+import { StoredRecordCodec } from '#page/review/evaluation/stored.ts';
 import { UNIT_CASES } from '#page/review/fixtures/unit-cases.ts';
 import { builtSession, fakeGame, newSession } from '#page/review/fixtures/unit-review.ts';
-import type { ReviewMove } from '#page/review/session.ts';
+import type { JudgedMove } from '#page/review/session.ts';
 import { nextJob } from './analyse-game.ts';
 import { cacheRecords, readCachedRecords } from './cache.ts';
 import { lookUpCloud } from './cloud-lookup.ts';
@@ -30,14 +32,14 @@ const byLegacyKeys = <T>(
 ): Record<string, T> =>
   Object.fromEntries(Object.entries(record).map(([key, value]) => [keys(key), value]));
 
-const moveOf = (move: ReviewMove | undefined): unknown =>
+const moveOf = (move: JudgedMove | undefined): unknown =>
   move && {
     ply: move.ply,
-    cls: move.cls,
+    cls: move.moveClass,
     loss: move.loss,
     accuracy: move.accuracy,
     best: move.best,
-    previous: move.previousMove ? [move.previousMove.ply, move.previousMove.cls] : null,
+    previous: move.previousMove ? [move.previousMove.ply, move.previousMove.moveClass] : null,
   };
 
 describe('refresh', () => {
@@ -53,7 +55,7 @@ describe('refresh', () => {
         draft: [...review.draft].map(moveOf),
         total: review.total,
         complete: review.complete,
-        positions: review.positions,
+        positions: z.encode(z.array(z.nullable(StoredRecordCodec)), [...review.positions]),
         accuracy: byLegacyKeys(review.accuracy, short),
         counts: byLegacyKeys(review.counts, short),
         rating:
@@ -103,9 +105,10 @@ describe('the game’s export', () => {
     const found = readExport(text, 5);
     expect(found?.bookPly).toBe(7);
     expect(found?.openingName).toBe('Italian Game');
-    expect(found?.rough[1]).toMatchObject({ cp: 30, wp2: null, best: null });
-    expect(found?.rough[2]).toEqual({ mate: 2, wp: 100, wp2: null, best: null });
-    expect(found?.rough[3]).toEqual({ mate: -1, wp: 0, wp2: null, best: null });
+    expect(found?.rough[1]).toMatchObject({ cp: 30, secondLineWinChance: null, best: null });
+    const noLine = { secondLineWinChance: null, best: null };
+    expect(found?.rough[2]).toEqual({ mate: 2, whiteWinChance: 100, ...noLine });
+    expect(found?.rough[3]).toEqual({ mate: -1, whiteWinChance: 0, ...noLine });
     expect(found?.rough[4]).toBeUndefined();
     // Past the game's last position.
     expect(found?.rough[5]).toBeUndefined();
@@ -137,13 +140,15 @@ describe('seedBooks', () => {
 });
 
 describe('the cache', () => {
-  it('keeps a finished game’s records under the original’s key, and reads back only a whole game', () => {
+  it('keeps a finished game’s records under the original’s key and format, and reads back only a whole game', () => {
     const records = [
-      { cp: 20, wp: 51.8, wp2: 50, best: 'e2e4' },
-      { mate: -2, wp: 0, wp2: null, best: null },
+      { cp: 20, whiteWinChance: 51.8, secondLineWinChance: 50, best: 'e2e4' },
+      { mate: -2, whiteWinChance: 0, secondLineWinChance: null, best: null },
     ];
     cacheRecords('abcdefgh', 2, records);
-    expect(localStorage.getItem('cdc-review:abcdefgh:2:v1')).toBe(JSON.stringify(records));
+    expect(localStorage.getItem('cdc-review:abcdefgh:2:v1')).toBe(
+      '[{"cp":20,"wp":51.8,"wp2":50,"best":"e2e4"},{"mate":-2,"wp":0,"wp2":null,"best":null}]',
+    );
     expect(readCachedRecords('abcdefgh', 2)).toEqual(records);
     expect(readCachedRecords('abcdefgh', 3)).toBeNull();
     localStorage.setItem('cdc-review:abcdefgh:3:v1', '[1,2,3]');

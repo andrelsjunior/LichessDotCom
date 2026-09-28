@@ -1,4 +1,5 @@
 import { someMove } from './fake-chess.ts';
+import { fnv } from './fnv.ts';
 
 // Test support: a stand-in for Lichess's Stockfish build, loaded like it
 // through `site.asset.url`. Its scores come from a hash of the position, so
@@ -8,12 +9,6 @@ import { someMove } from './fake-chess.ts';
 export const FAKE_STOCKFISH_URL = `data:text/javascript,${encodeURIComponent(
   'export default async options => globalThis.cdcFakeStockfish(options);',
 )}`;
-
-function fnv(text: string): number {
-  let value = 2166136261;
-  for (let i = 0; i < text.length; i++) value = Math.imul(value ^ text.charCodeAt(i), 16777619);
-  return value >>> 0;
-}
 
 /** The fake engine's output for a search: two scored lines, then the best move. */
 function fakeSearch(fen: string, depth: number): string[] {

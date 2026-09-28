@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { z } from 'zod/mini';
 import { createGuard } from './guards.ts';
 
@@ -19,5 +19,15 @@ describe('createGuard', () => {
     const isName = createGuard(z.string());
     expect(isName('a')).toBe(true);
     expect(isName(1)).toBe(false);
+  });
+
+  it('turns away a schema that rewrites the value, as the guard hands back the input', () => {
+    // Checked by the type-check: a string would pass as its length.
+    const length = z.pipe(
+      z.string(),
+      z.transform(value => value.length),
+    );
+    expectTypeOf(length).not.toExtend<Parameters<typeof createGuard<number>>[0]>();
+    expectTypeOf(z.number()).toExtend<Parameters<typeof createGuard<number>>[0]>();
   });
 });

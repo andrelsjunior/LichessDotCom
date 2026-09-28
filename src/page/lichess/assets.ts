@@ -9,7 +9,8 @@ const AssetOptionsSchema = z.object({ documentOrigin: z.boolean() });
 
 const SiteAssetsSchema = z.object({
   asset: z.object({
-    url: z.function({ input: [z.string(), z.optional(AssetOptionsSchema)], output: z.string() }),
+    // A guard checks only that it's a function: what it returns is narrowed below.
+    url: z.function({ input: [z.string(), z.optional(AssetOptionsSchema)], output: z.unknown() }),
   }),
 });
 
@@ -21,5 +22,7 @@ export type AssetOptions = z.infer<typeof AssetOptionsSchema>;
 export function assetUrl(path: string, options?: AssetOptions): string {
   const site = readSite();
   if (!hasAssets(site)) throw new Error('Lichess’s asset helper is missing');
-  return options ? site.asset.url(path, options) : site.asset.url(path);
+  const url = options ? site.asset.url(path, options) : site.asset.url(path);
+  if (typeof url !== 'string') throw new Error('Lichess’s asset helper returned no URL');
+  return url;
 }

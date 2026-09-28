@@ -30,10 +30,10 @@ export function createReview(): Session {
   return session;
 }
 
-// Only once the review runs: a render on a page it doesn't review (a
+// Called only for a page the review covers. Rendering on any other page (a
 // variant, a game without moves) would show an empty panel.
 function run(session: Session, mode: Mode): void {
-  document.documentElement.classList.add('cdc-review');
+  document.documentElement.classList.toggle('cdc-review', true);
   setMode(session, mode);
   setInterval(() => render(session), RENDER_MS);
   let lastWidth = window.innerWidth;
@@ -45,8 +45,8 @@ function run(session: Session, mode: Mode): void {
   window.addEventListener('resize', () => {
     if (Math.abs(window.innerWidth - lastWidth) > RESIZE_SLACK) refit();
   });
-  // Out of the mobile layout, where the panel was hidden: the graph and the
-  // comment were laid out at no size at all.
+  // Draw again on leaving the mobile layout. The panel was hidden there, so the
+  // graph and the comment were laid out at zero size.
   session.wide.addEventListener('change', refit);
 }
 

@@ -1,15 +1,13 @@
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { bundleCss } from './css-bundle.ts';
+import { tempDirs, writeFiles } from './testing.ts';
+
+const newDir = tempDirs('cdc-css-');
 
 async function fixture(files: Record<string, string>): Promise<string> {
-  const dir = await mkdtemp(path.join(tmpdir(), 'cdc-css-'));
-  for (const [name, text] of Object.entries(files)) {
-    await mkdir(path.dirname(path.join(dir, name)), { recursive: true });
-    await writeFile(path.join(dir, name), text);
-  }
+  const dir = await newDir();
+  await writeFiles(dir, files);
   return dir;
 }
 

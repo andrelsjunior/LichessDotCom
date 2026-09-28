@@ -52,9 +52,9 @@ const PAGE = `<main class="analyse">
 </main>`;
 
 /**
- * Lays the page out, and has the controller's redraw draw the move list:
- * whole when the tree grew (our marks on it go too, as with a new snabbdom
- * node), only the active move otherwise.
+ * Lays the page out, and has the controller's redraw draw the move list. When
+ * the tree grew it redraws the whole list, which drops our marks as a new
+ * snabbdom node would; otherwise it redraws only the active move.
  */
 export function mountFakePage(ctrl: FakeController): void {
   document.body.innerHTML = PAGE;

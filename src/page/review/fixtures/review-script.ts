@@ -1,4 +1,6 @@
 import { vi } from 'vitest';
+import { z } from 'zod/mini';
+import { StoredRecordCodec } from '#page/review/evaluation/stored.ts';
 import { someMove } from './fake-chess.ts';
 import { type FakeController, fakeController } from './fake-lichess.ts';
 import { mountFakePage } from './fake-page.ts';
@@ -144,12 +146,14 @@ export function setUp(scenario: Scenario): Driver {
   root.lang = scenario.lang;
   root.dataset.cdcAssets = 'chrome-extension://abc/';
   localStorage.clear();
+  // The original's storage keys and format, spelled out rather than taken from
+  // the port: a change to them would orphan the caches users have.
   localStorage.setItem('cdc-coach', String(game.coach));
   const positions = scenario.synthetic ? game.nodes.slice(0, 1) : game.nodes;
   if (scenario.cached)
     localStorage.setItem(
       `cdc-review:${game.id}:${positions.length}:v1`,
-      JSON.stringify(game.records),
+      JSON.stringify(z.encode(z.array(StoredRecordCodec), [...game.records])),
     );
   const id = scenario.synthetic ? 'synthetic' : game.id;
   history.pushState({}, '', scenario.synthetic ? '/analysis' : `/${game.id}`);
@@ -231,12 +235,19 @@ export async function runScenario(
   return snapshots;
 }
 
+export interface StepAgainstLegacy {
+  readonly step: string;
+  /** What the port shows after the step; null when the script has no such step. */
+  readonly port: ReviewSnapshot | null;
+  readonly legacy: unknown;
+}
+
 /** The review's state after each step, as the port shows it, next to the original's recording. */
 export async function portAgainstLegacy(
   scenario: Scenario,
   hooks: ScenarioHooks,
   legacy: Readonly<Record<string, unknown>>,
-): Promise<{ readonly step: string; readonly port: unknown; readonly legacy: unknown }[]> {
+): Promise<StepAgainstLegacy[]> {
   const snapshots = await runScenario(scenario, hooks);
   return Object.entries(legacy).map(([step, recorded]) => ({
     step,

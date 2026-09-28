@@ -4,7 +4,7 @@ import { normalizeUci, uciToSan } from '#page/review/chess/notation.ts';
 import { type MoveClass, RANK } from '#page/review/classes/classes.ts';
 import { forColor, moveAccuracy } from '#page/review/evaluation/score.ts';
 import { mateVerdict } from './mate.ts';
-import type { JudgeInput, MoveReview } from './types.ts';
+import type { JudgeInput, MoveVerdict } from './types.ts';
 
 interface Standing {
   readonly before: number;
@@ -38,33 +38,36 @@ function topClass(input: JudgeInput, { before, after, loss, second }: Standing):
 function baseClass(input: JudgeInput, standing: Standing, isBest: boolean): MoveClass {
   if (input.book) return 'book';
   if (isBest || standing.loss < 0.5) return topClass(input, standing);
-  const cls = lossClass(standing.loss);
+  const moveClass = lossClass(standing.loss);
   // An error right after the opponent's own is a missed punishment.
   const punishable = (input.previousMove?.loss ?? 0) >= 10 && standing.before >= 60;
-  return (cls === 'mistake' || cls === 'blunder') && punishable ? 'miss' : cls;
+  return (moveClass === 'mistake' || moveClass === 'blunder') && punishable ? 'miss' : moveClass;
 }
 
 /** Judges one move from the engine's records of the positions before and after it. */
-export function judge(input: JudgeInput): MoveReview {
+export function judge(input: JudgeInput): MoveVerdict {
   const { previousPosition, position, before: recordBefore, after: recordAfter } = input;
   const color = fenTurn(previousPosition.fen);
-  const before = forColor(recordBefore.wp, color);
-  const after = forColor(recordAfter.wp, color);
+  const before = forColor(recordBefore.whiteWinChance, color);
+  const after = forColor(recordAfter.whiteWinChance, color);
   const loss = Math.max(0, before - after);
-  const second = recordBefore.wp2 === null ? null : forColor(recordBefore.wp2, color);
+  const second =
+    recordBefore.secondLineWinChance === null
+      ? null
+      : forColor(recordBefore.secondLineWinChance, color);
   const isBest = normalizeUci(position.uci, input.chess960) === recordBefore.best;
-  let cls = baseClass(input, { before, after, loss, second }, isBest);
+  let moveClass = baseClass(input, { before, after, loss, second }, isBest);
   const mated = isBest || input.book ? null : mateVerdict(recordBefore, recordAfter, color);
-  if (mated && RANK.indexOf(cls) < RANK.indexOf(mated)) cls = mated;
+  if (mated && RANK.indexOf(moveClass) < RANK.indexOf(mated)) moveClass = mated;
   return {
     ply: position.ply,
     san: position.san,
     uci: position.uci,
     color,
-    cls,
+    moveClass,
     loss,
-    slower: mated !== null && cls === mated,
-    accuracy: cls === 'book' ? 100 : moveAccuracy(loss),
+    slower: mated !== null && moveClass === mated,
+    accuracy: moveClass === 'book' ? 100 : moveAccuracy(loss),
     best: recordBefore.best,
     bestSan: uciToSan(previousPosition.fen, recordBefore.best),
     before: recordBefore,

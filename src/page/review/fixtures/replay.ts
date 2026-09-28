@@ -1,7 +1,8 @@
 import { z } from 'zod/mini';
-import { PositionRecordSchema } from '#page/review/evaluation/score.ts';
+import type { PositionRecord } from '#page/review/evaluation/score.ts';
+import { StoredRecordCodec } from '#page/review/evaluation/stored.ts';
 import { judge } from '#page/review/judge/judge.ts';
-import type { GamePosition, MoveReview, PlayedPosition } from '#page/review/judge/types.ts';
+import type { GamePosition, MoveVerdict, PlayedPosition } from '#page/review/judge/types.ts';
 import judged from '#page/review/judge/fixtures/legacy.json' with { type: 'json' };
 import games from './games.json' with { type: 'json' };
 
@@ -25,10 +26,10 @@ const GameSchema = z.object({
   nodes: z.array(PositionSchema),
 });
 
-const RecordsSchema = z.array(z.object({ records: z.array(PositionRecordSchema) }));
+const RecordsSchema = z.array(z.object({ records: z.array(StoredRecordCodec) }));
 
 export interface FixtureGame extends z.infer<typeof GameSchema> {
-  readonly records: readonly z.infer<typeof PositionRecordSchema>[];
+  readonly records: readonly PositionRecord[];
 }
 
 export function fixtureGames(): FixtureGame[] {
@@ -46,8 +47,8 @@ function played(position: GamePosition): PlayedPosition {
 }
 
 /** Every move of a game, judged in order as the review does. */
-export function replay(game: FixtureGame): MoveReview[] {
-  const moves: MoveReview[] = [];
+export function replay(game: FixtureGame): MoveVerdict[] {
+  const moves: MoveVerdict[] = [];
   for (let i = 1; i < game.nodes.length; i++) {
     const previousPosition = game.nodes[i - 1];
     const position = game.nodes[i];

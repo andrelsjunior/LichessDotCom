@@ -2,13 +2,15 @@
 //
 //   node scripts/build.ts [--target chrome|chrome-store|firefox|all] [--release]
 //                         [--version x.y.z] [--out dir] [--watch]
+//
+// A --release build without --version counts the commits: it needs a full clone.
 
 import { watch } from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { buildTarget, TARGETS } from './lib/build-target.ts';
 import { fromRoot } from './lib/paths.ts';
-import { currentVersion } from './lib/version.ts';
+import { currentVersion, releaseVersion } from './lib/version.ts';
 
 const { values } = parseArgs({
   options: {
@@ -27,7 +29,8 @@ if (values.out !== undefined && targets.length > 1)
   throw new Error('--out needs a single --target');
 
 async function buildAll(): Promise<void> {
-  const version = values.version ?? currentVersion();
+  // A dev build may guess its version; a release build must count every commit.
+  const version = values.version ?? (values.release ? releaseVersion() : currentVersion());
   const started = performance.now();
   for (const target of targets) {
     const out = values.out === undefined ? fromRoot('dist', target) : path.resolve(values.out);

@@ -1,6 +1,6 @@
 import type { Analysis } from '#page/lichess/analysis.ts';
 import { toRecord } from '#page/review/engine/record.ts';
-import { engineFor } from '#page/review/game/engine-pool.ts';
+import { engineFor } from '#page/review/engine-pool.ts';
 import type { Session } from '#page/review/session.ts';
 import { BOOK_GAMES } from './judging.ts';
 
@@ -23,7 +23,7 @@ export async function analyseLive(
   const { live } = session;
   live.busy = true;
   try {
-    const engine = await engineFor(live, analysis);
+    const engine = await engineFor(session, analysis);
     live.evals.set(fen, toRecord(fen, await engine.analyse(fen)));
   } catch (error) {
     console.error('[LichessDotCom] engine failed', error);

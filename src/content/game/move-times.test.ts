@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { queryAll, queryOne } from '#shared/dom.ts';
 import { flush } from '#shared/testing/timers.ts';
-import { formatSpent, gameIdFrom, spentTimes } from './clock-times.ts';
+import { formatSpent, spentTimes } from './clock-times.ts';
 import { createMoveTimes } from './move-times.ts';
 // What the original script showed for each game, and how it wrote times.
 import legacy from './fixtures/legacy-move-times.json' with { type: 'json' };
@@ -43,11 +43,6 @@ describe('clock times', () => {
       0, 50, 200, 1050, 0,
     ]);
     expect(spentTimes({})).toEqual([]);
-  });
-
-  it('reads the game id a path starts with', () => {
-    expect(gameIdFrom('/abcdefgh/black')).toBe('abcdefgh');
-    expect(gameIdFrom('/tv/blitz')).toBeNull();
   });
 });
 

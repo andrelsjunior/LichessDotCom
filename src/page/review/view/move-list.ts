@@ -9,10 +9,10 @@ import type { LiveState, Review } from '#page/review/session.ts';
 // Badges in Lichess's move list. We only set attributes on its moves and
 // lines (snabbdom owns them); review.css draws the rest.
 
-function markClass(move: HTMLElement, cls: MoveClass, badge: boolean): void {
-  setData(move, 'cdcCls', cls);
-  setStyleProperty(move, '--c', CLASS_COLORS[cls]);
-  setStyleProperty(move, '--i', classImage(cls));
+function markClass(move: HTMLElement, moveClass: MoveClass, badge: boolean): void {
+  setData(move, 'cdcCls', moveClass);
+  setStyleProperty(move, '--cdc-class-color', CLASS_COLORS[moveClass]);
+  setStyleProperty(move, '--cdc-class-icon', classImage(moveClass));
   setData(move, 'cdcBadge', badge ? '' : null);
 }
 
@@ -21,14 +21,14 @@ function mainlineBadges(tree: Element, review: Review): void {
   const moves = queryAll(tree, ':scope > move:not(.empty)', HTMLElement);
   for (const [i, element] of moves.entries()) {
     const move = review.draft[i];
-    // Only a new verdict is written: the badge is decided with it.
-    if (!move || element.dataset.cdcCls === move.cls) continue;
-    const lastBook = !(move.cls === 'book' && review.draft[i + 1]?.cls === 'book');
-    markClass(element, move.cls, LIST_BADGES.has(move.cls) && lastBook);
+    // Skip a move whose verdict hasn't changed: its badge was set with it.
+    if (!move || element.dataset.cdcCls === move.moveClass) continue;
+    const lastBook = !(move.moveClass === 'book' && review.draft[i + 1]?.moveClass === 'book');
+    markClass(element, move.moveClass, LIST_BADGES.has(move.moveClass) && lastBook);
   }
 }
 
-// Rows striped per move number, so a variation in between doesn't shift the stripes.
+// Stripes the rows by move number, so a variation in between doesn't shift the stripes.
 function stripes(tree: Element): void {
   let even = false;
   for (const child of tree.children) {
@@ -38,9 +38,9 @@ function stripes(tree: Element): void {
   }
 }
 
-// The variations played here show, not Lichess's computer lines. A class,
-// not a data attribute: review.css reads it in a `:has()`, where an
-// attribute selector slows every move.
+// Marks the variations played here, which review.css shows while it hides
+// Lichess's computer lines. It's a class rather than a data attribute because
+// review.css reads it in a `:has()`, where an attribute selector slows every move.
 function ownVariations(tree: Element, analysis: Analysis): void {
   for (const line of queryAll(tree, 'interrupt line', Element)) {
     const path = line.querySelector('move[p]')?.getAttribute('p');
@@ -65,9 +65,10 @@ export function liveBadges(
     }
     const next = firstChild(analysis.nodeAtPath(path));
     const bookGoesOn = next !== null && bookAt(live, analysis, path + next.id) === true;
-    const badge = LIST_BADGES.has(move.cls) && !(move.cls === 'book' && bookGoesOn);
-    if (element.dataset.cdcCls === move.cls && 'cdcBadge' in element.dataset === badge) continue;
-    markClass(element, move.cls, badge);
+    const badge = LIST_BADGES.has(move.moveClass) && !(move.moveClass === 'book' && bookGoesOn);
+    if (element.dataset.cdcCls === move.moveClass && 'cdcBadge' in element.dataset === badge)
+      continue;
+    markClass(element, move.moveClass, badge);
   }
 }
 

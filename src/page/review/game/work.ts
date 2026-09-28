@@ -1,7 +1,7 @@
 import type { Analysis } from '#page/lichess/analysis.ts';
 import type { PositionRecord } from '#page/review/evaluation/score.ts';
 import { rateGame } from '#page/review/rating/rate-game.ts';
-import type { ReviewMove, Session } from '#page/review/session.ts';
+import type { JudgedMove, Session } from '#page/review/session.ts';
 import { buildReview } from './build.ts';
 
 // The game's analysis as it fills in. A deep record is never replaced, so a
@@ -17,7 +17,10 @@ export function setDeep(session: Session, index: number, record: PositionRecord)
   live.judged.clear();
 }
 
-/** The game's book moves, for the moves played off it: the masters needn't be asked. */
+/**
+ * Records the game's book moves for the moves played off it, so the masters
+ * database isn't asked about them.
+ */
 export function seedBooks(session: Session, analysis: Analysis): void {
   const { live, work, view } = session;
   const nodes = analysis.mainline;
@@ -36,7 +39,7 @@ export function seedBooks(session: Session, analysis: Analysis): void {
   live.judged.clear();
 }
 
-function rate(analysis: Analysis, moves: readonly ReviewMove[]): ReturnType<typeof rateGame> {
+function rate(analysis: Analysis, moves: readonly JudgedMove[]): ReturnType<typeof rateGame> {
   const players = analysis.players();
   return rateGame({
     speed: analysis.data?.game.speed,

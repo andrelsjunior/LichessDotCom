@@ -37,7 +37,7 @@ export interface Marker {
   readonly label: string;
 }
 
-// Neutral colors: every other color is some rating's.
+// Neutral colors, because every other color already stands for a rating.
 const MINE = '#ffffff';
 const OTHER = '#bab9b8';
 

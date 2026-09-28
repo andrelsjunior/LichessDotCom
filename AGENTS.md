@@ -50,8 +50,8 @@ back. `pnpm check` enforces much of what follows; the rest is on you.
   before writing a helper. Test-only helpers go in `src/shared/testing/`.
 - Imports across folders use the `#` aliases of `package.json`'s `imports`
   (`#shared/…`, `#content/…`, `#page/…`, `#background/…`, `#scripts/…`,
-  `#manifest`), never `../`. `./` is for the same folder. Keep the `.ts`
-  extension.
+  `#manifest`), never `../`. `./` is for the same folder or a folder below
+  it. Keep the `.ts` extension.
 - At most 250 lines of code per file and 60 per function, 4 parameters (use
   an options object), complexity 15, no nested ternaries. Split by what the
   code does, not to dodge the limit.
@@ -120,32 +120,34 @@ A change is done when all of these hold:
 
 | Command                         | What it does                                                                     |
 | ------------------------------- | -------------------------------------------------------------------------------- |
-| `pnpm install`                  | installs the pinned tooling (Node 24, pnpm via `corepack enable`)                |
+| `pnpm install`                  | installs the dependencies (Node 24 first, and `corepack enable` for pnpm)        |
 | `pnpm build`                    | builds `dist/chrome` with source maps (`--target firefox`, `--release`, `--out`) |
 | `pnpm dev`                      | the same, rebuilt on every change                                                |
 | `pnpm check`                    | typecheck, lint, format check, source rules, unit tests                          |
 | `pnpm test` / `pnpm test:watch` | unit tests                                                                       |
 | `pnpm test:e2e`                 | end-to-end tests on lichess.org (build first)                                    |
+| `pnpm test:e2e:fast`            | the same, without the `@slow` ones (the engine's)                                |
+| `pnpm test:firefox`             | Firefox smoke test of `dist/firefox` (after `pnpm build --target firefox`)       |
 | `pnpm lint:fix` / `pnpm format` | fix what oxlint and oxfmt can                                                    |
 | `pnpm package`                  | release zips of every target into `dist/`, plus the sources zip                  |
 | `pnpm store:render`             | renders the store images from `store/templates`                                  |
 
 ## Where things go
 
-| Path              | What it holds                                                                                                                                                                                                                                                               |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/manifest.ts` | the manifest of each target, and `BASE_VERSION`                                                                                                                                                                                                                             |
-| `src/content/`    | the isolated-world script: `boards` (board and piece picker), `bootstrap`, `layout` (`MARKS`, `HAS`, inset, zoom, controls height), `game`, `analysis`, `pages`, `ui` (tooltips, hover card, tab bars), `sounds`, `charts`, `coach` (the coach's face), `dev` (auto-reload) |
-| `src/page/`       | the page-world script: `motion`, `sounds`, `board` (shapes, checkmate), `review`, `charts`, and `lichess/`, typed facades over Lichess's globals                                                                                                                            |
-| `src/shared/`     | helpers for both worlds (DOM, markup, messages, storage, chess, charts), `testing/` for tests                                                                                                                                                                               |
-| `src/background/` | the service worker: auto-reload, old cache cleanup                                                                                                                                                                                                                          |
-| `src/styles/`     | one stylesheet per page or part, a folder of partials past 400 lines, joined in `index.css`'s order                                                                                                                                                                         |
-| `public/`         | copied into each build: `_locales/`, `icons/`, `img/` (`boards`, `pieces`, `icons`, `coaches`), `sounds/`                                                                                                                                                                   |
-| `scripts/`        | build, package, typecheck, source rules, version, store publishing and rendering                                                                                                                                                                                            |
-| `tests/e2e/`      | Playwright tests on lichess.org                                                                                                                                                                                                                                             |
-| `tools/`          | Python generators, run by hand: `boards/fetch.py`, `assets/fetch.py`, `coach-rig/extract.py`, `game-rating/`                                                                                                                                                                |
-| `store/`          | the store images and their HTML templates                                                                                                                                                                                                                                   |
-| `.github/`        | CI (`ci.yml`), releases and store submissions (`release.yml`), Dependabot                                                                                                                                                                                                   |
+| Path              | What it holds                                                                                                                                                                                                                                                                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/manifest.ts` | the manifest of each target, and `BASE_VERSION`                                                                                                                                                                                                                                                                                                   |
+| `src/content/`    | the isolated-world script: `boards` (board and piece picker), `bootstrap`, `layout` (`MARKS`, `HAS`, inset, zoom, controls height), `game`, `analysis`, `pages`, `ui` (tooltips, hover card, tab bars), `sounds`, `charts`, `coach` (the coach's face), `dev` (auto-reload), `platform` (the extension APIs it uses), `sidebar` (the Donate item) |
+| `src/page/`       | the page-world script: `motion`, `sounds`, `board` (shapes, checkmate), `review`, `charts`, and `lichess/`, typed facades over Lichess's globals                                                                                                                                                                                                  |
+| `src/shared/`     | helpers for both worlds (DOM, markup, messages, storage, chess, charts), `testing/` for tests                                                                                                                                                                                                                                                     |
+| `src/background/` | the service worker: auto-reload, old cache cleanup                                                                                                                                                                                                                                                                                                |
+| `src/styles/`     | one stylesheet per page or part, a folder of partials past 400 lines, joined in `index.css`'s order                                                                                                                                                                                                                                               |
+| `public/`         | copied into each build: `_locales/`, `icons/`, `img/` (`boards`, `pieces`, `icons`, `coaches`), `sounds/`                                                                                                                                                                                                                                         |
+| `scripts/`        | build, package, typecheck, source rules, version, store publishing and rendering                                                                                                                                                                                                                                                                  |
+| `tests/e2e/`      | Playwright tests on lichess.org                                                                                                                                                                                                                                                                                                                   |
+| `tools/`          | Python generators, run by hand: `boards/fetch.py`, `assets/fetch.py`, `coach-rig/extract.py`, `game-rating/`                                                                                                                                                                                                                                      |
+| `store/`          | the store images and their HTML templates                                                                                                                                                                                                                                                                                                         |
+| `.github/`        | CI (`ci.yml`), releases and store submissions (`release.yml`), Dependabot                                                                                                                                                                                                                                                                         |
 
 **Recipes**
 
@@ -485,6 +487,12 @@ git rebase origin/main`, never a merge: `main` stays a straight line) and
 2. In the main checkout, `git pull --ff-only`, then
    `pnpm install --frozen-lockfile && pnpm build`: Chrome loads its
    `dist/chrome`, and reloads itself when a Lichess tab next gets focus.
+   Once only, on the first pull that brings this layout: Chrome's unpacked
+   entry still points at the checkout's root, whose `manifest.json` that
+   pull removes, so the old worker reloads it into an error. Tell the user
+   to remove that entry in `chrome://extensions` and load
+   `<main checkout>/dist/chrome` instead (the extension id changes with the
+   path). Drop this note along with `legacy/`.
 3. Remove any throwaway files you created.
 4. Don't bump the version: CI stamps `<BASE_VERSION>.<commits on main>` into
    each release and publishes it as `v<version>`. Raise `BASE_VERSION`

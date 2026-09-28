@@ -22,6 +22,11 @@ type Area = 'local' | 'session';
 
 const area = (name: Area): Storage => (name === 'local' ? localStorage : sessionStorage);
 
+/**
+ * A stored value that passes `schema`, or null. A blocked storage throws, as
+ * the original's did: read as missing, a once-per-game check could never hold
+ * there, as the writes are lost. So read before changing the page.
+ */
 export function readStored<T>(
   key: string,
   schema: z.ZodMiniType<T>,
@@ -31,6 +36,7 @@ export function readStored<T>(
   return result.success ? result.data : null;
 }
 
+/** Like `readStored`, for a JSON value: a blocked storage throws too. */
 export function readStoredJson<T>(
   key: string,
   schema: z.ZodMiniType<T>,

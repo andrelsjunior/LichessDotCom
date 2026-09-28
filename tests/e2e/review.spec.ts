@@ -74,7 +74,7 @@ test.describe('the Game Review of a finished game', () => {
     const firstMove = (await mainlineMoves(page).first().locator('san').textContent()) ?? '';
     await expect(bubbleTitle).toContainText(firstMove);
     await expect(comment).not.toBeEmpty();
-    await expect(avatar).toHaveAttribute('data-mood', /\w/);
+    await expect(avatar).toHaveAttribute('data-cdc-mood', /\w/);
     await expect(badge).toHaveCount(1);
     await expect(page.locator('html')).toHaveAttribute('data-cdc-cls', VERDICT);
     await expect(evalBar).toBeVisible();
@@ -128,7 +128,10 @@ test.describe('the Game Review of a finished game', () => {
     const verdicts = await moves.evaluateAll(list => list.map(move => move.dataset.cdcCls ?? ''));
     for (const verdict of verdicts) expect(verdict).toMatch(VERDICT);
     const badged = moves.and(page.locator('[data-cdc-badge]'));
-    await expect(badged.first()).toHaveAttribute('style', /--i: url\("data:image\/svg\+xml/);
+    await expect(badged.first()).toHaveAttribute(
+      'style',
+      /--cdc-class-icon: url\("data:image\/svg\+xml/,
+    );
   });
 
   test('closes to Lichess’s panel, and opens again', async ({ page }) => {
@@ -149,13 +152,13 @@ test.describe('the Game Review of a finished game', () => {
     // The content script plays the coach's face over the portrait.
     await expect(avatar).toHaveClass(/\bcdc-coach__avatar--rig\b/);
     await expect(avatar.locator('.cdc-coach__rig svg').first()).toBeAttached();
-    const coach = Number(await avatar.getAttribute('data-coach'));
+    const coach = Number(await avatar.getAttribute('data-cdc-coach-id'));
     const nextCoach = (coach % COACH_COUNT) + 1;
     await avatar.click();
-    await expect(avatar).toHaveAttribute('data-coach', String(nextCoach));
+    await expect(avatar).toHaveAttribute('data-cdc-coach-id', String(nextCoach));
     expect(await storedValue(page, 'cdc-coach')).toBe(String(nextCoach));
     await page.reload({ waitUntil: 'load' });
     await startReview(page);
-    await expect(reviewParts(page).avatar).toHaveAttribute('data-coach', String(nextCoach));
+    await expect(reviewParts(page).avatar).toHaveAttribute('data-cdc-coach-id', String(nextCoach));
   });
 });

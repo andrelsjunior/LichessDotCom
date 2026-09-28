@@ -1,6 +1,6 @@
 import { isError } from '#page/review/classes/classes.ts';
 import type { CommentPart } from '#page/review/comment/markup.ts';
-import type { MoveReview } from '#page/review/judge/types.ts';
+import type { MoveVerdict } from '#page/review/judge/types.ts';
 import { type CoachContext, moveSeed } from './context.ts';
 import { fact } from './fact.ts';
 import { hash } from './hash.ts';
@@ -16,12 +16,12 @@ const say = (text: string, droppable = false): CommentPart => ({ text, droppable
  * `opening` names a book move's opening ('' for none).
  */
 export function explanation(
-  move: MoveReview,
+  move: MoveVerdict,
   context: CoachContext,
   opening: string,
 ): CommentPart[] {
   const { language } = context;
-  if (move.cls === 'book')
+  if (move.moveClass === 'book')
     return [
       say(remark(move, context)),
       ...(opening ? [say(language.openingLine(opening), true)] : []),
@@ -33,6 +33,7 @@ export function explanation(
     { before: move.before, after: move.after, mover: move.color, seed },
     language,
   );
-  if (isError(move.cls)) return found === null ? [say(course)] : [say(course, true), say(found)];
+  if (isError(move.moveClass))
+    return found === null ? [say(course)] : [say(course, true), say(found)];
   return [say(found ?? remark(move, context)), say(course, true)];
 }

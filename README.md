@@ -119,8 +119,9 @@ pnpm install --frozen-lockfile
 pnpm build --target firefox --release --version <version>
 ```
 
-`dist/firefox` is then the add-on, file for file. From a clone at the tag
-`store-<version>`, `pnpm package` writes every package into `dist/`.
+`dist/firefox` is then the add-on, file for file. From a full clone (not
+`--depth`) at the tag `store-<version>`, `pnpm package` writes every package
+into `dist/`: the version counts the commits.
 
 ## Disclaimer
 

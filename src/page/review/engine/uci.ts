@@ -8,15 +8,14 @@ export type EngineLine =
 
 export interface EngineResult {
   readonly lines: readonly EngineLine[];
-  readonly bestmove?: string | undefined;
 }
 
 export type UciOutput =
-  | { readonly kind: 'bestmove'; readonly move: string | undefined }
+  | { readonly kind: 'bestmove' }
   | { readonly kind: 'line'; readonly slot: number; readonly line: EngineLine };
 
 const SCORED = / score /;
-// A bound is a search still in progress: its score isn't the line's.
+// A bound comes from a search still in progress, so its score isn't the line's.
 const BOUND = / (lower|upper)bound/;
 
 function parseScore(text: string, pv: readonly string[]): EngineLine | null {
@@ -28,7 +27,7 @@ function parseScore(text: string, pv: readonly string[]): EngineLine | null {
 
 /** Reads one line of engine output; null for anything the review ignores. */
 export function parseUciOutput(text: string): UciOutput | null {
-  if (text.startsWith('bestmove')) return { kind: 'bestmove', move: text.split(' ')[1] };
+  if (text.startsWith('bestmove')) return { kind: 'bestmove' };
   if (!text.startsWith('info') || !SCORED.test(text) || BOUND.test(text)) return null;
   const slot = Number(/ multipv (\d+)/.exec(text)?.[1] ?? 1) - 1;
   const pv = (/ pv (.+)$/.exec(text)?.[1] ?? '').trim().split(/\s+/).filter(Boolean);
@@ -44,8 +43,7 @@ export class SearchCollector {
   read(text: string): EngineResult | null {
     const output = parseUciOutput(text);
     if (output?.kind === 'bestmove') {
-      const lines = this.#lines.filter(line => line !== undefined);
-      return { lines, bestmove: output.move };
+      return { lines: this.#lines.filter(line => line !== undefined) };
     }
     if (output) this.#lines[output.slot] = output.line;
     return null;

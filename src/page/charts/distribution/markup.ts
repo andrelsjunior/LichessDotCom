@@ -90,7 +90,7 @@ interface Chart {
   readonly geometry: Geometry;
   readonly players: Players;
   readonly markers: readonly Marker[];
-  /** The last column lit: yours, the columns above it dimmed. */
+  /** The last lit column, yours when you have a rating. The columns after it are dimmed. */
   readonly lit: number;
   readonly color: string;
   readonly formats: NumberFormats;

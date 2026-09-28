@@ -1,7 +1,7 @@
 import type { ReviewLanguage } from '#page/review/i18n/types.ts';
-import type { MoveReview } from '#page/review/judge/types.ts';
+import type { MoveVerdict } from '#page/review/judge/types.ts';
 
-/** Who comments on which game: the picks hash both, so each coach words things their own way. */
+/** The game and its coach. Phrase picks hash both, so each coach words a move its own way. */
 export interface CoachContext {
   /** Lichess's game id (`synthetic` on the free analysis board). */
   readonly gameId: string;
@@ -11,5 +11,5 @@ export interface CoachContext {
 }
 
 /** The seed of a move's picks: stable across redraws. */
-export const moveSeed = (move: MoveReview, { gameId, coach }: CoachContext): string =>
+export const moveSeed = (move: MoveVerdict, { gameId, coach }: CoachContext): string =>
   `${gameId}:${move.ply}:${move.uci}:${coach}`;

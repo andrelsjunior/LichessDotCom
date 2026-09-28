@@ -34,7 +34,10 @@ export type RatingModel = z.infer<typeof RatingModelSchema>;
 
 let model: RatingModel | null = null;
 
-/** The model, checked the first time it's needed: a bad file only costs the rating. */
+/**
+ * The model, parsed the first time it's needed. A malformed model.json would
+ * stop the whole review, which is why rating.test.ts parses the shipped one.
+ */
 export function ratingModel(): RatingModel {
   model ??= RatingModelSchema.parse(modelData);
   return model;

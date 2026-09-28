@@ -2,10 +2,10 @@ import type { Analysis } from '#page/lichess/analysis.ts';
 import { toRecord } from '#page/review/engine/record.ts';
 import { FULL_SEARCH, QUICK_SEARCH } from '#page/review/engine/settings.ts';
 import type { Stockfish } from '#page/review/engine/stockfish.ts';
+import { engineFor } from '#page/review/engine-pool.ts';
 import type { GameWork, Mode, Session } from '#page/review/session.ts';
 import { cacheRecords, readCachedRecords } from './cache.ts';
 import { lookUpCloud } from './cloud-lookup.ts';
-import { engineFor } from './engine-pool.ts';
 import { fetchExport } from './export.ts';
 import { refresh, seedBooks, setDeep } from './work.ts';
 
@@ -23,8 +23,8 @@ interface JobInput {
   readonly analysis: Analysis;
 }
 
-// The cloud goes ahead through the opening: the engine leaves it the few
-// positions it's about to look up.
+// The cloud looks up the opening one position at a time. The engine skips the
+// position it's looking up and the next few, which it will reach soon.
 const CLOUD_AHEAD = 3;
 
 /**
@@ -65,7 +65,7 @@ async function runEngine(session: Session, analysis: Analysis, engine: Stockfish
     const job = nextJob({ work, mode: view.mode, analysis });
     if (!job) {
       if (view.review?.complete) return;
-      // The cloud has the rest in hand.
+      // Nothing left for the engine: the cloud is still looking up the rest.
       await pause(100);
       continue;
     }
@@ -78,7 +78,7 @@ async function runEngine(session: Session, analysis: Analysis, engine: Stockfish
   }
 }
 
-async function readExport(session: Session, analysis: Analysis): Promise<void> {
+async function applyExport(session: Session, analysis: Analysis): Promise<void> {
   const { work, view } = session;
   try {
     const found = await fetchExport(analysis.gameId, work.nodes.length);
@@ -96,7 +96,7 @@ export async function analyseGame(session: Session, analysis: Analysis): Promise
   const gameId = analysis.gameId;
   work.nodes = analysis.mainline;
   const positions = work.nodes.length;
-  await readExport(session, analysis);
+  await applyExport(session, analysis);
   seedBooks(session, analysis);
   for (const [i, record] of (readCachedRecords(gameId, positions) ?? []).entries())
     setDeep(session, i, record);
@@ -105,7 +105,7 @@ export async function analyseGame(session: Session, analysis: Analysis): Promise
   if (!analysis.chess960) void lookUpCloud(session, analysis);
   let engine: Stockfish;
   try {
-    engine = await engineFor(session.live, analysis);
+    engine = await engineFor(session, analysis);
   } catch (error) {
     console.error('[LichessDotCom] engine boot failed', error);
     view.error = session.language.ui.engineError;

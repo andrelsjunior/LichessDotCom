@@ -1,11 +1,11 @@
-// Our colors for Lichess's brushes, as "r,g,b". Keyed by the stroke
-// chessground paints with: the brush names don't make it into the svg.
+// Our colors for Lichess's brushes, as "r,g,b". They're keyed by the stroke
+// color chessground paints with, because the brush names don't reach the svg.
 
 const GREEN = '#15781B';
 const RED = '#882020';
 const BLUE = '#003088';
 
-// Lichess's default green is our orange, and its yellow our green.
+// Lichess's default green brush becomes our orange, and its yellow brush becomes our green.
 const ARROWS: ReadonlyMap<string, string> = new Map([
   [GREEN, '255,170,0'],
   [RED, '248,85,63'],
@@ -17,8 +17,8 @@ const ARROWS: ReadonlyMap<string, string> = new Map([
   ['#ffffff', '255,255,255'],
 ]);
 
-// Squares start from the red they're highlighted with: the default brush
-// takes it, and Lichess's red the orange it frees.
+// Right-clicked squares are red by default, so Lichess's default brush fills
+// them in our red, and its red brush uses orange instead to stay distinct.
 const SQUARES: ReadonlyMap<string, string> = new Map([
   ...ARROWS,
   [GREEN, '235,97,80'],

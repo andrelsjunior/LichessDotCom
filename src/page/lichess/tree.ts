@@ -17,6 +17,24 @@ export type TreeNode = z.infer<typeof TreeNodeSchema>;
 
 export const isTreeNode = createGuard(TreeNodeSchema);
 
+// A tree path is its nodes' ids end to end, two characters each (lila's
+// ui/lib/src/tree/path.ts).
+const NODE_ID_LENGTH = 2;
+
+/** The path of the node's parent: '' for a move from the root. */
+export const parentPath = (path: string): string => path.slice(0, -NODE_ID_LENGTH);
+
+/** The id of the node the path leads to. */
+export const lastNodeId = (path: string): string => path.slice(-NODE_ID_LENGTH);
+
+/** The path of each node along `path`, the first move's first, `path` itself last. */
+export function pathPrefixes(path: string): string[] {
+  const prefixes: string[] = [];
+  for (let end = NODE_ID_LENGTH; end <= path.length; end += NODE_ID_LENGTH)
+    prefixes.push(path.slice(0, end));
+  return prefixes;
+}
+
 /** The node's first child: the next move on its line. */
 export function firstChild(node: TreeNode): TreeNode | null {
   const child = node.children[0];

@@ -14,25 +14,28 @@ only the DOM and `window.postMessage`. A third runs in the background.
 `src/shared/` holds what several of them use, and must not touch `chrome.*`:
 the page world would crash on it.
 
-| Module                                                                      | What it gives                                                                                                      |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `dom.ts`, `owned-element.ts`, `svg.ts`                                      | typed lookups, element builders, writes that skip unchanged values, an element of ours kept in a Lichess container |
-| `html.ts`                                                                   | the escaping `html` template and `setHtml`                                                                         |
-| `protocol.ts`, `dev-check.ts`                                               | the messages between the worlds, and with the background worker                                                    |
-| `json.ts`, `zod.ts`, `guards.ts`                                            | parsing and validating outside data                                                                                |
-| `storage.ts`                                                                | every storage key, and reads and writes that survive a blocked storage                                             |
-| `page-init-data.ts`                                                         | the page's `#page-init-data`, captured before Lichess removes it                                                   |
-| `features.ts`, `frame.ts`, `poll.ts`                                        | starting features, once-per-frame work, waiting for Lichess's globals                                              |
-| `lang.ts`, `text.ts`, `math.ts`, `geometry.ts`                              | the page's language, small text and number helpers, points and boxes                                               |
-| `chess/`, `charts/`, `coach.ts`, `sounds.ts`                                | chess basics, chart pieces, the coach's moods, the sound names                                                     |
-| `testing/`                                                                  | helpers only tests import, and the vitest setup filling happy-dom's gaps                                           | Each directory |
-| has its own `tsconfig.json`, so a page-world file that names `chrome` fails |
-| to type-check, and the linter says why.                                     |
+| Module                                         | What it gives                                                                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `dom.ts`, `owned-element.ts`, `svg.ts`         | typed lookups, element builders, writes that skip unchanged values, an element of ours kept in a Lichess container |
+| `html.ts`                                      | the escaping `html` template and `setHtml`                                                                         |
+| `protocol.ts`, `dev-check.ts`                  | the messages between the worlds, and with the background worker                                                    |
+| `json.ts`, `zod.ts`, `guards.ts`               | parsing and validating outside data                                                                                |
+| `storage.ts`                                   | every storage key; writes that survive a full or blocked storage, and reads that throw on a blocked one            |
+| `page-init-data.ts`                            | the page's `#page-init-data`, captured before Lichess removes it                                                   |
+| `features.ts`, `frame.ts`, `poll.ts`           | starting features, once-per-frame work, waiting for Lichess's globals                                              |
+| `lang.ts`, `text.ts`, `math.ts`, `geometry.ts` | the page's language, small text and number helpers, points and boxes                                               |
+| `chess/`, `charts/`, `coach.ts`, `sounds.ts`   | chess basics, chart pieces, the coach's moods, the sound names                                                     |
+| `testing/`                                     | helpers only tests import, and the vitest setup filling happy-dom's gaps                                           |
+
+Each directory has its own `tsconfig.json`, so a page-world file that names
+`chrome` fails to type-check, and the linter says why.
 
 `src/manifest.ts` defines the manifest for every target (Chrome, the Chrome
 Web Store, Firefox). `scripts/build.ts` bundles each script with rolldown into
-an IIFE, joins the stylesheets, copies `public/` and writes the manifest into
-`dist/<target>/`.
+an IIFE, joins the stylesheets, copies `public/` and the bundled packages'
+licenses (`scripts/lib/licenses.ts`) and writes the manifest. It builds beside
+`dist/<target>/`, then swaps the result in whole: the browser, and its dev
+reload, never see a half-written or failed build.
 
 ## Features
 
@@ -61,14 +64,17 @@ so the logic can be unit-tested without a page.
 - Lichess's live objects (the analysis controller, tree nodes, the sound
   player) must keep their identity, and a zod parse returns a copy: narrow
   them with `createGuard(schema)` instead (`src/shared/guards.ts`). The
-  schema still gives the type. Describe only the members we use.
+  schema still gives the type, and must not rewrite the value (no
+  `lenient`, catch, default or coerce): the guard narrows the input, not a
+  parsed copy. Describe only the members we use.
 - DOM lookups narrow with `instanceof` through `queryOne`, `queryAll` and
   `closestTo` (`src/shared/dom.ts`).
 - Import with the `.ts` extension, and `import type` for types only.
-- Import from another folder through a `#` alias, never `../`: `#shared/…`,
-  `#content/…`, `#page/…`, `#background/…`, `#scripts/…` and `#manifest`,
-  declared once in `package.json`'s `imports`, which TypeScript, rolldown,
-  vitest and Node all read. `./` is for a file in the same folder.
+- Never import with `../`: reach a file outside your folder through a `#`
+  alias (`#shared/…`, `#content/…`, `#page/…`, `#background/…`,
+  `#scripts/…` and `#manifest`), declared once in `package.json`'s
+  `imports`, which TypeScript, rolldown, vitest and Node all read. `./` is
+  for a file in the same folder or a folder below it.
 
 ## Code
 
@@ -125,4 +131,6 @@ stylesheet longer than 400 lines is a folder of partials with its own
 | `pnpm lint` / `pnpm format` | oxlint (type-aware) / oxfmt             |
 | `pnpm test`                 | unit tests                              |
 | `pnpm test:e2e`             | end-to-end tests (build first)          |
+| `pnpm test:e2e:fast`        | the same, without the `@slow` ones      |
+| `pnpm test:firefox`         | Firefox smoke test (build it first)     |
 | `pnpm check`                | everything but the end-to-end tests     |

@@ -31,7 +31,11 @@ describe.each(LANGUAGES)('%s', (lang, language) => {
 
   it('has the original’s class labels and verdicts', () => {
     expect(original.labels).toEqual(
-      MOVE_CLASSES.map(cls => [cls, language.classLabels[cls], language.classSentences[cls]]),
+      MOVE_CLASSES.map(moveClass => [
+        moveClass,
+        language.classLabels[moveClass],
+        language.classSentences[moveClass],
+      ]),
     );
   });
 

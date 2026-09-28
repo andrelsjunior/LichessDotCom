@@ -32,7 +32,3 @@ export function formatSpent(centiseconds: number): string {
   if (seconds < 60) return `${seconds.toFixed(1)}s`;
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 }
-
-/** The game id a path starts with (`/abcd1234/black`), if any. */
-export const gameIdFrom = (path: string): string | null =>
-  /^\/([A-Za-z0-9]{8})/.exec(path)?.[1] ?? null;

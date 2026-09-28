@@ -50,7 +50,6 @@ const REDUCED = 'data:text/css,@media (prefers-reduced-motion: reduce) { a { ani
 const PLAIN = 'data:text/css,a { color: red }';
 
 const links = (): HTMLLinkElement[] => queryAll(document, 'link', HTMLLinkElement);
-const settle = (): Promise<void> => new Promise(resolve => setTimeout(resolve, 50));
 
 function addLink(href: string, attrs: Record<string, string> = {}): HTMLLinkElement {
   const link = document.createElement('link');
@@ -62,7 +61,11 @@ function addLink(href: string, attrs: Record<string, string> = {}): HTMLLinkElem
 }
 
 describe('copyStylesheets', () => {
+  let observer: MutationObserver | undefined;
+
   afterEach(() => {
+    observer?.disconnect();
+    observer = undefined;
     for (const link of links()) link.remove();
   });
 
@@ -72,36 +75,39 @@ describe('copyStylesheets', () => {
     const unnamed = document.createElement('link');
     unnamed.rel = 'stylesheet';
     document.head.append(unnamed);
-    copyStylesheets();
+    observer = copyStylesheets();
     const copy = original.nextElementSibling;
     expect(copy?.outerHTML).toBe(
       `<link rel="stylesheet" crossorigin="anonymous" media="screen" href="${REDUCED}">`,
     );
-    await settle();
-    expect(original.disabled).toBe(true);
-    expect(copy?.isConnected).toBe(true);
-    // Nothing to rewrite: the copy goes, the original stays on.
+    // The plain sheet has nothing to rewrite, so its copy is removed and the original stays on.
+    await vi.waitFor(() => {
+      expect(original.disabled).toBe(true);
+      expect(links()).toEqual([original, copy, plain, unnamed]);
+    });
     expect(plain.disabled).not.toBe(true);
-    expect(links()).toHaveLength(4);
-    expect(unnamed.nextElementSibling).toBeNull();
   });
 
   it('follows the sheets Lichess adds and removes', async () => {
+    observer = copyStylesheets();
     const later = addLink(REDUCED);
-    await settle();
+    await vi.waitFor(() =>
+      expect(later.nextElementSibling?.getAttribute('crossorigin')).toBe('anonymous'),
+    );
     const copy = later.nextElementSibling;
-    expect(copy?.getAttribute('crossorigin')).toBe('anonymous');
     later.remove();
-    await settle();
-    expect(copy?.isConnected).toBe(false);
+    await vi.waitFor(() => expect(copy?.isConnected).toBe(false));
   });
 
-  it('drops a copy that fails to load', async () => {
-    const warn = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const broken = addLink('data:text/plain;base64,!!!');
-    await settle();
+  it('drops a copy that fails to load', () => {
+    const broken = addLink(PLAIN);
+    observer = copyStylesheets();
+    const copy = broken.nextElementSibling;
+    expect(copy).toBeInstanceOf(HTMLLinkElement);
+    // The failure is fired by hand because happy-dom prints a real one to the
+    // terminal. Check at once: happy-dom's own load would remove this copy too.
+    copy?.dispatchEvent(new Event('error'));
+    expect(copy?.isConnected).toBe(false);
     expect(broken.disabled).not.toBe(true);
-    expect(links()).toEqual([broken]);
-    warn.mockRestore();
   });
 });

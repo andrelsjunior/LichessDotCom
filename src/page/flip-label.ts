@@ -4,8 +4,9 @@ import { pollUntil } from '#shared/poll.ts';
 import { nonEmpty } from '#shared/text.ts';
 import { translate } from '#page/lichess/globals.ts';
 
-// The game page's flip button (src/content/game/board-tools.ts) is labelled
-// in Lichess's words, which only the page world can read: copied onto <html>.
+// The game page's flip button (src/content/game/board-tools.ts) uses Lichess's
+// own label. Only the page world can read Lichess's translations, so this
+// copies the label onto <html>.
 
 const flipBoardLabel = (): string | null => nonEmpty(translate('flipBoard', '')) ?? null;
 

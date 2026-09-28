@@ -5,22 +5,23 @@ import type { ReviewLanguage, Standing } from '#page/review/i18n/types.ts';
 // How a move changed the game: "The game was balanced, but now Black has a
 // clear advantage."
 
-function winLevel(wp: number): number {
-  if (wp >= 90) return 3;
-  if (wp >= 70) return 2;
-  return wp >= 58 ? 1 : 0;
+function winLevel(winChance: number): number {
+  if (winChance >= 90) return 3;
+  if (winChance >= 70) return 2;
+  return winChance >= 58 ? 1 : 0;
 }
 
-function lossLevel(wp: number): number {
-  if (wp <= 10) return 3;
-  if (wp <= 30) return 2;
-  return wp <= 42 ? 1 : 0;
+function lossLevel(winChance: number): number {
+  if (winChance <= 10) return 3;
+  if (winChance <= 30) return 2;
+  return winChance <= 42 ? 1 : 0;
 }
 
 /** White's view of a position, from -4 (Black mates) to 4 (White mates). */
 export function evaluationLevel(record: PositionRecord): number {
-  if ('mate' in record) return record.mate > 0 || (record.mate === 0 && record.wp > 50) ? 4 : -4;
-  return winLevel(record.wp) - lossLevel(record.wp);
+  if ('mate' in record)
+    return record.mate > 0 || (record.mate === 0 && record.whiteWinChance > 50) ? 4 : -4;
+  return winLevel(record.whiteWinChance) - lossLevel(record.whiteWinChance);
 }
 
 /** "a clear advantage", or "a mate in 3" when there's a mate to count. */

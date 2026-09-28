@@ -1,16 +1,13 @@
 import { closestTo } from '#shared/dom.ts';
 import { analysis as pageAnalysis, type Analysis } from '#page/lichess/analysis.ts';
-import type { Mode, Session } from '#page/review/session.ts';
+import type { Session } from '#page/review/session.ts';
+import { type PanelAction, PanelActionSchema } from './actions.ts';
 import { nextCoach } from './coach-avatar.ts';
 import { goTo, jump, showBest, stepPath, stopPlaying, togglePlay } from './navigation.ts';
-import { render, setMode } from './render.ts';
 
 // The panel's and the controls' buttons, by their `data-cdc` action.
 
-const MODES: ReadonlySet<string> = new Set<Mode>(['normal', 'summary', 'moves', 'live']);
-const isMode = (action: string): action is Mode => MODES.has(action);
-
-function act(session: Session, analysis: Analysis, action: string): void {
+function act(session: Session, analysis: Analysis, action: Exclude<PanelAction, 'coach'>): void {
   const { view } = session;
   if (action === 'play') togglePlay(session, analysis);
   else if (action === 'explain') view.explain = !view.explain;
@@ -21,28 +18,30 @@ function act(session: Session, analysis: Analysis, action: string): void {
     const path = stepPath(session, analysis, action === 'prev' ? -1 : 1);
     if (path !== null) goTo(analysis, path);
   } else if (action === 'best') showBest(session, analysis);
-  else if (isMode(action)) {
+  else {
     // Starting the review goes to the first move.
     if (action === 'moves' && (!analysis.onMainline || analysis.node.ply === 0)) jump(analysis, 1);
-    setMode(session, action);
+    session.setMode(action);
   }
 }
 
 function onClick(session: Session, event: MouseEvent): void {
   const button = closestTo(event.target, '[data-cdc]', HTMLElement);
   if (!button || (button instanceof HTMLButtonElement && button.disabled)) return;
-  const analysis = pageAnalysis();
-  const action = button.dataset.cdc ?? '';
+  const parsed = PanelActionSchema.safeParse(button.dataset.cdc);
+  if (!parsed.success) return;
+  const action = parsed.data;
   if (action === 'coach') {
     nextCoach(session, button);
     // Each coach words the remarks their own way.
-    if (session.view.mode === 'moves' || session.view.mode === 'live') render(session, true);
+    if (session.view.mode === 'moves' || session.view.mode === 'live') session.redraw(true);
     return;
   }
+  const analysis = pageAnalysis();
   if (!analysis) return;
   if (action !== 'play') stopPlaying(session);
   act(session, analysis, action);
-  render(session, true);
+  session.redraw(true);
 }
 
 export function watchClicks(session: Session): void {

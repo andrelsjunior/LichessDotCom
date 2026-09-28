@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { BrowserContext, Page } from '@playwright/test';
 import { z } from 'zod/mini';
 import { MOVE_CLASSES } from '#page/review/classes/classes.ts';
-import { PositionRecordSchema } from '#page/review/evaluation/score.ts';
+import { StoredRecordSchema } from '#page/review/evaluation/stored.ts';
 
 // The Game Review of FINISHED_GAME. The engine takes a minute and never
 // judges twice alike, so most tests start from its cache: every position
@@ -15,7 +15,7 @@ export const VERDICT = new RegExp(`^(${MOVE_CLASSES.join('|')})$`);
 
 const ReviewCacheSchema = z.object({
   storageKey: z.string().check(z.startsWith('cdc-review:')),
-  records: z.array(PositionRecordSchema).check(z.minLength(2)),
+  records: z.array(StoredRecordSchema).check(z.minLength(2)),
 });
 
 export type ReviewCache = z.infer<typeof ReviewCacheSchema>;

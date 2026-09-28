@@ -150,4 +150,9 @@ describe('assetUrl', () => {
     expect(assetUrl('npm/sf.js', { documentOrigin: true })).toBe('/assets/npm/sf.js?doc');
     expect(assetUrl('lifat/nnue/a')).toBe('/assets/lifat/nnue/a');
   });
+
+  it('throws when the helper returns no URL', () => {
+    Object.assign(window, { site: { asset: { url: () => 42 } } });
+    expect(() => assetUrl('x.js')).toThrow(/returned no URL/);
+  });
 });

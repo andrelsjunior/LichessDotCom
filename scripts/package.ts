@@ -3,24 +3,26 @@
 // Firefox zip from.
 //
 //   node scripts/package.ts [--version x.y.z]
+//
+// Without --version it counts the commits, so it needs a full clone.
 
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
-import { buildTarget, TARGETS } from '#scripts/lib/build-target.ts';
+import { buildTarget, TARGETS } from './lib/build-target.ts';
 import {
   isPackageName,
   listPackageFiles,
   listSourceFiles,
   packageName,
   type PackageKind,
-} from '#scripts/lib/package-files.ts';
-import { fromRoot, ROOT } from '#scripts/lib/paths.ts';
-import { currentVersion } from '#scripts/lib/version.ts';
-import { createZip, type ZipEntry } from '#scripts/lib/zip.ts';
+} from './lib/package-files.ts';
+import { fromRoot, ROOT } from './lib/paths.ts';
+import { releaseVersion } from './lib/version.ts';
+import { createZip, type ZipEntry } from './lib/zip.ts';
 
 const { values } = parseArgs({ options: { version: { type: 'string' } } });
-const version = values.version ?? currentVersion();
+const version = values.version ?? releaseVersion();
 const DIST = fromRoot('dist');
 
 function readEntries(dir: string, files: readonly string[]): Promise<ZipEntry[]> {

@@ -4,9 +4,9 @@ import { squareCoords } from '#shared/chess/squares.ts';
 import type { Color, Square } from '#shared/chess/types.ts';
 import { queryOne } from '#shared/dom.ts';
 import { SOUND_NAMES } from '#shared/sounds.ts';
-import type { SoundPlayer } from '#page/lichess/sound.ts';
 import { watchMoveAttempts } from './attempts.ts';
 import { addSquare, ColorSchema, renderBoard, SquareSchema } from './fixtures/boards.ts';
+import { fakeSoundPlayer } from './fixtures/sound-player.ts';
 import { hookSoundPlayer } from './player.ts';
 import { squareFromPoint } from './pointer-square.ts';
 import { createSession } from './session.ts';
@@ -81,20 +81,6 @@ function press(
   target.dispatchEvent(new PointerEvent(type, { bubbles: true, button, clientX: x, clientY: y }));
 }
 
-function fakePlayer(): { sound: SoundPlayer; calls: unknown[] } {
-  const calls: unknown[] = [];
-  const sound: SoundPlayer = {
-    paths: new Map(),
-    theme: 'standard',
-    play: (name, volume) => {
-      calls.push(['play', name, volume]);
-      return Promise.resolve();
-    },
-    move: () => Promise.resolve(),
-  };
-  return { sound, calls };
-}
-
 let stop = (): void => {};
 
 beforeEach(() => {
@@ -109,7 +95,7 @@ afterEach(() => {
 
 describe('move attempts', () => {
   it.each(attempts)('$name: plays what the original played', async attempt => {
-    const { sound, calls } = fakePlayer();
+    const { sound, calls } = fakeSoundPlayer();
     const session = createSession();
     hookSoundPlayer(sound, new Map(SOUND_NAMES.map(name => [name, `blob:${name}`])), session);
     stop = watchMoveAttempts(session);

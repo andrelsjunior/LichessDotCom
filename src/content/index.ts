@@ -17,7 +17,8 @@ import { moveTimes } from './game/move-times.ts';
 import { newGame } from './game/new-game.ts';
 import { flags } from './game/flags.ts';
 import { boardInset } from './layout/board-inset.ts';
-import { puzzle } from './pages/puzzle.ts';
+import { evalGauge } from './analysis/eval-gauge.ts';
+import { puzzleSession } from './pages/puzzle.ts';
 import { homeHero } from './pages/home-hero.ts';
 import { coachTitles } from './pages/coach-titles.ts';
 import { swiss } from './pages/swiss.ts';
@@ -59,7 +60,8 @@ function main(): void {
     newGame,
     flags,
     boardInset,
-    puzzle,
+    evalGauge,
+    puzzleSession,
     homeHero,
     coachTitles,
     swiss,

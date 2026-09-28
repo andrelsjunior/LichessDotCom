@@ -54,7 +54,7 @@ export const en: ReviewLanguage = {
     miss: '{m} is a miss',
     blunder: '{m} is a blunder',
   },
-  countLabel: (cls, count) => `${count} ${CLASS_LABELS[cls]}`,
+  countLabel: (moveClass, count) => `${count} ${CLASS_LABELS[moveClass]}`,
   typography: text => text,
   openingLine: name => `Opening: ${name}.`,
   remarks: remarksEn,

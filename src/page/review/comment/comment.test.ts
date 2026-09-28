@@ -97,9 +97,9 @@ describe('streamFor', () => {
 describe('verdictTitle', () => {
   it('writes the verdicts as the original did', () => {
     for (const [lang, key, san, html] of legacy.titles) {
-      const cls = MOVE_CLASSES.find(candidate => candidate === key);
-      if (!cls) throw new Error(`unknown class ${key}`);
-      expect(verdictTitle(cls, String(san), languageOf(lang)).value).toBe(html);
+      const moveClass = MOVE_CLASSES.find(candidate => candidate === key);
+      if (!moveClass) throw new Error(`unknown class ${key}`);
+      expect(verdictTitle(moveClass, String(san), languageOf(lang)).value).toBe(html);
     }
   });
 });
@@ -110,8 +110,11 @@ describe('the languages’ helpers', () => {
       expect(fr.typography(String(text))).toBe(french);
       expect(en.typography(String(text))).toBe(english);
     }
-    for (const [lang, cls, count, label] of legacy.counts) {
-      const counted = cls === 'brilliant' || cls === 'great' || cls === 'best' ? cls : 'best';
+    for (const [lang, moveClass, count, label] of legacy.counts) {
+      const counted =
+        moveClass === 'brilliant' || moveClass === 'great' || moveClass === 'best'
+          ? moveClass
+          : 'best';
       expect(languageOf(lang).countLabel(counted, Number(count))).toBe(label);
     }
   });

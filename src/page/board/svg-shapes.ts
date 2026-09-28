@@ -61,7 +61,7 @@ export function readShapes(
       color: squareColor(circle.getAttribute('stroke')),
       opacity: opacityOf(circle),
     }));
-  // Not until the button is released: Lichess draws the arrow as you drag, we don't.
+  // Skip the arrow being dragged: Lichess draws it as you drag, we wait for the release.
   const arrows = queryAll(svg, 'line', Element)
     .filter(line => !isBeingDrawn(line) && !isEngineShape(line))
     .map(line => ({

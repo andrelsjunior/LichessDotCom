@@ -7,8 +7,8 @@ import { openingAt } from '#page/review/live/judging.ts';
 import type { BookEntry, Session } from '#page/review/session.ts';
 
 // The opening's name over the free board's move list, from the masters
-// database (signed in only). Ours, appended to Lichess's panel and put above
-// the moves by review.css, so Lichess's own children never move.
+// database (signed in only). Our element is appended to Lichess's panel and
+// placed above the moves by review.css, so Lichess's own children never move.
 
 /** "Ruy Lopez: Morphy Defense": the family in bold, then the variation. */
 export function openingMarkup({ name, eco }: Pick<BookEntry, 'name' | 'eco'>): SafeHtml {
@@ -34,14 +34,14 @@ export function renderOpening(session: Session, analysis: Analysis): void {
   if (element.parentNode !== tools) tools.append(element);
   const opening = shownOpening(session, analysis);
   const key = opening ? `${opening.eco}|${opening.name}` : '';
-  if (element.dataset.key === key) return;
-  setData(element, 'key', key);
+  if (element.dataset.cdcOpening === key) return;
+  setData(element, 'cdcOpening', key);
   document.documentElement.classList.toggle('cdc-opening-on', opening !== null);
   if (!opening) {
     element.replaceChildren();
     return;
   }
   element.title = opening.name;
-  setStyleProperty(element, '--i', classImage('book'));
+  setStyleProperty(element, '--cdc-class-icon', classImage('book'));
   setHtml(element, openingMarkup(opening));
 }

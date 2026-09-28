@@ -1,5 +1,5 @@
 # Checks, packages and tests every push and pull request. On main the release
-# workflow runs it before it packages.
+# workflow calls it, then publishes the zips it packaged.
 name: CI
 
 on:

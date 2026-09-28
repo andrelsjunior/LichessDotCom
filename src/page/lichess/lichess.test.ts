@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { cgKey } from './chessground.ts';
+import { method } from './method.ts';
 import { readMoveOptions, soundPlayer } from './sound.ts';
+import { lastNodeId, parentPath, pathPrefixes } from './tree.ts';
 
 afterEach(() => {
   Reflect.deleteProperty(window, 'site');
@@ -13,6 +15,28 @@ describe('cgKey', () => {
     expect(cgKey(Object.assign(piece, { cgKey: 'e4' }))).toBe('e4');
     expect(cgKey(Object.assign(document.createElement('piece'), { cgKey: 'a0' }))).toBeNull();
     expect(cgKey(Object.assign(document.createElement('piece'), { cgKey: 42 }))).toBeNull();
+  });
+});
+
+describe('tree paths', () => {
+  it('read a path as its nodes’ two-character ids', () => {
+    expect(parentPath('')).toBe('');
+    expect(parentPath('/?')).toBe('');
+    expect(parentPath('/?WG.>')).toBe('/?WG');
+    expect(lastNodeId('/?WG.>')).toBe('.>');
+    expect(lastNodeId('')).toBe('');
+    expect(pathPrefixes('')).toEqual([]);
+    expect(pathPrefixes('/?')).toEqual(['/?']);
+    expect(pathPrefixes('/?WG.>')).toEqual(['/?', '/?WG', '/?WG.>']);
+  });
+});
+
+describe('method', () => {
+  it('takes a function, and nothing else', () => {
+    const schema = method<[path: string]>();
+    expect(schema.safeParse((path: string) => path.length).success).toBe(true);
+    expect(schema.safeParse('nodeAtPath').success).toBe(false);
+    expect(schema.safeParse(undefined).success).toBe(false);
   });
 });
 

@@ -17,8 +17,12 @@ function sanMarkup(san: string): SafeHtml {
   return html`${pieces}`;
 }
 
-export function verdictTitle(cls: MoveClass, san: string, language: ReviewLanguage): SafeHtml {
-  const sentence = language.typography(language.classSentences[cls]);
+export function verdictTitle(
+  moveClass: MoveClass,
+  san: string,
+  language: ReviewLanguage,
+): SafeHtml {
+  const sentence = language.typography(language.classSentences[moveClass]);
   const at = sentence.indexOf('{m}');
   if (at < 0) return html`${sentence}`;
   return html`${sentence.slice(0, at)}${sanMarkup(san)}${sentence.slice(at + 3)}`;

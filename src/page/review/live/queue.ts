@@ -1,6 +1,6 @@
 import { queryAll } from '#shared/dom.ts';
 import type { Analysis } from '#page/lichess/analysis.ts';
-import { firstChild, type TreeNode } from '#page/lichess/tree.ts';
+import { firstChild, pathPrefixes, type TreeNode } from '#page/lichess/tree.ts';
 import type { LiveState, Session } from '#page/review/session.ts';
 import { BOOK_PLIES } from './judging.ts';
 import { analyseLive, lookUpBook } from './lookups.ts';
@@ -41,8 +41,8 @@ export function wanted(analysis: Analysis, movePaths: readonly string[]): TreeNo
 
 /** The first position along `path` not looked up in the masters database, while the line is in it. */
 export function bookGap(live: LiveState, analysis: Analysis, path: string): string | null {
-  for (let i = 2; i <= path.length; i += 2) {
-    const node = analysis.nodeAtPath(path.slice(0, i));
+  for (const prefix of pathPrefixes(path)) {
+    const node = analysis.nodeAtPath(prefix);
     if (node.ply > BOOK_PLIES) return null;
     const entry = live.books.get(node.fen);
     if (!entry) return node.fen;
@@ -72,7 +72,7 @@ function nextBookGap(live: LiveState, analysis: Analysis): string | null {
 export function pump(session: Session, analysis: Analysis): void {
   const { live, work } = session;
   if (!live.busy && live.error === null) {
-    // A game's own positions are its analysis's to run.
+    // Skip the game's own positions: the game's analysis evaluates those.
     const game = analysis.synthetic ? null : new Set(work.nodes.map(node => node.fen));
     const node = wanted(analysis, treeMovePaths()).find(
       candidate => !live.evals.has(candidate.fen) && !game?.has(candidate.fen),

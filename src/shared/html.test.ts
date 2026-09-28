@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { escapeHtml, html, setHtml, trustedHtml } from './html.ts';
+import { describe, expect, expectTypeOf, it } from 'vitest';
+import { escapeHtml, html, type SafeHtml, setHtml, trustedHtml } from './html.ts';
 
 describe('html', () => {
   it('escapes what it interpolates, but not nested html', () => {
@@ -24,5 +24,11 @@ describe('html', () => {
     const host = document.createElement('div');
     setHtml(host, html`<span>${'<x>'}</span>`);
     expect(host.innerHTML).toBe('<span>&lt;x&gt;</span>');
+  });
+
+  it('takes no lookalike for its output, so page text can’t skip the escaping', () => {
+    // Checked by the type-check.
+    expectTypeOf<{ value: string; toString: () => string }>().not.toExtend<SafeHtml>();
+    expectTypeOf(html`<br>`).toExtend<SafeHtml>();
   });
 });

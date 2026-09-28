@@ -1,5 +1,6 @@
 import { z } from 'zod/mini';
 import { createGuard } from '#shared/guards.ts';
+import { clamp } from '#shared/math.ts';
 import { FULL_SEARCH, type SearchLimits, STOCKFISH_BUILD } from './settings.ts';
 import { assetUrl } from '#page/lichess/assets.ts';
 import { type EngineResult, SearchCollector } from './uci.ts';
@@ -78,7 +79,7 @@ export class Stockfish {
     await loadNetworks(module);
     Object.assign(module, { listen: (text: string) => this.#onLine?.(text) });
     this.#module = module;
-    const threads = Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 2) - 1));
+    const threads = clamp((navigator.hardwareConcurrency || 2) - 1, 1, 4);
     module.uci('uci');
     module.uci(`setoption name Threads value ${threads}`);
     module.uci('setoption name Hash value 64');
@@ -106,9 +107,5 @@ export class Stockfish {
     const search = this.#queue.then(run);
     this.#queue = search;
     return search;
-  }
-
-  destroy(): void {
-    this.#module?.uci('quit');
   }
 }

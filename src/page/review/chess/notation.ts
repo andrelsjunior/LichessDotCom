@@ -1,4 +1,4 @@
-import { parseFen } from '#shared/chess/index.ts';
+import { parseFen, parseSquare, squareCoords } from '#shared/chess/index.ts';
 import type { Color, Role } from '#shared/chess/index.ts';
 import { pieceOn } from './material.ts';
 
@@ -26,9 +26,10 @@ export const roleOfLetter = (letter: string): Role | undefined =>
 
 export const colorLetter = (color: Color): string => (color === 'white' ? 'w' : 'b');
 
-function fileIndex(square: string): number {
-  const file = square[0];
-  return file === undefined ? -1 : 'abcdefgh'.indexOf(file);
+/** A square's file, 0 for a to 7 for h; -1 for no square. */
+function fileIndex(name: string): number {
+  const square = parseSquare(name);
+  return square ? squareCoords(square)[0] : -1;
 }
 
 /**

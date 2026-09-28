@@ -36,14 +36,17 @@ function replaceWithCopy(link: HTMLLinkElement): void {
   link.after(copy);
 }
 
-export function copyStylesheets(): void {
-  new MutationObserver(records => {
+/** Copies the page's sheets, then those Lichess adds; returns the observer that watches for them. */
+export function copyStylesheets(): MutationObserver {
+  const observer = new MutationObserver(records => {
     for (const record of records) {
       for (const node of record.addedNodes) if (isStylesheet(node)) replaceWithCopy(node);
       for (const node of record.removedNodes) if (isStylesheet(node)) copies.get(node)?.remove();
     }
-  }).observe(document.documentElement, { childList: true, subtree: true });
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
   for (const link of queryAll(document, 'link[rel~="stylesheet"]', HTMLLinkElement)) {
     replaceWithCopy(link);
   }
+  return observer;
 }

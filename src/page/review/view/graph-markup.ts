@@ -1,4 +1,5 @@
 import { html, type SafeHtml } from '#shared/html.ts';
+import { clamp } from '#shared/math.ts';
 import { CLASS_COLORS, GRAPH_DOTS } from '#page/review/classes/classes.ts';
 import type { Review } from '#page/review/session.ts';
 
@@ -39,18 +40,18 @@ export function graphMarkup(
   const span = lastIndex(review) || 1;
   const x = (index: number): string => ((index / span) * width).toFixed(1);
   const y = (winChance: number): string =>
-    (height - (Math.max(0, Math.min(100, winChance)) / 100) * height).toFixed(1);
-  const wpAt = (index: number): number => review.positions[index]?.wp ?? 0;
+    (height - (clamp(winChance, 0, 100) / 100) * height).toFixed(1);
+  const winChanceAt = (index: number): number => review.positions[index]?.whiteWinChance ?? 0;
   const area = knownRuns(review.positions)
     .map(run => {
-      const points = run.map(index => `${x(index)},${y(wpAt(index))}`).join(' L');
+      const points = run.map(index => `${x(index)},${y(winChanceAt(index))}`).join(' L');
       return `M${x(run[0] ?? 0)},${height} L${points} L${x(run.at(-1) ?? 0)},${height} Z`;
     })
     .join(' ');
   const dots = review.draft.flatMap(move =>
-    move && GRAPH_DOTS.has(move.cls) && review.positions[move.ply]
+    move && GRAPH_DOTS.has(move.moveClass) && review.positions[move.ply]
       ? [
-          html`<circle cx="${x(move.ply)}" cy="${y(wpAt(move.ply))}" r="3.5" fill="${CLASS_COLORS[move.cls]}"/>`,
+          html`<circle cx="${x(move.ply)}" cy="${y(winChanceAt(move.ply))}" r="3.5" fill="${CLASS_COLORS[move.moveClass]}"/>`,
         ]
       : [],
   );

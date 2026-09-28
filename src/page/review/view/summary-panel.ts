@@ -43,14 +43,15 @@ export interface SummaryInput {
 function countRows({ review, allRows, language }: SummaryInput): SafeHtml[] {
   const brilliant =
     (review?.counts.white.brilliant ?? 0) > 0 || (review?.counts.black.brilliant ?? 0) > 0;
-  const count = (color: Color, cls: MoveClass): number => review?.counts[color][cls] ?? 0;
+  const count = (color: Color, moveClass: MoveClass): number =>
+    review?.counts[color][moveClass] ?? 0;
   return MOVE_CLASSES.filter(
-    cls => allRows || SUMMARY_ROWS.has(cls) || (cls === 'brilliant' && brilliant),
+    moveClass => allRows || SUMMARY_ROWS.has(moveClass) || (moveClass === 'brilliant' && brilliant),
   ).map(
-    cls => html`<tr><td class="cdc-t-label">${language.classLabels[cls]}</td>
-        <td class="cdc-t-num" style="color:${CLASS_COLORS[cls]}">${count('white', cls)}</td>
-        <td class="cdc-t-icon">${classIcon(cls)}</td>
-        <td class="cdc-t-num" style="color:${CLASS_COLORS[cls]}">${count('black', cls)}</td></tr>`,
+    moveClass => html`<tr><td class="cdc-t-label">${language.classLabels[moveClass]}</td>
+        <td class="cdc-t-num" style="color:${CLASS_COLORS[moveClass]}">${count('white', moveClass)}</td>
+        <td class="cdc-t-icon">${classIcon(moveClass)}</td>
+        <td class="cdc-t-num" style="color:${CLASS_COLORS[moveClass]}">${count('black', moveClass)}</td></tr>`,
   );
 }
 
@@ -60,8 +61,8 @@ function moreToggle({ allRows, language }: SummaryInput): SafeHtml {
       <tr class="cdc-t-sep"><td colspan="4"></td></tr>`;
 }
 
-// The rating each side played at, then a verdict per phase as the icon of
-// the class it deserves; a phase the game never reached goes once it's rated.
+// The rating each side played at, then a verdict per phase as the icon of the
+// class it deserves. Once the game is rated, phases it never reached are left out.
 function ratingRows({ review, language }: SummaryInput): SafeHtml {
   const { ui } = language;
   const rating = review?.rating;

@@ -13,17 +13,25 @@ export function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, char => ENTITIES[char] ?? char);
 }
 
-export class SafeHtml {
-  readonly value: string;
+// The private field makes the type nominal, and only its type is exported:
+// `html` and `trustedHtml` are the only ways to make one.
+class SafeHtml {
+  readonly #markup: string;
 
-  constructor(value: string) {
-    this.value = value;
+  constructor(markup: string) {
+    this.#markup = markup;
+  }
+
+  get value(): string {
+    return this.#markup;
   }
 
   toString(): string {
-    return this.value;
+    return this.#markup;
   }
 }
+
+export type { SafeHtml };
 
 export type HtmlValue =
   | SafeHtml

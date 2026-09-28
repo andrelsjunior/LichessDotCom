@@ -19,8 +19,9 @@ describe('forum labels', () => {
     document.body.innerHTML = legacy.html;
     syncForumLabels();
     const cell = queryOne(document, 'td.right', HTMLElement);
-    if (cell) delete cell.dataset.cdcLabel;
+    if (!cell) throw new Error('no count cell');
+    delete cell.dataset.cdcLabel;
     syncForumLabels();
-    expect(cell?.dataset.cdcLabel).toBeUndefined();
+    expect(cell.dataset.cdcLabel).toBeUndefined();
   });
 });

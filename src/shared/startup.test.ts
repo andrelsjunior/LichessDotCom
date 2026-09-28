@@ -77,6 +77,26 @@ describe('readPageInitData', () => {
     expect(second).toHaveBeenCalledExactlyOnceWith('{"b":2}');
   });
 
+  it('still hands the data to the other readers when one of them throws', async () => {
+    setReadyState('loading');
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const broken = vi.fn<(text: string | null) => void>(() => {
+      throw new Error('no');
+    });
+    const next = vi.fn<(text: string | null) => void>();
+    readPageInitData(broken);
+    readPageInitData(next);
+    addInitData('{"c":3}');
+    await Promise.resolve();
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    expect(broken).toHaveBeenCalledExactlyOnceWith('{"c":3}');
+    expect(next).toHaveBeenCalledExactlyOnceWith('{"c":3}');
+    expect(error).toHaveBeenCalledExactlyOnceWith(
+      '[LichessDotCom] page init data reader failed',
+      expect.any(Error),
+    );
+  });
+
   it('hands null over when the page has none', () => {
     const read = vi.fn<(text: string | null) => void>();
     readPageInitData(read);

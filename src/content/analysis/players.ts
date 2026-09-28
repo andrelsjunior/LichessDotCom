@@ -1,4 +1,5 @@
-import { opposite, type Color } from '#shared/chess/types.ts';
+import { opposite } from '#shared/chess/types.ts';
+import { wrapOrientation } from '#shared/chessground.ts';
 import { createElement, queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { createOwnedElement } from '#shared/owned-element.ts';
@@ -27,7 +28,7 @@ export function createPlayersSync(): () => void {
     const bottomBar = ownBottomBar(main);
     if (topBar.isNew || bottomBar.isNew) lastKey = '';
     // Flipping the board swaps them.
-    const bottomColor: Color = wrap.classList.contains('orientation-black') ? 'black' : 'white';
+    const bottomColor = wrapOrientation(wrap);
     const key = bottomColor + meta.innerHTML;
     if (key === lastKey) return;
     lastKey = key;

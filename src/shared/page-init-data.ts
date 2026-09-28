@@ -29,7 +29,15 @@ function watch(): void {
       node = null;
       const waiting = readers ?? [];
       readers = null;
-      for (const read of waiting) read(text);
+      // One listener serves every feature's reader: one that throws mustn't
+      // keep the others from their data.
+      for (const read of waiting) {
+        try {
+          read(text);
+        } catch (error) {
+          console.error('[LichessDotCom] page init data reader failed', error);
+        }
+      }
     },
     { once: true },
   );

@@ -1,6 +1,6 @@
 import { z } from 'zod/mini';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PositionRecordSchema } from '#page/review/evaluation/score.ts';
+import { StoredRecordCodec } from '#page/review/evaluation/stored.ts';
 import { CloudEvalSchema, fromCloud } from './cloud.ts';
 import { toRecord } from './record.ts';
 import { FULL_SEARCH, QUICK_SEARCH, STOCKFISH_BUILD } from './settings.ts';
@@ -14,10 +14,13 @@ const LineSchema = z.union([
   z.object({ mate: z.number(), pv: z.array(z.string()) }),
   z.object({ cp: z.number(), pv: z.array(z.string()) }),
 ]);
-const ResultSchema = z.object({ lines: z.array(LineSchema), bestmove: z.optional(z.string()) });
+const ResultSchema = z.object({ lines: z.array(LineSchema) });
 const SamplesSchema = z.array(
-  z.object({ fen: z.string(), result: ResultSchema, record: PositionRecordSchema }),
+  z.object({ fen: z.string(), result: ResultSchema, record: StoredRecordCodec }),
 );
+// A record as the original wrote it.
+const stored = (record: z.infer<typeof StoredRecordCodec>): string =>
+  JSON.stringify(z.encode(StoredRecordCodec, record));
 
 describe('UCI output', () => {
   it('collects the lines the original collected', () => {
@@ -25,7 +28,8 @@ describe('UCI output', () => {
       const collector = new SearchCollector();
       const results = lines.map(line => collector.read(line));
       expect(results.slice(0, -1).every(partial => partial === null)).toBe(true);
-      expect(results.at(-1)).toEqual(result);
+      // The original kept the final best move too, which nothing read.
+      expect(results.at(-1)).toEqual({ lines: result.lines });
     }
   });
 
@@ -34,7 +38,7 @@ describe('UCI output', () => {
     expect(parseUciOutput('info depth 3 score cp 20 lowerbound pv e2e4')).toBeNull();
     expect(parseUciOutput('info depth 3 score wdl 1 2 3 pv e2e4')).toBeNull();
     expect(parseUciOutput('readyok')).toBeNull();
-    expect(parseUciOutput('bestmove e2e4 ponder e7e5')).toEqual({ kind: 'bestmove', move: 'e2e4' });
+    expect(parseUciOutput('bestmove e2e4 ponder e7e5')).toEqual({ kind: 'bestmove' });
   });
 });
 
@@ -43,8 +47,8 @@ describe('toRecord', () => {
     const samples = SamplesSchema.parse([...legacyRecords, ...legacy.records]);
     for (const { fen, result, record } of samples) {
       // Through JSON, as the fixtures went (and as the cache stores records):
-      // the same keys in the same order, -0 and 0 alike.
-      expect(JSON.stringify(toRecord(fen, result))).toBe(JSON.stringify(record));
+      // -0 and 0 alike.
+      expect(stored(toRecord(fen, result))).toBe(stored(record));
     }
   });
 });
@@ -55,7 +59,7 @@ describe('fromCloud', () => {
       const lines = fromCloud(fen, CloudEvalSchema.parse(payload));
       expect(lines).toEqual(result);
       if (!lines) throw new Error(`no lines for ${fen}`);
-      expect(toRecord(fen, lines)).toEqual(record);
+      expect(toRecord(fen, lines)).toEqual(StoredRecordCodec.parse(record));
     }
   });
 
@@ -135,7 +139,5 @@ describe('Stockfish', () => {
       'position fen fen two',
       'go depth 12 movetime 500',
     ]);
-    engine.destroy();
-    expect(sent.at(-1)).toBe('quit');
   });
 });

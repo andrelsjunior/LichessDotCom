@@ -62,16 +62,17 @@ interface Frame {
   readonly width: number;
   readonly height: number;
   readonly counts: readonly number[];
+  /** Where the last column ends (`Players.maxRating`), the x axis's right end. */
+  readonly maxRating: number;
   readonly markers: number;
 }
 
-export function layOut({ width, height, counts, markers }: Frame): Geometry {
+export function layOut({ width, height, counts, maxRating, markers }: Frame): Geometry {
   const top = PADDING.top + markers * MARKER_ROW;
   const plotWidth = width - PADDING.left - PADDING.right;
   const bottom = height - PADDING.bottom;
   const plotHeight = bottom - top;
   const scale = countScale(Math.max(...counts));
-  const maxRating = MIN_RATING + counts.length * BIN_SIZE;
   return {
     width,
     height,

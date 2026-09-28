@@ -5,8 +5,9 @@ import type { Session } from '#page/review/session.ts';
 import { refresh, setDeep } from './work.ts';
 
 // Lichess's cloud: positions someone already analyzed deep, which for a game
-// means its opening. One position a request, one request at a time, as
-// Lichess asks; a few misses in a row and the game has left the known lines.
+// means its opening. It asks for one position at a time, one request at a
+// time, as Lichess asks. After a few misses in a row, the game has left the
+// known lines.
 
 const MISSES = 3;
 const TIMEOUT_MS = 5000;

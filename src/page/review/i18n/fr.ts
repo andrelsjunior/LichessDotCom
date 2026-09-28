@@ -65,8 +65,8 @@ export const fr: ReviewLanguage = {
     miss: '{m} est un coup manqué',
     blunder: '{m} est une gaffe',
   },
-  countLabel: (cls, count) => {
-    const [one, many] = COUNT_LABELS[cls];
+  countLabel: (moveClass, count) => {
+    const [one, many] = COUNT_LABELS[moveClass];
     return `${count} ${count > 1 ? many : one}`;
   },
   typography,

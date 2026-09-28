@@ -1,6 +1,6 @@
 import type { Color } from '#shared/chess/index.ts';
 import { forColor } from '#page/review/evaluation/score.ts';
-import type { MoveReview } from '#page/review/judge/types.ts';
+import type { MoveVerdict } from '#page/review/judge/types.ts';
 import { type PhaseKey, ratingModel, type Speed } from './model.ts';
 import { bandOdds, posteriorMean, RATING_GRID } from './odds.ts';
 import { divide, type Division, type Phase, PHASES } from './phases.ts';
@@ -30,8 +30,8 @@ export interface PlayerRating {
 export type GameRating = Readonly<Record<Color, PlayerRating | null>>;
 
 export type RatedMove = Pick<
-  MoveReview,
-  'color' | 'cls' | 'ply' | 'loss' | 'before' | 'previousPosition'
+  MoveVerdict,
+  'color' | 'moveClass' | 'ply' | 'loss' | 'before' | 'previousPosition'
 >;
 
 export interface GameRatingInput {
@@ -76,7 +76,7 @@ function movePhase(move: RatedMove, previous: RatedMove | undefined, division: D
   const index = move.ply - 1;
   if (division.end >= 0 && index >= division.end) return 'endgame';
   if (division.middle < 0 || index < division.middle) return 'opening';
-  const previousLoss = previous && previous.cls !== 'book' ? previous.loss : 0;
+  const previousLoss = previous && previous.moveClass !== 'book' ? previous.loss : 0;
   return isTactical(move.previousPosition.fen, previousLoss) ? 'tactics' : 'strategy';
 }
 
@@ -87,10 +87,11 @@ function standingIndex(winChance: number): number {
 
 function scoreMoves(moves: readonly RatedMove[], division: Division): ScoredMove[] {
   return moves.map((move, i) => {
-    if (move.cls === 'book') return { color: move.color, phase: 'book', context: 0, band: 0 };
+    if (move.moveClass === 'book') return { color: move.color, phase: 'book', context: 0, band: 0 };
     const phase = movePhase(move, moves[i - 1], division);
     // Lost, level or winning: in a won position even a blunder costs little.
-    const context = PHASES.indexOf(phase) * 3 + standingIndex(forColor(move.before.wp, move.color));
+    const context =
+      PHASES.indexOf(phase) * 3 + standingIndex(forColor(move.before.whiteWinChance, move.color));
     const band = LOSS_BANDS.findIndex(limit => move.loss < limit);
     return { color: move.color, phase, context, band: band < 0 ? LOSS_BANDS.length : band };
   });

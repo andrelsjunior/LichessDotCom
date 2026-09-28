@@ -1,23 +1,36 @@
+import { fnv } from './fnv.ts';
+
 // Test support: what the Game Review shows, read off the page after a step
 // of the script. The class icons and their data URLs, the same everywhere,
 // are cut down to their color and a hash.
 
-/** A short hash, for what's too long to keep whole; null stays null. */
-export const hashOf = (text: string | null): string | null => (text === null ? null : fnv(text));
+const shortHash = (text: string): string => fnv(text).toString(36);
 
-function fnv(text: string): string {
-  let value = 2166136261;
-  for (let i = 0; i < text.length; i++) value = Math.imul(value ^ text.charCodeAt(i), 16777619);
-  return (value >>> 0).toString(36);
-}
+/** A short hash, for what's too long to keep whole; null stays null. */
+export const hashOf = (text: string | null): string | null =>
+  text === null ? null : shortHash(text);
 
 const ICON = /<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" viewBox="0 0 18 19">[\s\S]*?<\/svg>/g;
 const ICON_URL = /url\((?:&quot;|")?data:image\/svg\+xml,.*?%3C%2Fsvg%3E(?:&quot;|")?\)/g;
 
+// The names the port gave the `cdc` prefix, back to the original's, as the
+// recordings have them.
+const RENAMED: readonly (readonly [string, string])[] = [
+  ['--cdc-class-color:', '--c:'],
+  ['--cdc-class-icon:', '--i:'],
+  ['data-cdc-version=', 'data-v='],
+  ['data-cdc-opening=', 'data-key='],
+  ['data-cdc-coach-id=', 'data-coach='],
+  ['data-cdc-mood=', 'data-mood='],
+];
+
 export function compact(markup: string): string {
-  return markup
-    .replace(ICON, icon => `[icon ${/fill="(#[0-9a-f]+)"/.exec(icon)?.[1] ?? ''} ${fnv(icon)}]`)
-    .replace(ICON_URL, url => `url(icon ${fnv(url)})`);
+  return RENAMED.reduce((text, [port, original]) => text.replaceAll(port, original), markup)
+    .replace(
+      ICON,
+      icon => `[icon ${/fill="(#[0-9a-f]+)"/.exec(icon)?.[1] ?? ''} ${shortHash(icon)}]`,
+    )
+    .replace(ICON_URL, url => `url(icon ${shortHash(url)})`);
 }
 
 const outer = (selector: string): string | null => {

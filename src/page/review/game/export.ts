@@ -31,9 +31,19 @@ export function readExport(text: string, positions: number): GameExport | null {
   for (const [i, entry] of (parsed.analysis ?? []).entries()) {
     if (i + 1 >= positions) continue;
     if (entry.mate !== undefined)
-      rough[i + 1] = { mate: entry.mate, wp: entry.mate > 0 ? 100 : 0, wp2: null, best: null };
+      rough[i + 1] = {
+        mate: entry.mate,
+        whiteWinChance: entry.mate > 0 ? 100 : 0,
+        secondLineWinChance: null,
+        best: null,
+      };
     else if (entry.eval !== undefined)
-      rough[i + 1] = { cp: entry.eval, wp: winPercent(entry.eval), wp2: null, best: null };
+      rough[i + 1] = {
+        cp: entry.eval,
+        whiteWinChance: winPercent(entry.eval),
+        secondLineWinChance: null,
+        best: null,
+      };
   }
   return {
     bookPly: parsed.opening?.ply ?? 0,

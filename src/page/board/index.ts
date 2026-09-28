@@ -8,16 +8,17 @@ import { onReviewArrowsChange } from './review-arrows.ts';
 // ringed, thick arrows (L-shaped for a knight), the Game Review's arrows,
 // and checkmate.
 
-// Chessground redrawing its svg or the whole board, or the board turned
-// round (its class): what can change the shapes, bar the review's arrows.
+// Only two kinds of change can move the shapes: chessground redrawing its svg
+// or the whole board, and the board turning round, which changes its class.
+// The review's arrows have their own listener.
 const mayChangeShapes = (record: MutationRecord): boolean =>
   record.type === 'childList' ||
   (record.target instanceof Element && record.target.classList.contains('cg-wrap'));
 
 function start(): void {
   const mateLabel = isFrench() ? 'Échec et mat' : 'Checkmate';
-  // Drawn at most once a frame, and only when asked: a loop of frames kept
-  // Chrome restyling whatever animates on any page with a board.
+  // Draw at most once a frame, and only when something asks for it. Drawing on
+  // every frame kept Chrome restyling every animation on any page with a board.
   const redraw = oncePerFrame(createShapeDrawer({ mateLabel, redraw: () => redraw() }));
   new MutationObserver(records => {
     if (records.some(mayChangeShapes)) redraw();

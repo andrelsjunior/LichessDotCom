@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { z } from 'zod/mini';
 import { barLabel, formatEval } from './format.ts';
-import { forColor, moveAccuracy, PositionRecordSchema, winPercent } from './score.ts';
+import { forColor, moveAccuracy, winPercent } from './score.ts';
+import { StoredRecordCodec } from './stored.ts';
 // What the original script printed and computed.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
 
@@ -24,15 +26,30 @@ describe('win probability and accuracy', () => {
   });
 });
 
-describe('PositionRecordSchema', () => {
+describe('StoredRecordCodec', () => {
   it('reads the cache’s records, and nothing else', () => {
-    const cp = { cp: 20, wp: 51.8, wp2: null, best: 'e2e4' };
-    const mate = { mate: -2, wp: 0, wp2: 12.5, best: null };
-    expect(PositionRecordSchema.parse(cp)).toEqual(cp);
-    expect(PositionRecordSchema.parse(mate)).toEqual(mate);
-    expect(PositionRecordSchema.safeParse({ wp: 50, wp2: null, best: null }).success).toBe(false);
-    expect(
-      PositionRecordSchema.safeParse({ cp: '20', wp: 50, wp2: null, best: null }).success,
-    ).toBe(false);
+    expect(StoredRecordCodec.parse({ cp: 20, wp: 51.8, wp2: null, best: 'e2e4' })).toEqual({
+      cp: 20,
+      whiteWinChance: 51.8,
+      secondLineWinChance: null,
+      best: 'e2e4',
+    });
+    expect(StoredRecordCodec.parse({ mate: -2, wp: 0, wp2: 12.5, best: null })).toEqual({
+      mate: -2,
+      whiteWinChance: 0,
+      secondLineWinChance: 12.5,
+      best: null,
+    });
+    expect(StoredRecordCodec.safeParse({ wp: 50, wp2: null, best: null }).success).toBe(false);
+    expect(StoredRecordCodec.safeParse({ cp: '20', wp: 50, wp2: null, best: null }).success).toBe(
+      false,
+    );
+  });
+
+  it('writes records back in the stored format and order', () => {
+    const stored =
+      '[{"cp":0,"wp":50,"wp2":48,"best":"e2e4"},{"mate":3,"wp":100,"wp2":null,"best":null}]';
+    const records = z.array(StoredRecordCodec).parse(JSON.parse(stored));
+    expect(JSON.stringify(z.encode(z.array(StoredRecordCodec), records))).toBe(stored);
   });
 });

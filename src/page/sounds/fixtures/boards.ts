@@ -41,7 +41,7 @@ export function renderBoard(markup: BoardMarkup): Element {
   for (const [key, piece] of parsePlacement(markup.placement)) {
     board.append(keyed(createElement('piece', { className: `${piece.color} ${piece.role}` }), key));
   }
-  // Left behind by an animation, and a dragged piece's ghost: never read.
+  // A dragged piece's ghost and a taken piece fading out, which the board reader must skip.
   board.append(keyed(createElement('piece', { className: 'white queen ghost' }), 'h4'));
   board.append(keyed(createElement('piece', { className: 'black rook fading' }), 'h5'));
   if (markup.selected) addSquare(board, 'selected', markup.selected);

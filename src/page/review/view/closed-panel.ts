@@ -13,11 +13,11 @@ function countsLine(session: Session, analysis: Analysis): SafeHtml {
   if (!review?.complete)
     return html`<span class="cdc-review__progress">${language.ui.analysing} ${Math.round(view.progress * 100)}%</span>`;
   const counts = review.counts[analysis.orientation()];
-  const shown = COUNTED.flatMap(cls => {
-    const count = counts[cls];
+  const shown = COUNTED.flatMap(moveClass => {
+    const count = counts[moveClass];
     return count
       ? [
-          html`<span class="cdc-review__count" style="color:${CLASS_COLORS[cls]}">${classIcon(cls)}${language.countLabel(cls, count)}</span>`,
+          html`<span class="cdc-review__count" style="color:${CLASS_COLORS[moveClass]}">${classIcon(moveClass)}${language.countLabel(moveClass, count)}</span>`,
         ]
       : [];
   });

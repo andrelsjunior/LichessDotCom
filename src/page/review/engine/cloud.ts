@@ -1,4 +1,5 @@
 import { z } from 'zod/mini';
+import { fenTurn } from '#shared/chess/index.ts';
 import { normalizeUci } from '#page/review/chess/notation.ts';
 import type { EngineLine, EngineResult } from './uci.ts';
 
@@ -19,8 +20,8 @@ export type CloudEval = z.infer<typeof CloudEvalSchema>;
  */
 export function fromCloud(fen: string, cloud: CloudEval): EngineResult | null {
   if (!cloud.pvs?.length) return null;
-  // The cloud's scores are from White's view, its castling king takes rook.
-  const sign = fen.split(' ')[1] === 'w' ? 1 : -1;
+  // The cloud scores from White's view and writes castling as king takes rook.
+  const sign = fenTurn(fen) === 'white' ? 1 : -1;
   const lines = cloud.pvs.map((line): EngineLine => {
     const pv = line.moves.split(' ').map(uci => normalizeUci(uci, false));
     return 'mate' in line ? { mate: line.mate * sign, pv } : { cp: line.cp * sign, pv };

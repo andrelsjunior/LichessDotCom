@@ -1,8 +1,6 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { reviewArrows } from '#page/board/review-arrows.ts';
-import { portAgainstLegacy } from '#page/review/fixtures/review-script.ts';
 import { LIVE_SIGNED_OUT } from '#page/review/fixtures/review-scenarios.ts';
-import { review } from '#page/review/index.ts';
+import { portSnapshots } from './port-snapshots.ts';
 // What the original script showed after each step of the same script.
 import legacy from './fixtures/legacy-live-signed-out.json' with { type: 'json' };
 
@@ -11,11 +9,5 @@ afterEach(() => {
 });
 
 it('shows what the original showed, step by step', async () => {
-  const steps = await portAgainstLegacy(
-    LIVE_SIGNED_OUT,
-    { boot: review.start, arrows: reviewArrows },
-    legacy,
-  );
-  for (const { step, port, legacy: recorded } of steps)
-    expect({ step, ...Object(port) }).toEqual({ step, ...Object(recorded) });
+  expect(await portSnapshots(LIVE_SIGNED_OUT, legacy)).toEqual(legacy);
 }, 30_000);

@@ -1,6 +1,6 @@
 import { z } from 'zod/mini';
 import { describe, expect, it } from 'vitest';
-import { PositionRecordSchema } from '#page/review/evaluation/score.ts';
+import { StoredRecordCodec } from '#page/review/evaluation/stored.ts';
 import { fixtureGames, replay } from '#page/review/fixtures/replay.ts';
 import { en } from '#page/review/i18n/en.ts';
 import { fr } from '#page/review/i18n/fr.ts';
@@ -70,8 +70,8 @@ const CraftedSchema = z.array(
     name: z.string(),
     prev: PositionSchema,
     node: z.object({ ...PositionSchema.shape, uci: z.string(), san: z.string() }),
-    a: PositionRecordSchema,
-    b: PositionRecordSchema,
+    a: StoredRecordCodec,
+    b: StoredRecordCodec,
     cls: z.string(),
     slower: z.boolean(),
     en: SaidSchema,
@@ -89,7 +89,7 @@ describe('rarer moves', () => {
       book: false,
       chess960: false,
     });
-    expect(move).toMatchObject({ cls: said.cls, slower: said.slower });
+    expect(move).toMatchObject({ moveClass: said.cls, slower: said.slower });
     for (const lang of langs) {
       const context = { gameId: 'crafted1', coach: 2, language: LANGUAGES[lang] };
       expect(fact(move, LANGUAGES[lang].facts)).toBe(said[lang].fact);
@@ -100,7 +100,7 @@ describe('rarer moves', () => {
 
 describe('trajectory', () => {
   const all = units.recs.map(record =>
-    PositionRecordSchema.parse({ wp2: null, best: null, ...record }),
+    StoredRecordCodec.parse({ wp2: null, best: null, ...record }),
   );
 
   it('rates evaluations as the original did', () => {

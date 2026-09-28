@@ -29,7 +29,7 @@ export function createElements(): ReviewElements {
     barLabel,
     overlay: createElement('div', { id: 'cdc-board-overlay' }),
     opening: createElement('div', { id: 'cdc-opening' }),
-    // On <body>: the panel's rows scroll, and would clip it.
+    // Put on <body>, because the panel's rows scroll and would clip it.
     tip: createElement('div', { id: 'cdc-tip', attrs: { role: 'tooltip' } }),
   };
 }

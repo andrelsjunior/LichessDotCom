@@ -2,6 +2,7 @@ import { html, type SafeHtml, trustedHtml } from '#shared/html.ts';
 import { formatEval } from '#page/review/evaluation/format.ts';
 import type { PositionRecord } from '#page/review/evaluation/score.ts';
 import type { ReviewLanguage } from '#page/review/i18n/types.ts';
+import type { Mode } from '#page/review/session.ts';
 
 // Markup the panel's modes share: icons, the header, the score chip.
 
@@ -22,7 +23,7 @@ export type IconName = keyof typeof ICON_PATHS;
 export const svgIcon = (name: IconName): SafeHtml =>
   html`<svg class="cdc-i" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd">${trustedHtml(ICON_PATHS[name])}</svg>`;
 
-// Drawn icons of one size: the font's "←" is a sliver next to its "✕".
+// Icons drawn at one size, because the font's "←" is a sliver next to its "✕".
 const strokeIcon = (path: string): SafeHtml =>
   html`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${path}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
@@ -30,12 +31,13 @@ const BACK_ICON = strokeIcon('M19 12H5M11 5l-7 7 7 7');
 const CLOSE_ICON = strokeIcon('M6 6l12 12M18 6 6 18');
 export const CHEVRON_ICON = strokeIcon('M6 9l6 6 6-6');
 
-/** The panel's header; `back` is the mode its back button returns to. */
-export function header(title: string, back: string, language: ReviewLanguage): SafeHtml {
+/** The panel's header; `back` is the mode its back button returns to, null for none. */
+export function header(title: string, back: Mode | null, language: ReviewLanguage): SafeHtml {
   const { ui } = language;
-  const backButton = back
-    ? html`<button class="cdc-review__back" data-cdc="${back}" data-cdc-tip="${ui.back}" aria-label="${ui.back}">${BACK_ICON}</button>`
-    : trustedHtml('<span></span>');
+  const backButton =
+    back === null
+      ? trustedHtml('<span></span>')
+      : html`<button class="cdc-review__back" data-cdc="${back}" data-cdc-tip="${ui.back}" aria-label="${ui.back}">${BACK_ICON}</button>`;
   return html`<div class="cdc-review__head">
       ${backButton}
       <div class="cdc-review__title"><span class="cdc-review__star">★</span>${title}</div>
@@ -46,7 +48,7 @@ export function header(title: string, back: string, language: ReviewLanguage): S
 function blackIsBetter(record: PositionRecord | null | undefined): boolean {
   if (!record) return false;
   // Mate 0: the side to move is mated, which only the win probability tells.
-  if ('mate' in record) return record.mate < 0 || (record.mate === 0 && record.wp < 50);
+  if ('mate' in record) return record.mate < 0 || (record.mate === 0 && record.whiteWinChance < 50);
   return record.cp < 0;
 }
 

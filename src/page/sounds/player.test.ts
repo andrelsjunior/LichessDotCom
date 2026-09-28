@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod/mini';
 import { SoundNameSchema } from '#shared/sounds.ts';
-import type { SoundPlayer } from '#page/lichess/sound.ts';
 import { ColorSchema, renderBoard, SquareSchema } from './fixtures/boards.ts';
+import { fakeSoundPlayer } from './fixtures/sound-player.ts';
 import { hookSoundPlayer } from './player.ts';
 import { createSession } from './session.ts';
 // Each scenario's calls to Lichess's player, as recorded from the original.
@@ -28,23 +28,6 @@ const ScenarioSchema = z.object({
 
 const scenarios = z.array(ScenarioSchema).parse(legacy);
 
-function fakePlayer(): { sound: SoundPlayer; calls: unknown[] } {
-  const calls: unknown[] = [];
-  const sound: SoundPlayer = {
-    paths: new Map(),
-    theme: 'standard',
-    play: (name, volume) => {
-      calls.push(['play', name, volume]);
-      return Promise.resolve();
-    },
-    move: options => {
-      calls.push(['move', options ?? null]);
-      return Promise.resolve();
-    },
-  };
-  return { sound, calls };
-}
-
 const describeResult = (value: unknown): string => {
   if (value === undefined) return 'undefined';
   return value instanceof Promise ? 'promise' : typeof value;
@@ -64,7 +47,7 @@ afterEach(() => {
 
 describe('hookSoundPlayer', () => {
   it.each(scenarios)('$name, as the original did', async scenario => {
-    const { sound, calls } = fakePlayer();
+    const { sound, calls } = fakeSoundPlayer();
     const urls = new Map(scenario.names.map(name => [name, `blob:${name}`]));
     expect(hookSoundPlayer(sound, urls, createSession())).toBe(true);
     expect([...sound.paths]).toEqual(scenario.paths);
@@ -87,7 +70,7 @@ describe('hookSoundPlayer', () => {
   });
 
   it('only adds the sounds when another copy of the script hooked the player first', () => {
-    const { sound, calls } = fakePlayer();
+    const { sound, calls } = fakeSoundPlayer();
     sound.cdcHooked = true;
     const { play } = sound;
     const session = createSession();
@@ -99,7 +82,7 @@ describe('hookSoundPlayer', () => {
   });
 
   it('remembers the board after each move, for the next one', async () => {
-    const { sound } = fakePlayer();
+    const { sound } = fakeSoundPlayer();
     const session = createSession();
     hookSoundPlayer(sound, new Map([['move-self', 'blob:move-self']]), session);
     renderBoard({ placement: '4k3/8/8/8/8/8/8/4K3', orientation: 'white' });

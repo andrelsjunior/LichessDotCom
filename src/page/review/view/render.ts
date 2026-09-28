@@ -1,7 +1,7 @@
 import { queryAll } from '#shared/dom.ts';
 import { analysis as pageAnalysis, type Analysis } from '#page/lichess/analysis.ts';
 import { pump } from '#page/review/live/queue.ts';
-import type { Mode, Session } from '#page/review/session.ts';
+import { type Mode, MODES, type Session } from '#page/review/session.ts';
 import { renderBoard } from './board.ts';
 import { fitBubble } from './bubble.ts';
 import { renderClosed } from './closed-panel.ts';
@@ -18,8 +18,6 @@ import { hideTip } from './tooltip.ts';
 
 // The panel, drawn again whenever what it shows changes, and the board's
 // marks on every pass.
-
-const MODES: readonly Mode[] = ['normal', 'summary', 'moves', 'live'];
 
 const KEPT_BUTTONS = 'button[data-cdc]:not([data-cdc="coach"])';
 
@@ -64,7 +62,7 @@ function redrawPanel(session: Session, analysis: Analysis): void {
     if (element) element.scrollTop = top;
   }
   keepAvatar(session);
-  // The tooltip stays while what it points at does (a kept button).
+  // Keep the tooltip while the element it points at is still there (a button the render kept).
   if (!session.tipFor?.isConnected) hideTip(session);
   startStream(session);
   fitBubble(panel);

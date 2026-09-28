@@ -3,7 +3,7 @@ import { setHtml } from '#shared/html.ts';
 import type { Analysis } from '#page/lichess/analysis.ts';
 import { type ReviewArrow, reviewArrows, setReviewArrows } from '#page/board/review-arrows.ts';
 import { judgeAt } from '#page/review/live/judging.ts';
-import type { ReviewMove, Session } from '#page/review/session.ts';
+import type { JudgedMove, Session } from '#page/review/session.ts';
 import { badgeMarkup, reviewArrowsFor } from './board-badge.ts';
 import { barPosition, drawBar } from './eval-bar.ts';
 import { liveBadges, reviewBadges, treeMoves } from './move-list.ts';
@@ -13,7 +13,7 @@ import { renderOpening } from './opening.ts';
 // What the review adds on and around the board: the eval bar, the verdict's
 // badge and squares, the arrows, and the move list's badges.
 
-function renderBar(session: Session, analysis: Analysis, shown: ReviewMove | null): void {
+function renderBar(session: Session, analysis: Analysis, shown: JudgedMove | null): void {
   const { view, live } = session;
   const reviewing = view.mode !== 'normal';
   const position = barPosition({
@@ -36,24 +36,24 @@ function renderBar(session: Session, analysis: Analysis, shown: ReviewMove | nul
 function boardMove(
   session: Session,
   analysis: Analysis,
-  shown: ReviewMove | null,
-): ReviewMove | null {
+  shown: JudgedMove | null,
+): JudgedMove | null {
   const { mode } = session.view;
   if (!session.wide.matches) return null;
   if (mode === 'live') return judgeAt(session.live, analysis, analysis.path);
-  if (shown) return { ...shown, cls: 'best' };
+  if (shown) return { ...shown, moveClass: 'best' };
   return mode === 'normal' ? null : reviewMove(session, analysis);
 }
 
 const sameArrows = (drawn: readonly ReviewArrow[], next: readonly ReviewArrow[]): boolean =>
   JSON.stringify(drawn) === JSON.stringify(next);
 
-function renderBadge(session: Session, analysis: Analysis, move: ReviewMove | null): void {
+function renderBadge(session: Session, analysis: Analysis, move: JudgedMove | null): void {
   const { view, elements } = session;
   const { node } = analysis;
   const badge = move
     ? badgeMarkup({
-        cls: move.cls,
+        moveClass: move.moveClass,
         uci: node.uci ?? '',
         san: node.san ?? '',
         orientation: analysis.orientation(),
@@ -66,14 +66,14 @@ function renderBadge(session: Session, analysis: Analysis, move: ReviewMove | nu
   else elements.overlay.replaceChildren();
 }
 
-// The best move, drawn with the board's other arrows. Off the game's moves,
-// the engine's move from here too, as the free board has Lichess's.
-function renderArrows(session: Session, analysis: Analysis, move: ReviewMove | null): void {
+// Draws the best move with the board's other arrows. Off the game's moves it
+// also draws the engine's move from here, as Lichess does on the free board.
+function renderArrows(session: Session, analysis: Analysis, move: JudgedMove | null): void {
   const { view, live } = session;
   const offGame =
     session.wide.matches && view.mode !== 'normal' && view.review !== null && !analysis.onMainline;
   const arrows = reviewArrowsFor({
-    cls: move?.cls ?? null,
+    moveClass: move?.moveClass ?? null,
     best: move?.best ?? null,
     engine: offGame ? (live.evals.get(analysis.node.fen)?.best ?? null) : null,
   });
@@ -85,7 +85,7 @@ export function renderBoard(session: Session, analysis: Analysis): void {
   const shown = view.mode === 'live' ? null : bestShown(session, analysis);
   renderBar(session, analysis, shown);
   const move = boardMove(session, analysis, shown);
-  setData(document.documentElement, 'cdcCls', move ? move.cls : '');
+  setData(document.documentElement, 'cdcCls', move ? move.moveClass : '');
   renderBadge(session, analysis, move);
   renderArrows(session, analysis, move);
   if (view.mode === 'live') {

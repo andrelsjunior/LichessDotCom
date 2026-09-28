@@ -1,26 +1,23 @@
 import { z } from 'zod/mini';
 import { createGuard } from '#shared/guards.ts';
 import { readSite } from './globals.ts';
+import { method } from './method.ts';
 import { lenient } from '#shared/zod.ts';
 
 // Lichess's sound player, `site.sound` (ui/lib/src/sound.ts). Lichess calls
 // it from untyped code, so what it passes is unknown until read.
 
-export type PlaySound = (name: unknown, volume?: unknown) => unknown;
-type PlayMoveSound = (options?: unknown) => unknown;
-
-const isFunction = (value: unknown): boolean => typeof value === 'function';
-
 const SoundPlayerSchema = z.object({
   paths: z.instanceof(Map),
-  play: z.custom<PlaySound>(isFunction),
-  move: z.custom<PlayMoveSound>(isFunction),
+  play: method<[name: unknown, volume?: unknown]>(),
+  move: method<[options?: unknown]>(),
   theme: z.optional(z.unknown()),
   // Set once our hooks are in, so another copy of the page script leaves them be.
   cdcHooked: z.optional(z.boolean()),
 });
 
 export type SoundPlayer = z.infer<typeof SoundPlayerSchema>;
+export type PlaySound = SoundPlayer['play'];
 
 const isSoundPlayer = createGuard(SoundPlayerSchema);
 const hasSound = createGuard(z.object({ sound: z.unknown() }));

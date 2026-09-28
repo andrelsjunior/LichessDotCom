@@ -1,4 +1,5 @@
 import { closestTo, setStyleProperty } from '#shared/dom.ts';
+import { clamp } from '#shared/math.ts';
 import type { Session } from '#page/review/session.ts';
 
 // The panel's tooltip: dark, over what it explains, its tail pointing at it.
@@ -20,10 +21,10 @@ export interface TipPlacement {
   readonly tail: number;
 }
 
-/** Centered over the anchor, kept inside the window. */
+/** Centers the tooltip over its anchor, keeping it inside the window. */
 export function tipPlacement({ anchor, width, height, viewportWidth }: TipInput): TipPlacement {
   const center = anchor.left + anchor.width / 2;
-  const left = Math.max(MARGIN, Math.min(viewportWidth - width - MARGIN, center - width / 2));
+  const left = clamp(center - width / 2, MARGIN, viewportWidth - width - MARGIN);
   return { left, top: anchor.top - height - GAP, tail: center - left };
 }
 

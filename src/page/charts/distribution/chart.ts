@@ -55,6 +55,7 @@ class DistributionChart {
       width: Math.max(240, Math.round(parts.plot.clientWidth)),
       height: Math.max(200, Math.round(parts.plot.clientHeight)),
       counts: players.counts,
+      maxRating: players.maxRating,
       markers: markers.length,
     });
     this.#geometry = geometry;
@@ -66,7 +67,8 @@ class DistributionChart {
     parts.root.classList.toggle('cdc-dist--intro', animate);
   }
 
-  // Each pill centered over its line, kept inside the plot; measured once filled.
+  // Centers each pill over its line, inside the plot. A pill is measured once
+  // it's filled, since its text sets its width.
   #placeMarks(geometry: Geometry): void {
     const { parts, players, markers } = this.#setup;
     for (const [k, mark] of [...parts.marks.children].entries()) {
@@ -83,8 +85,8 @@ class DistributionChart {
     }
   }
 
-  // The column under the pointer, and the columns up to it lit: the share of
-  // players rated below it, which the curve also reads.
+  // Highlights the column under the pointer and dims the ones after it. The
+  // columns left lit are the players rated below its end, the share the curve shows.
   hover(event: MouseEvent): void {
     const geometry = this.#geometry;
     if (!geometry) return;

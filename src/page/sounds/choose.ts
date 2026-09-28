@@ -102,8 +102,8 @@ function isCastlingHighlight(first: Square, second: Square, mover: Piece | undef
   return sideways && (!mover || mover.role === 'king');
 }
 
-// Auto-queen swaps the pawn before we get to look: what stood on the origin
-// square before the move tells.
+// Auto-queen swaps the pawn for a queen before we read the board, so look at
+// what stood on the origin square before the move.
 function isPromotion(highlight: Highlight, before: Board | null): boolean {
   const { orig, dest, mover } = highlight;
   const was = before?.get(orig);

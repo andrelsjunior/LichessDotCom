@@ -1,4 +1,4 @@
-import type { Color } from '#shared/chess/types.ts';
+import { pieceOf, wrapOrientation } from '#shared/chessground.ts';
 import { createElement, queryOne } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { setHtml } from '#shared/html.ts';
@@ -12,9 +12,11 @@ import { CAPTURABLE_ROLES, capturedMarkup, type BarSide, type MaterialPiece } fr
 
 function readPieces(board: Element): MaterialPiece[] {
   const pieces: MaterialPiece[] = [];
-  for (const piece of board.querySelectorAll('piece:not(.ghost):not(.fading)')) {
-    const role = CAPTURABLE_ROLES.find(name => piece.classList.contains(name));
-    if (role) pieces.push({ color: piece.classList.contains('white') ? 'white' : 'black', role });
+  for (const element of board.querySelectorAll('piece')) {
+    const piece = pieceOf(element);
+    if (!piece) continue;
+    const role = CAPTURABLE_ROLES.find(name => name === piece.role);
+    if (role) pieces.push({ color: piece.color, role });
   }
   return pieces;
 }
@@ -51,7 +53,7 @@ export function createCapturedSync(piecesUrl: string): () => void {
     // On the analysis board, only under the players of a game.
     if (main.matches('.analyse') && !main.querySelector(':scope > .cdc-player')) return;
     const variant = readVariant(main);
-    const bottomColor: Color = wrap.classList.contains('orientation-black') ? 'black' : 'white';
+    const bottomColor = wrapOrientation(wrap);
     const checks = variant === 'threeCheck' ? readChecks(main) : { top: 0, bottom: 0 };
     const markup = capturedMarkup({
       pieces: readPieces(board),
