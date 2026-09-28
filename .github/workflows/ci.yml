@@ -85,7 +85,7 @@ jobs:
         with:
           name: packages
           path: packages
-      - run: unzip -q packages/LichessDotCom-v*[0-9].zip -d dist/chrome
+      - run: mkdir -p dist && unzip -q packages/LichessDotCom-v*[0-9].zip -d dist/chrome
       - run: pnpm test:e2e
 
       - uses: actions/upload-artifact@v7
