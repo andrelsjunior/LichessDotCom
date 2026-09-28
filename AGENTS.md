@@ -475,8 +475,10 @@ Learned the hard way. Check here before touching the area concerned.
 When the work is done (see [Definition of done](#definition-of-done)), ship
 it without being asked. Don't open a PR.
 
-1. Commit with a message in French, like the history, without a
-   `Co-Authored-By` trailer. Rebase onto `origin/main` (`git fetch origin &&
+1. Commit with a short message in English (a one-line summary under ~70
+   characters, in the imperative: "Fix the eval bar on flipped boards"; a
+   body only when the why isn't obvious), without a `Co-Authored-By`
+   trailer. Rebase onto `origin/main` (`git fetch origin &&
 git rebase origin/main`, never a merge: `main` stays a straight line) and
    push as a fast-forward (`git push origin HEAD:main`). If `main` moved,
    fetch, rebase and push again.
