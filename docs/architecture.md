@@ -11,11 +11,23 @@ only the DOM and `window.postMessage`. A third runs in the background.
 | `page.js`                    | `src/page/`                   | Lichess's objects, its sound player, its translations | the extension's APIs                                |
 | `background.js`              | `src/background/`             | the extension's APIs                                  | any page                                            |
 
-`src/shared/` holds what several of them use: DOM and markup helpers, the
-messages between the worlds (`protocol.ts`), storage keys, chess basics. It
-must not touch `chrome.*`: the page world would crash on it. Each directory
-has its own `tsconfig.json`, so a page-world file that names `chrome` fails
-to type-check, and the linter says why.
+`src/shared/` holds what several of them use, and must not touch `chrome.*`:
+the page world would crash on it.
+
+| Module                                                                      | What it gives                                                                                                      |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `dom.ts`, `owned-element.ts`, `svg.ts`                                      | typed lookups, element builders, writes that skip unchanged values, an element of ours kept in a Lichess container |
+| `html.ts`                                                                   | the escaping `html` template and `setHtml`                                                                         |
+| `protocol.ts`, `dev-check.ts`                                               | the messages between the worlds, and with the background worker                                                    |
+| `json.ts`, `zod.ts`, `guards.ts`                                            | parsing and validating outside data                                                                                |
+| `storage.ts`                                                                | every storage key, and reads and writes that survive a blocked storage                                             |
+| `page-init-data.ts`                                                         | the page's `#page-init-data`, captured before Lichess removes it                                                   |
+| `features.ts`, `frame.ts`, `poll.ts`                                        | starting features, once-per-frame work, waiting for Lichess's globals                                              |
+| `lang.ts`, `text.ts`, `math.ts`, `geometry.ts`                              | the page's language, small text and number helpers, points and boxes                                               |
+| `chess/`, `charts/`, `coach.ts`, `sounds.ts`                                | chess basics, chart pieces, the coach's moods, the sound names                                                     |
+| `testing/`                                                                  | helpers only tests import, and the vitest setup filling happy-dom's gaps                                           | Each directory |
+| has its own `tsconfig.json`, so a page-world file that names `chrome` fails |
+| to type-check, and the linter says why.                                     |
 
 `src/manifest.ts` defines the manifest for every target (Chrome, the Chrome
 Web Store, Firefox). `scripts/build.ts` bundles each script with rolldown into
