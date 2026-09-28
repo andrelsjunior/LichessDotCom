@@ -73,7 +73,8 @@
   flex: none;
   width: 36px;
   height: 36px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/coaches.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/coaches.svg') center /
+    contain no-repeat;
 }
 
 .coach-list__main .box__top__actions {
@@ -124,7 +125,9 @@
     top: 0;
     z-index: 3;
     background: var(--cdc-bg-page);
-    box-shadow: -12px 0 var(--cdc-bg-page), 12px 0 var(--cdc-bg-page);
+    box-shadow:
+      -12px 0 var(--cdc-bg-page),
+      12px 0 var(--cdc-bg-page);
   }
 
   .coach-list__main .box__top::after {
@@ -223,7 +226,10 @@
   border: 1px solid var(--cdc-card-border) !important;
   border-radius: 10px;
   background: var(--cdc-bg-panel) !important;
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s !important;
 }
 
 .coach-list__main .coach-widget:hover {

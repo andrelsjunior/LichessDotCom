@@ -209,7 +209,9 @@
   box-shadow: var(--cdc-btn-grey-shadow);
   color: var(--cdc-text-dim) !important;
   font-size: 14px;
-  transition: background 0.15s, color 0.15s !important;
+  transition:
+    background 0.15s,
+    color 0.15s !important;
 }
 
 #friend_box .content a.tv:hover {

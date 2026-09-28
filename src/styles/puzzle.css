@@ -23,10 +23,16 @@
     grid-template-columns:
       min(
         var(---col2-uniboard-width),
-        calc(100vw - var(--cdc-sidebar-w, 0px) - 2 * var(---main-margin, 0px) - var(--cdc-coords-l) - 270px)
+        calc(
+          100vw - var(--cdc-sidebar-w, 0px) - 2 * var(---main-margin, 0px) - var(--cdc-coords-l) -
+            270px
+        )
       )
       var(---puzzle-gauge-col)
-      minmax(calc(240px - var(---puzzle-gauge-offset)), calc(400px - var(---puzzle-gauge-offset))) !important;
+      minmax(
+        calc(240px - var(---puzzle-gauge-offset)),
+        calc(400px - var(---puzzle-gauge-offset))
+      ) !important;
     margin-left: var(--cdc-coords-l);
   }
 
@@ -75,18 +81,29 @@
        the minimum they fit exactly). The bar's column is the side card's
        (see .gauge-on): it costs the board nothing. Resizable like the game
        page's board. */
-    --cdc-cols-w: calc(100vw - var(--cdc-sidebar-w, 0px) - var(--cdc-coords-l) - 2 * var(--cdc-gap) - 48px);
+    --cdc-cols-w: calc(
+      100vw - var(--cdc-sidebar-w, 0px) - var(--cdc-coords-l) - 2 * var(--cdc-gap) - 48px
+    );
     --cdc-board: max(
       320px,
       calc(
         min(
-          calc(100dvh - 28px - var(--cdc-coords-off) - var(--cdc-session-h) - var(--cdc-kb-h)),
-          calc(var(--cdc-cols-w) - var(--cdc-side-min) - var(--cdc-tools-min))
-        ) * var(--cdc-board-scale, 1)
+            calc(100dvh - 28px - var(--cdc-coords-off) - var(--cdc-session-h) - var(--cdc-kb-h)),
+            calc(var(--cdc-cols-w) - var(--cdc-side-min) - var(--cdc-tools-min))
+          ) *
+          var(--cdc-board-scale, 1)
       )
     );
-    --cdc-side-w: clamp(var(--cdc-side-min), calc((var(--cdc-cols-w) - var(--cdc-board)) * 0.48), 340px);
-    --cdc-tools-w: clamp(var(--cdc-tools-min), calc((var(--cdc-cols-w) - var(--cdc-board)) * 0.52), 380px);
+    --cdc-side-w: clamp(
+      var(--cdc-side-min),
+      calc((var(--cdc-cols-w) - var(--cdc-board)) * 0.48),
+      340px
+    );
+    --cdc-tools-w: clamp(
+      var(--cdc-tools-min),
+      calc((var(--cdc-cols-w) - var(--cdc-board)) * 0.52),
+      380px
+    );
 
     grid-template-columns:
       var(--cdc-side-col) var(--cdc-gauge-col) var(--cdc-board) var(--cdc-gap)
@@ -170,7 +187,9 @@ main.puzzle .puzzle__tools {
   border: none !important;
   border-radius: 12px !important;
   background: var(--cdc-bg-panel) !important;
-  box-shadow: inset 0 1px 0 #ffffff0d, 0 10px 28px #00000033 !important;
+  box-shadow:
+    inset 0 1px 0 #ffffff0d,
+    0 10px 28px #00000033 !important;
 }
 
 main.puzzle .puzzle__side > * {
@@ -201,7 +220,9 @@ main.puzzle .puzzle__side strong {
     scrollbar-color: #ffffff26 transparent;
     border-radius: 12px;
     background: var(--cdc-bg-panel);
-    box-shadow: inset 0 1px 0 #ffffff0d, 0 10px 28px #00000033;
+    box-shadow:
+      inset 0 1px 0 #ffffff0d,
+      0 10px 28px #00000033;
   }
 
   main.puzzle .puzzle__side > * {
@@ -310,7 +331,8 @@ main.puzzle .puzzle__side__user__rating strong::before {
   flex: none;
   width: 1em;
   height: 1em;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/puzzle-piece.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/puzzle-piece.svg') center /
+    contain no-repeat;
 }
 
 /* In three columns the rating, its change and the icon share the side card's
@@ -485,7 +507,9 @@ main.puzzle .puzzle__themes__vote {
   background: #ffffff0d;
   color: var(--cdc-text-dim) !important;
   font-size: 12px;
-  transition: background 0.15s, color 0.15s !important;
+  transition:
+    background 0.15s,
+    color 0.15s !important;
 }
 
 main.puzzle .puzzle__themes__vote.vote-up:is(:hover, .active) {
@@ -658,7 +682,9 @@ main.puzzle .puzzle__feedback:is(.good, .fail) em {
 main.puzzle .puzzle__feedback:is(.good, .fail) .icon {
   border-radius: 50%;
   background: var(--cdc-feedback-badge);
-  box-shadow: inset 0 1px 0 #ffffff40, 0 0 0 5px color-mix(in srgb, var(--cdc-feedback) 18%, transparent);
+  box-shadow:
+    inset 0 1px 0 #ffffff40,
+    0 0 0 5px color-mix(in srgb, var(--cdc-feedback) 18%, transparent);
   color: #fff !important;
   font-size: 30px !important;
   font-weight: 800;
@@ -922,7 +948,9 @@ main.puzzle .puzzle__controls .jumps .fbt:is(.disabled, [disabled]) {
 
 main.puzzle .puzzle__controls .jumps .fbt.glowing {
   color: #fff !important;
-  box-shadow: var(--cdc-btn-grey-shadow), 0 0 0 2px var(--cdc-green);
+  box-shadow:
+    var(--cdc-btn-grey-shadow),
+    0 0 0 2px var(--cdc-green);
 }
 
 /* ---------------------------------------------------- moves, engine --- */

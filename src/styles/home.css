@@ -36,16 +36,46 @@
     margin: 0 !important;
   }
 
-  main.lobby .lobby__table            { grid-column: 1 / 9 !important;  grid-row: 2 !important; }
-  main.lobby .lobby__tv               { grid-column: 9 / 13 !important; grid-row: 1 / 3 !important; }
-  main.lobby .lobby__app              { grid-column: 1 / 9 !important;  grid-row: 3 !important; }
-  main.lobby .lobby__puzzle           { grid-column: 9 / 13 !important; grid-row: 3 !important; }
-  main.lobby .lobby__blog             { grid-column: 1 / -1 !important; grid-row: 4 !important; }
-  main.lobby .lobby__feed             { grid-column: 1 / 9 !important;  grid-row: 5 !important; }
-  main.lobby .lobby__side             { grid-column: 9 / 13 !important; grid-row: 5 !important; }
-  main.lobby .lobby__tournaments-simuls { grid-column: 1 / 9 !important; grid-row: 6 !important; }
-  main.lobby .lobby__support          { grid-column: 9 / 13 !important; grid-row: 6 !important; }
-  main.lobby .lobby__about            { grid-column: 1 / -1 !important; grid-row: 7 !important; }
+  main.lobby .lobby__table {
+    grid-column: 1 / 9 !important;
+    grid-row: 2 !important;
+  }
+  main.lobby .lobby__tv {
+    grid-column: 9 / 13 !important;
+    grid-row: 1 / 3 !important;
+  }
+  main.lobby .lobby__app {
+    grid-column: 1 / 9 !important;
+    grid-row: 3 !important;
+  }
+  main.lobby .lobby__puzzle {
+    grid-column: 9 / 13 !important;
+    grid-row: 3 !important;
+  }
+  main.lobby .lobby__blog {
+    grid-column: 1 / -1 !important;
+    grid-row: 4 !important;
+  }
+  main.lobby .lobby__feed {
+    grid-column: 1 / 9 !important;
+    grid-row: 5 !important;
+  }
+  main.lobby .lobby__side {
+    grid-column: 9 / 13 !important;
+    grid-row: 5 !important;
+  }
+  main.lobby .lobby__tournaments-simuls {
+    grid-column: 1 / 9 !important;
+    grid-row: 6 !important;
+  }
+  main.lobby .lobby__support {
+    grid-column: 9 / 13 !important;
+    grid-row: 6 !important;
+  }
+  main.lobby .lobby__about {
+    grid-column: 1 / -1 !important;
+    grid-row: 7 !important;
+  }
 
   /* ----------------------------------------------------------- hero --- */
 
@@ -68,7 +98,9 @@
       radial-gradient(circle at 88% 18%, #ffffff17, transparent 52%),
       radial-gradient(circle at 10% 110%, #ffffff08, transparent 45%),
       linear-gradient(135deg, #34322f 0%, #262522 50%, #1d1c1a 100%);
-    box-shadow: inset 0 1px 0 #ffffff12, 0 12px 32px #00000040;
+    box-shadow:
+      inset 0 1px 0 #ffffff12,
+      0 12px 32px #00000040;
   }
 
   /* A big Neo king as the hero illustration. */
@@ -79,7 +111,8 @@
     right: 26px;
     width: 210px;
     height: 210px;
-    background: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wk.webp') center / contain no-repeat;
+    background: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wk.webp') center /
+      contain no-repeat;
     filter: drop-shadow(0 18px 24px #0000008c);
     transform: rotate(-8deg);
     pointer-events: none;
@@ -205,8 +238,12 @@
       font-size: 22px !important;
     }
 
-    main.lobby :is(.lobby__start__button--friend, .lobby__start__button--friend-user,
-        .lobby__start__button--ai)::before {
+    main.lobby
+      :is(
+        .lobby__start__button--friend,
+        .lobby__start__button--friend-user,
+        .lobby__start__button--ai
+      )::before {
       width: 30px;
       height: 30px;
     }
@@ -257,14 +294,26 @@
 
   /* ---------------------------------------------------------- cards --- */
 
-  main.lobby :is(.lobby__tv, .lobby__puzzle, .lobby__blog, .lobby__feed, .lobby__streams,
-      .about-side, .lobby__tournaments-simuls, .lobby__app, .lobby__timeline) {
+  main.lobby
+    :is(
+      .lobby__tv,
+      .lobby__puzzle,
+      .lobby__blog,
+      .lobby__feed,
+      .lobby__streams,
+      .about-side,
+      .lobby__tournaments-simuls,
+      .lobby__app,
+      .lobby__timeline
+    ) {
     box-sizing: border-box;
     padding: 16px !important;
     border: none !important;
     border-radius: 16px !important;
     background: var(--cdc-bg-panel) !important;
-    box-shadow: inset 0 1px 0 #ffffff0d, 0 10px 28px #00000033 !important;
+    box-shadow:
+      inset 0 1px 0 #ffffff0d,
+      0 10px 28px #00000033 !important;
   }
 
   /* Card titles Lichess doesn't provide. */
@@ -276,26 +325,66 @@
     font-weight: 800;
   }
 
-  main.lobby .lobby__tv::before   { content: 'Featured game'; }
-  main.lobby .lobby__blog::before { content: 'From the blog'; }
-  main.lobby .lobby__feed::before { content: "What's new"; }
-  main.lobby .lobby__streams::before { content: 'Live streams'; }
-  html[lang^='fr'] main.lobby .lobby__tv::before   { content: 'Partie en vedette'; }
-  html[lang^='fr'] main.lobby .lobby__blog::before { content: 'Articles du blog'; }
-  html[lang^='fr'] main.lobby .lobby__feed::before { content: 'Nouveautés'; }
-  html[lang^='fr'] main.lobby .lobby__streams::before { content: 'Streams en direct'; }
-  html[lang^='de'] main.lobby .lobby__tv::before   { content: 'Ausgewählte Partie'; }
-  html[lang^='de'] main.lobby .lobby__blog::before { content: 'Aus dem Blog'; }
-  html[lang^='de'] main.lobby .lobby__feed::before { content: 'Neuigkeiten'; }
-  html[lang^='de'] main.lobby .lobby__streams::before { content: 'Live-Streams'; }
-  html[lang^='es'] main.lobby .lobby__tv::before   { content: 'Partida destacada'; }
-  html[lang^='es'] main.lobby .lobby__blog::before { content: 'Del blog'; }
-  html[lang^='es'] main.lobby .lobby__feed::before { content: 'Novedades'; }
-  html[lang^='es'] main.lobby .lobby__streams::before { content: 'Streams en directo'; }
-  html[lang^='pt'] main.lobby .lobby__tv::before   { content: 'Partida em destaque'; }
-  html[lang^='pt'] main.lobby .lobby__blog::before { content: 'Do blog'; }
-  html[lang^='pt'] main.lobby .lobby__feed::before { content: 'Novidades'; }
-  html[lang^='pt'] main.lobby .lobby__streams::before { content: 'Transmissões ao vivo'; }
+  main.lobby .lobby__tv::before {
+    content: 'Featured game';
+  }
+  main.lobby .lobby__blog::before {
+    content: 'From the blog';
+  }
+  main.lobby .lobby__feed::before {
+    content: "What's new";
+  }
+  main.lobby .lobby__streams::before {
+    content: 'Live streams';
+  }
+  html[lang^='fr'] main.lobby .lobby__tv::before {
+    content: 'Partie en vedette';
+  }
+  html[lang^='fr'] main.lobby .lobby__blog::before {
+    content: 'Articles du blog';
+  }
+  html[lang^='fr'] main.lobby .lobby__feed::before {
+    content: 'Nouveautés';
+  }
+  html[lang^='fr'] main.lobby .lobby__streams::before {
+    content: 'Streams en direct';
+  }
+  html[lang^='de'] main.lobby .lobby__tv::before {
+    content: 'Ausgewählte Partie';
+  }
+  html[lang^='de'] main.lobby .lobby__blog::before {
+    content: 'Aus dem Blog';
+  }
+  html[lang^='de'] main.lobby .lobby__feed::before {
+    content: 'Neuigkeiten';
+  }
+  html[lang^='de'] main.lobby .lobby__streams::before {
+    content: 'Live-Streams';
+  }
+  html[lang^='es'] main.lobby .lobby__tv::before {
+    content: 'Partida destacada';
+  }
+  html[lang^='es'] main.lobby .lobby__blog::before {
+    content: 'Del blog';
+  }
+  html[lang^='es'] main.lobby .lobby__feed::before {
+    content: 'Novedades';
+  }
+  html[lang^='es'] main.lobby .lobby__streams::before {
+    content: 'Streams en directo';
+  }
+  html[lang^='pt'] main.lobby .lobby__tv::before {
+    content: 'Partida em destaque';
+  }
+  html[lang^='pt'] main.lobby .lobby__blog::before {
+    content: 'Do blog';
+  }
+  html[lang^='pt'] main.lobby .lobby__feed::before {
+    content: 'Novidades';
+  }
+  html[lang^='pt'] main.lobby .lobby__streams::before {
+    content: 'Transmissões ao vivo';
+  }
 
   /* Lichess repeats the support links inside these blocks on some widths. */
   main.lobby :is(.lobby__tv, .lobby__puzzle) > .lobby__support-link {
@@ -413,7 +502,9 @@
     height: 40px;
     border-radius: 50%;
     background: var(--cdc-btn-grey);
-    box-shadow: var(--cdc-btn-grey-shadow), 0 4px 12px #00000080;
+    box-shadow:
+      var(--cdc-btn-grey-shadow),
+      0 4px 12px #00000080;
     color: #fff;
     font-size: 18px;
   }
@@ -467,17 +558,39 @@
     margin-top: 34px;
   }
 
-  main.lobby .lpool[data-id='1+0']   { --cdc-pool-label: '1 min'; }
-  main.lobby .lpool[data-id='2+1']   { --cdc-pool-label: '2 + 1'; }
-  main.lobby .lpool[data-id='3+0']   { --cdc-pool-label: '3 min'; }
-  main.lobby .lpool[data-id='3+2']   { --cdc-pool-label: '3 + 2'; }
-  main.lobby .lpool[data-id='5+0']   { --cdc-pool-label: '5 min'; }
-  main.lobby .lpool[data-id='5+3']   { --cdc-pool-label: '5 + 3'; }
-  main.lobby .lpool[data-id='10+0']  { --cdc-pool-label: '10 min'; }
-  main.lobby .lpool[data-id='10+5']  { --cdc-pool-label: '10 + 5'; }
-  main.lobby .lpool[data-id='15+10'] { --cdc-pool-label: '15 + 10'; }
-  main.lobby .lpool[data-id='30+0']  { --cdc-pool-label: '30 min'; }
-  main.lobby .lpool[data-id='30+20'] { --cdc-pool-label: '30 + 20'; }
+  main.lobby .lpool[data-id='1+0'] {
+    --cdc-pool-label: '1 min';
+  }
+  main.lobby .lpool[data-id='2+1'] {
+    --cdc-pool-label: '2 + 1';
+  }
+  main.lobby .lpool[data-id='3+0'] {
+    --cdc-pool-label: '3 min';
+  }
+  main.lobby .lpool[data-id='3+2'] {
+    --cdc-pool-label: '3 + 2';
+  }
+  main.lobby .lpool[data-id='5+0'] {
+    --cdc-pool-label: '5 min';
+  }
+  main.lobby .lpool[data-id='5+3'] {
+    --cdc-pool-label: '5 + 3';
+  }
+  main.lobby .lpool[data-id='10+0'] {
+    --cdc-pool-label: '10 min';
+  }
+  main.lobby .lpool[data-id='10+5'] {
+    --cdc-pool-label: '10 + 5';
+  }
+  main.lobby .lpool[data-id='15+10'] {
+    --cdc-pool-label: '15 + 10';
+  }
+  main.lobby .lpool[data-id='30+0'] {
+    --cdc-pool-label: '30 min';
+  }
+  main.lobby .lpool[data-id='30+20'] {
+    --cdc-pool-label: '30 + 20';
+  }
 
   /* A time control reads left to right in every language: on a right-to-left
      page "2 + 1" came out as "1 + 2", and "1 min" as "min 1". */
@@ -491,15 +604,39 @@
   }
 
   /* Lichess's text is "10+0": hide it and write our own label instead. */
-  main.lobby .lpool:is([data-id='1+0'], [data-id='2+1'], [data-id='3+0'], [data-id='3+2'],
-      [data-id='5+0'], [data-id='5+3'], [data-id='10+0'], [data-id='10+5'], [data-id='15+10'],
-      [data-id='30+0'], [data-id='30+20']) .clock {
+  main.lobby
+    .lpool:is(
+      [data-id='1+0'],
+      [data-id='2+1'],
+      [data-id='3+0'],
+      [data-id='3+2'],
+      [data-id='5+0'],
+      [data-id='5+3'],
+      [data-id='10+0'],
+      [data-id='10+5'],
+      [data-id='15+10'],
+      [data-id='30+0'],
+      [data-id='30+20']
+    )
+    .clock {
     font-size: 0 !important;
   }
 
-  main.lobby .lpool:is([data-id='1+0'], [data-id='2+1'], [data-id='3+0'], [data-id='3+2'],
-      [data-id='5+0'], [data-id='5+3'], [data-id='10+0'], [data-id='10+5'], [data-id='15+10'],
-      [data-id='30+0'], [data-id='30+20']) .clock::before {
+  main.lobby
+    .lpool:is(
+      [data-id='1+0'],
+      [data-id='2+1'],
+      [data-id='3+0'],
+      [data-id='3+2'],
+      [data-id='5+0'],
+      [data-id='5+3'],
+      [data-id='10+0'],
+      [data-id='10+5'],
+      [data-id='15+10'],
+      [data-id='30+0'],
+      [data-id='30+20']
+    )
+    .clock::before {
     content: var(--cdc-pool-label);
     font-size: 16px;
   }
@@ -518,7 +655,9 @@
   /* Seeking: a green ring, with Lichess's spinner or rating range
      beside the label instead of under it. */
   main.lobby .lpool.active {
-    box-shadow: inset 0 0 0 2px var(--cdc-green), var(--cdc-btn-grey-shadow) !important;
+    box-shadow:
+      inset 0 0 0 2px var(--cdc-green),
+      var(--cdc-btn-grey-shadow) !important;
   }
 
   main.lobby .lpool .spinner {
@@ -540,31 +679,66 @@
 
   /* Speed headings. Lichess's own speed names sit in .perf, which it swaps
      for the spinner on the pool being sought, so the names are ours. */
-  main.lobby .lpool:is([data-id='1+0'], [data-id='2+1'])    { --cdc-pool-speed: 'Bullet';    --cdc-pool-icon: var(--cdc-mode-bullet); --cdc-pool-color: #e3aa24; }
-  main.lobby .lpool:is([data-id^='3+'], [data-id^='5+'])    { --cdc-pool-speed: 'Blitz';     --cdc-pool-icon: var(--cdc-mode-blitz);  --cdc-pool-color: #fad541; }
-  main.lobby .lpool:is([data-id^='10+'], [data-id^='15+'])  { --cdc-pool-speed: 'Rapid';     --cdc-pool-icon: var(--cdc-mode-rapid);  --cdc-pool-color: #81b64c; }
-  main.lobby .lpool[data-id^='30+']                         { --cdc-pool-speed: 'Classical'; --cdc-pool-icon: var(--cdc-mode-rapid);  --cdc-pool-color: #81b64c; }
+  main.lobby .lpool:is([data-id='1+0'], [data-id='2+1']) {
+    --cdc-pool-speed: 'Bullet';
+    --cdc-pool-icon: var(--cdc-mode-bullet);
+    --cdc-pool-color: #e3aa24;
+  }
+  main.lobby .lpool:is([data-id^='3+'], [data-id^='5+']) {
+    --cdc-pool-speed: 'Blitz';
+    --cdc-pool-icon: var(--cdc-mode-blitz);
+    --cdc-pool-color: #fad541;
+  }
+  main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) {
+    --cdc-pool-speed: 'Rapid';
+    --cdc-pool-icon: var(--cdc-mode-rapid);
+    --cdc-pool-color: #81b64c;
+  }
+  main.lobby .lpool[data-id^='30+'] {
+    --cdc-pool-speed: 'Classical';
+    --cdc-pool-icon: var(--cdc-mode-rapid);
+    --cdc-pool-color: #81b64c;
+  }
 
-  html[lang^='fr'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) { --cdc-pool-speed: 'Rapide'; }
-  html[lang^='fr'] main.lobby .lpool[data-id^='30+']                        { --cdc-pool-speed: 'Classique'; }
-  html[lang^='de'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) { --cdc-pool-speed: 'Schnellschach'; }
-  html[lang^='de'] main.lobby .lpool[data-id^='30+']                        { --cdc-pool-speed: 'Klassisch'; }
-  html[lang^='es'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) { --cdc-pool-speed: 'Rápida'; }
-  html[lang^='es'] main.lobby .lpool[data-id^='30+']                        { --cdc-pool-speed: 'Clásica'; }
-  html[lang^='pt'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) { --cdc-pool-speed: 'Rápida'; }
-  html[lang^='pt'] main.lobby .lpool[data-id^='30+']                        { --cdc-pool-speed: 'Clássico'; }
+  html[lang^='fr'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) {
+    --cdc-pool-speed: 'Rapide';
+  }
+  html[lang^='fr'] main.lobby .lpool[data-id^='30+'] {
+    --cdc-pool-speed: 'Classique';
+  }
+  html[lang^='de'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) {
+    --cdc-pool-speed: 'Schnellschach';
+  }
+  html[lang^='de'] main.lobby .lpool[data-id^='30+'] {
+    --cdc-pool-speed: 'Klassisch';
+  }
+  html[lang^='es'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) {
+    --cdc-pool-speed: 'Rápida';
+  }
+  html[lang^='es'] main.lobby .lpool[data-id^='30+'] {
+    --cdc-pool-speed: 'Clásica';
+  }
+  html[lang^='pt'] main.lobby .lpool:is([data-id^='10+'], [data-id^='15+']) {
+    --cdc-pool-speed: 'Rápida';
+  }
+  html[lang^='pt'] main.lobby .lpool[data-id^='30+'] {
+    --cdc-pool-speed: 'Clássico';
+  }
 
   /* Drawn by each row's first button, above it. No pointer events: a click
      on a heading must not join that pool. */
-  main.lobby .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::before,
-  main.lobby .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::after {
+  main.lobby
+    .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::before,
+  main.lobby
+    .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::after {
     position: absolute;
     bottom: calc(100% + 8px);
     inset-inline-start: 2px;
     pointer-events: none;
   }
 
-  main.lobby .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::before {
+  main.lobby
+    .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::before {
     content: var(--cdc-pool-speed);
     padding-inline-start: 28px;
     color: var(--cdc-text);
@@ -574,7 +748,8 @@
     white-space: nowrap;
   }
 
-  main.lobby .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::after {
+  main.lobby
+    .lpool:is([data-id='1+0'], [data-id='3+0'], [data-id='10+0'], [data-id='30+0'])::after {
     content: '';
     width: 20px;
     height: 20px;
@@ -856,7 +1031,9 @@
     padding: 12px !important;
     border-radius: 14px !important;
     background: var(--cdc-bg-panel) !important;
-    box-shadow: inset 0 1px 0 #ffffff0d, 0 10px 28px #00000033 !important;
+    box-shadow:
+      inset 0 1px 0 #ffffff0d,
+      0 10px 28px #00000033 !important;
     opacity: 1 !important;
     text-shadow: none !important;
   }
@@ -1028,8 +1205,12 @@
     padding: 18px 22px 18px 18px !important;
     border-radius: 16px !important;
     background: var(--cdc-bg-panel) !important;
-    box-shadow: inset 0 1px 0 #ffffff0d, 0 10px 28px #00000033 !important;
-    transition: transform 0.15s, background 0.15s !important;
+    box-shadow:
+      inset 0 1px 0 #ffffff0d,
+      0 10px 28px #00000033 !important;
+    transition:
+      transform 0.15s,
+      background 0.15s !important;
   }
 
   main.lobby .lobby__support-link:hover {
@@ -1086,7 +1267,9 @@
     border: solid var(--cdc-text-dim);
     border-width: 2.5px 2.5px 0 0;
     transform: rotate(45deg);
-    transition: transform 0.15s, border-color 0.15s !important;
+    transition:
+      transform 0.15s,
+      border-color 0.15s !important;
   }
 
   main.lobby .lobby__support-link:hover::after {

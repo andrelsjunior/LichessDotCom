@@ -426,7 +426,9 @@ html.cdc-opening-on main.analyse .explorer-box .data > .title:has(> a) {
 
 .explorer-box :is(.games, .tablebase) result.black {
   background: var(--cdc-ex-black) !important;
-  box-shadow: inset 0 0 0 1px #ffffff14, 0 1px 2px #00000059 !important;
+  box-shadow:
+    inset 0 0 0 1px #ffffff14,
+    0 1px 2px #00000059 !important;
   color: #fff !important;
 }
 
@@ -489,7 +491,9 @@ html.cdc-opening-on main.analyse .explorer-box .data > .title:has(> a) {
    explained over a close button stays: signed out, the explorer is only
    "You need an account" (without it, the toggle seemed dead), and an error
    isn't nothing to show. */
-.explorer-box .data.empty:not(:has(> .message > .explanation ~ button)) > :is(.message, .title:not(:has(> a))) {
+.explorer-box
+  .data.empty:not(:has(> .message > .explanation ~ button))
+  > :is(.message, .title:not(:has(> a))) {
   display: none !important;
 }
 
@@ -654,7 +658,9 @@ html.cdc-opening-on main.analyse .explorer-box .data > .title:has(> a) {
    up to 40% of it, and scrolls past that. Lichess still shrinks it once the
    line leaves book. */
 @media (min-width: 1020px) {
-  main.analyse .analyse__tools:has(> .explorer-box):not(:has(> .explorer-box.reduced)) > .analyse__moves {
+  main.analyse
+    .analyse__tools:has(> .explorer-box):not(:has(> .explorer-box.reduced))
+    > .analyse__moves {
     flex: 1 1 0 !important;
     min-height: 90px;
   }

@@ -25,7 +25,9 @@
   color: #fff;
   font-weight: 600;
   text-shadow: none !important;
-  transition: background-color 0.15s, border-color 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s !important;
 }
 
 .mselect__label:hover,
@@ -48,7 +50,9 @@
   opacity: 1 !important;
   -webkit-mask: var(--cdc-chevron) center / contain no-repeat;
   mask: var(--cdc-chevron) center / contain no-repeat;
-  transition: transform 0.15s ease, background-color 0.15s !important;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s !important;
 }
 
 .mselect__label:hover::after,
@@ -98,14 +102,20 @@
     visibility: hidden;
     transform: translateY(-4px) scale(0.98) !important;
     transform-origin: top center !important;
-    transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0s linear 0.14s !important;
+    transition:
+      opacity 0.14s ease-out,
+      transform 0.14s ease-out,
+      visibility 0s linear 0.14s !important;
   }
 
   .mselect__toggle:checked ~ .mselect__list {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
-    transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0s !important;
+    transition:
+      opacity 0.14s ease-out,
+      transform 0.14s ease-out,
+      visibility 0s !important;
   }
 
   /* The variant picker only renders its menu once open. */
@@ -121,7 +131,9 @@
   .mselect__toggle:checked ~ .mselect__list .mselect__item {
     opacity: 1 !important;
     visibility: inherit !important;
-    transition: background-color 0.1s, color 0.1s !important;
+    transition:
+      background-color 0.1s,
+      color 0.1s !important;
   }
 }
 
@@ -266,7 +278,9 @@ dialog .scrollable:has(.game-setup .mselect__toggle:checked) {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    transition: background-color 0.15s, border-color 0.15s !important;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s !important;
   }
 
   select:not([multiple], [size]):not(:disabled):hover {
@@ -281,7 +295,9 @@ dialog .scrollable:has(.game-setup .mselect__toggle:checked) {
     background: var(--cdc-text-dim);
     -webkit-mask: var(--cdc-chevron) center / contain no-repeat;
     mask: var(--cdc-chevron) center / contain no-repeat;
-    transition: rotate 0.15s ease, background-color 0.15s !important;
+    transition:
+      rotate 0.15s ease,
+      background-color 0.15s !important;
   }
 
   select:not([multiple], [size]):hover::picker-icon,
@@ -305,7 +321,10 @@ dialog .scrollable:has(.game-setup .mselect__toggle:checked) {
     scrollbar-width: thin;
     opacity: 1;
     transform: none;
-    transition: opacity 0.14s ease-out, transform 0.14s ease-out, overlay 0.14s allow-discrete,
+    transition:
+      opacity 0.14s ease-out,
+      transform 0.14s ease-out,
+      overlay 0.14s allow-discrete,
       display 0.14s allow-discrete !important;
   }
 

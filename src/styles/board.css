@@ -24,7 +24,10 @@
 /* ----------------------------------------------------------------- board --- */
 
 html:not([data-cdc-board='lichess']) body .is2d cg-board::before {
-  background-image: var(--cdc-board-img, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%23ebecd0'/%3E%3Cpath fill='%23739552' d='M1 0h1v1h-1zM3 0h1v1h-1zM5 0h1v1h-1zM7 0h1v1h-1zM0 1h1v1h-1zM2 1h1v1h-1zM4 1h1v1h-1zM6 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM5 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM6 5h1v1h-1zM1 6h1v1h-1zM3 6h1v1h-1zM5 6h1v1h-1zM7 6h1v1h-1zM0 7h1v1h-1zM2 7h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1z'/%3E%3C/svg%3E")) !important;
+  background-image: var(
+    --cdc-board-img,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%23ebecd0'/%3E%3Cpath fill='%23739552' d='M1 0h1v1h-1zM3 0h1v1h-1zM5 0h1v1h-1zM7 0h1v1h-1zM0 1h1v1h-1zM2 1h1v1h-1zM4 1h1v1h-1zM6 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM5 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM6 5h1v1h-1zM1 6h1v1h-1zM3 6h1v1h-1zM5 6h1v1h-1zM7 6h1v1h-1zM0 7h1v1h-1zM2 7h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1z'/%3E%3C/svg%3E")
+  ) !important;
   background-size: cover !important;
   filter: none !important;
   opacity: 1 !important;
@@ -37,18 +40,78 @@ cg-board {
 
 /* ---------------------------------------------------------------- pieces --- */
 
-html:not([data-cdc-pieces='lichess']) .is2d .pawn.white   { background-image: var(--cdc-piece-wp, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wp.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .knight.white { background-image: var(--cdc-piece-wn, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wn.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .bishop.white { background-image: var(--cdc-piece-wb, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wb.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .rook.white   { background-image: var(--cdc-piece-wr, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wr.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .queen.white  { background-image: var(--cdc-piece-wq, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wq.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .king.white   { background-image: var(--cdc-piece-wk, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wk.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .pawn.black   { background-image: var(--cdc-piece-bp, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bp.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .knight.black { background-image: var(--cdc-piece-bn, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bn.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .bishop.black { background-image: var(--cdc-piece-bb, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bb.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .rook.black   { background-image: var(--cdc-piece-br, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/br.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .queen.black  { background-image: var(--cdc-piece-bq, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bq.webp')) !important; }
-html:not([data-cdc-pieces='lichess']) .is2d .king.black   { background-image: var(--cdc-piece-bk, url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bk.webp')) !important; }
+html:not([data-cdc-pieces='lichess']) .is2d .pawn.white {
+  background-image: var(
+    --cdc-piece-wp,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wp.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .knight.white {
+  background-image: var(
+    --cdc-piece-wn,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wn.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .bishop.white {
+  background-image: var(
+    --cdc-piece-wb,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wb.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .rook.white {
+  background-image: var(
+    --cdc-piece-wr,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wr.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .queen.white {
+  background-image: var(
+    --cdc-piece-wq,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wq.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .king.white {
+  background-image: var(
+    --cdc-piece-wk,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wk.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .pawn.black {
+  background-image: var(
+    --cdc-piece-bp,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bp.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .knight.black {
+  background-image: var(
+    --cdc-piece-bn,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bn.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .bishop.black {
+  background-image: var(
+    --cdc-piece-bb,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bb.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .rook.black {
+  background-image: var(
+    --cdc-piece-br,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/br.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .queen.black {
+  background-image: var(
+    --cdc-piece-bq,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bq.webp')
+  ) !important;
+}
+html:not([data-cdc-pieces='lichess']) .is2d .king.black {
+  background-image: var(
+    --cdc-piece-bk,
+    url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/bk.webp')
+  ) !important;
+}
 
 /* ------------------------------------------------------------ highlights --- */
 
@@ -66,7 +129,11 @@ cg-board square.move-dest {
 }
 
 cg-board square.oc.move-dest {
-  background: radial-gradient(transparent 0 57%, var(--cdc-hint) 58% 70%, transparent 71%) !important;
+  background: radial-gradient(
+    transparent 0 57%,
+    var(--cdc-hint) 58% 70%,
+    transparent 71%
+  ) !important;
 }
 
 cg-board square.move-dest:hover,
@@ -81,7 +148,11 @@ cg-board square.premove-dest {
 }
 
 cg-board square.oc.premove-dest {
-  background: radial-gradient(transparent 0 57%, var(--cdc-hint) 58% 70%, transparent 71%) !important;
+  background: radial-gradient(
+    transparent 0 57%,
+    var(--cdc-hint) 58% 70%,
+    transparent 71%
+  ) !important;
 }
 
 /* A premove that's set: both of its squares, the piece already on the new one
@@ -92,7 +163,12 @@ body[data-board] .is2d cg-board square.current-premove {
 }
 
 cg-board square.check {
-  background: radial-gradient(ellipse at center, #ff3b3b 0%, #e70000 25%, rgba(169, 0, 0, 0) 89%) !important;
+  background: radial-gradient(
+    ellipse at center,
+    #ff3b3b 0%,
+    #e70000 25%,
+    rgba(169, 0, 0, 0) 89%
+  ) !important;
 }
 
 /* ------------------------------------------------- shapes, arrows & mate --- */
@@ -121,8 +197,12 @@ svg.cdc-marks {
 
 /* Boards board.js leaves alone (mini boards, previews): Lichess's default green
    brush becomes our orange. */
-.cg-shapes [stroke='#15781B'] { stroke: #ffaa00 !important; }
-.cg-shapes [fill='#15781B']   { fill: #ffaa00 !important; }
+.cg-shapes [stroke='#15781B'] {
+  stroke: #ffaa00 !important;
+}
+.cg-shapes [fill='#15781B'] {
+  fill: #ffaa00 !important;
+}
 
 #cdc-shapes {
   position: absolute;
@@ -200,7 +280,9 @@ html.cdc-mate main.analyse cg-board square.check {
 }
 
 @keyframes cdc-fade {
-  from { opacity: 0; }
+  from {
+    opacity: 0;
+  }
 }
 
 /* ------------------------------------------------------------- promotion --- */
@@ -239,10 +321,20 @@ html.cdc-mate main.analyse cg-board square.check {
   pointer-events: none;
 }
 
-#promotion-choice.top square:first-child { border-radius: 4px 4px 0 0 !important; }
-#promotion-choice.bottom square:first-child { border-radius: 0 0 4px 4px !important; }
-#promotion-choice.top square:last-child::before { bottom: -50%; border-radius: 0 0 4px 4px; }
-#promotion-choice.bottom square:last-child::before { top: -50%; border-radius: 4px 4px 0 0; }
+#promotion-choice.top square:first-child {
+  border-radius: 4px 4px 0 0 !important;
+}
+#promotion-choice.bottom square:first-child {
+  border-radius: 0 0 4px 4px !important;
+}
+#promotion-choice.top square:last-child::before {
+  bottom: -50%;
+  border-radius: 0 0 4px 4px;
+}
+#promotion-choice.bottom square:last-child::before {
+  top: -50%;
+  border-radius: 4px 4px 0 0;
+}
 
 /* The "×": no events of its own, so a click on it lands on the fog behind,
    which is what cancels (a click on the square would promote). */
@@ -255,7 +347,9 @@ html.cdc-mate main.analyse cg-board square.check {
   place-items: center;
   background: #f1f0ee;
   color: #8b8987;
-  font: 700 max(14px, 4cqw) / 1 system-ui, sans-serif;
+  font:
+    700 max(14px, 4cqw) / 1 system-ui,
+    sans-serif;
   pointer-events: none;
 }
 
@@ -281,13 +375,24 @@ html.cdc-mate main.analyse cg-board square.check {
   transform: scale(1.04) !important;
 }
 
-.is2d #promotion-choice square:nth-child(2) piece { animation-delay: 0.03s; }
-.is2d #promotion-choice square:nth-child(3) piece { animation-delay: 0.06s; }
-.is2d #promotion-choice square:nth-child(4) piece { animation-delay: 0.09s; }
-.is2d #promotion-choice square:nth-child(5) piece { animation-delay: 0.12s; }
+.is2d #promotion-choice square:nth-child(2) piece {
+  animation-delay: 0.03s;
+}
+.is2d #promotion-choice square:nth-child(3) piece {
+  animation-delay: 0.06s;
+}
+.is2d #promotion-choice square:nth-child(4) piece {
+  animation-delay: 0.09s;
+}
+.is2d #promotion-choice square:nth-child(5) piece {
+  animation-delay: 0.12s;
+}
 
 @keyframes cdc-promo-in {
-  from { opacity: 0; transform: scale(0.5); }
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
 /* ----------------------------------------------------------- coordinates --- */
@@ -434,13 +539,21 @@ html:not([data-cdc-board='lichess']) body .is2d coords {
   width: var(--cdc-gauge-w, 15px) !important;
   overflow: hidden;
   border-radius: 3px !important;
-  background: linear-gradient(to bottom, #403d39 var(--eval-percent), #fff var(--eval-percent)) !important;
+  background: linear-gradient(
+    to bottom,
+    #403d39 var(--eval-percent),
+    #fff var(--eval-percent)
+  ) !important;
   transition: --eval-percent 0.3s ease !important;
 }
 
 .eval-gauge.reverse {
   transform: none !important;
-  background: linear-gradient(to top, #403d39 var(--eval-percent), #fff var(--eval-percent)) !important;
+  background: linear-gradient(
+    to top,
+    #403d39 var(--eval-percent),
+    #fff var(--eval-percent)
+  ) !important;
 }
 
 .eval-gauge tick {

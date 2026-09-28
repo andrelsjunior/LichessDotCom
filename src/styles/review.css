@@ -21,7 +21,10 @@
     --cdc-review-top: 92px;
     --cdc-chat-h: min(clamp(150px, 24vh, 260px), calc(var(--cdc-board) * 0.32));
     grid-template-rows:
-      max(0px, calc(var(--cdc-stage) - var(--cdc-review-top) - var(--cdc-ctrl-h) - var(--cdc-chat-h)))
+      max(
+        0px,
+        calc(var(--cdc-stage) - var(--cdc-review-top) - var(--cdc-ctrl-h) - var(--cdc-chat-h))
+      )
       var(--cdc-review-top)
       var(--cdc-ctrl-h)
       var(--cdc-chat-h) !important;
@@ -56,7 +59,13 @@
     --cdc-review-ctrl: 72px;
     grid-template-rows:
       var(--cdc-review-top)
-      max(0px, calc(var(--cdc-stage) - var(--cdc-review-top) - var(--cdc-review-graph) - var(--cdc-review-ctrl)))
+      max(
+        0px,
+        calc(
+          var(--cdc-stage) - var(--cdc-review-top) - var(--cdc-review-graph) -
+            var(--cdc-review-ctrl)
+        )
+      )
       var(--cdc-review-graph)
       var(--cdc-review-ctrl) !important;
     grid-template-areas:
@@ -72,7 +81,10 @@
     --cdc-review-top: 140px;
     grid-template-rows:
       var(--cdc-review-top)
-      max(0px, calc(var(--cdc-stage) - var(--cdc-review-top) - var(--cdc-ctrl-h) - var(--cdc-chat-h)))
+      max(
+        0px,
+        calc(var(--cdc-stage) - var(--cdc-review-top) - var(--cdc-ctrl-h) - var(--cdc-chat-h))
+      )
       var(--cdc-ctrl-h)
       var(--cdc-chat-h) !important;
     grid-template-areas:
@@ -100,7 +112,10 @@
      over the moves. It's back as it was once the review is closed. */
   html.cdc-review-summary main.analyse > :is(.analyse__tools, .analyse__controls, .mchat),
   html.cdc-review-moves main.analyse > :is(.analyse__controls, .mchat),
-  html.cdc-review-moves main.analyse .analyse__tools > :is(.ceval, .pv_box, .explorer-box, .analyse__fork),
+  html.cdc-review-moves
+    main.analyse
+    .analyse__tools
+    > :is(.ceval, .pv_box, .explorer-box, .analyse__fork),
   html.cdc-review:not(.cdc-review-moves) :is(#cdc-review-graph, #cdc-review-controls) {
     display: none !important;
   }
@@ -209,7 +224,9 @@
     background: transparent;
     color: var(--cdc-text-dim);
     cursor: pointer;
-    transition: background-color 0.15s, color 0.15s !important;
+    transition:
+      background-color 0.15s,
+      color 0.15s !important;
   }
 
   .cdc-review__back svg,
@@ -334,8 +351,12 @@
   }
 
   @keyframes cdc-reveal {
-    from { clip-path: inset(0 100% 0 0); }
-    to { clip-path: inset(0 0 0 0); }
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
   }
 
   /* Eval under the mouse. */
@@ -430,7 +451,9 @@
     background: none;
     color: #ffffff80;
     cursor: pointer;
-    transition: color 0.15s, background-color 0.15s !important;
+    transition:
+      color 0.15s,
+      background-color 0.15s !important;
   }
 
   .cdc-review__more:hover {
@@ -470,8 +493,14 @@
     font-weight: 800;
   }
 
-  .cdc-acc--w { background: #fff; color: #312e2b; }
-  .cdc-acc--b { background: #403d39; color: #fff; }
+  .cdc-acc--w {
+    background: #fff;
+    color: #312e2b;
+  }
+  .cdc-acc--b {
+    background: #403d39;
+    color: #fff;
+  }
 
   /* The game rating's label explains itself on hover (#cdc-tip). */
   :not(button)[data-cdc-tip] {
@@ -630,13 +659,23 @@
   }
 
   @keyframes cdc-breathe {
-    50% { transform: scaleY(1.012); }
+    50% {
+      transform: scaleY(1.012);
+    }
   }
 
-  .cdc-coach__avatar[data-coach='1'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-1.webp'); }
-  .cdc-coach__avatar[data-coach='2'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-2.webp'); }
-  .cdc-coach__avatar[data-coach='3'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-3.webp'); }
-  .cdc-coach__avatar[data-coach='4'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-4.webp'); }
+  .cdc-coach__avatar[data-coach='1'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-1.webp');
+  }
+  .cdc-coach__avatar[data-coach='2'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-2.webp');
+  }
+  .cdc-coach__avatar[data-coach='3'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-3.webp');
+  }
+  .cdc-coach__avatar[data-coach='4'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-4.webp');
+  }
 
   /* The rig (coach.js): the face as Lottie animations, the lids, the blinks
    * and the brows and mouth, over the portrait's plate, the portrait with
@@ -653,10 +692,18 @@
     display: block;
   }
 
-  .cdc-coach__avatar--rig[data-coach='1'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-1-plate.webp'); }
-  .cdc-coach__avatar--rig[data-coach='2'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-2-plate.webp'); }
-  .cdc-coach__avatar--rig[data-coach='3'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-3-plate.webp'); }
-  .cdc-coach__avatar--rig[data-coach='4'] .cdc-coach__face { background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-4-plate.webp'); }
+  .cdc-coach__avatar--rig[data-coach='1'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-1-plate.webp');
+  }
+  .cdc-coach__avatar--rig[data-coach='2'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-2-plate.webp');
+  }
+  .cdc-coach__avatar--rig[data-coach='3'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-3-plate.webp');
+  }
+  .cdc-coach__avatar--rig[data-coach='4'] .cdc-coach__face {
+    background-image: url('chrome-extension://__MSG_@@extension_id__/img/coaches/coach-4-plate.webp');
+  }
 
   /* The marks over the head: sparkles, "?", "!" or a drop, in the class's
    * color, popping up and fading away. */
@@ -668,7 +715,12 @@
     pointer-events: none;
   }
 
-  .cdc-coach__avatar--react:is([data-mood='delight'], [data-mood='doubt'], [data-mood='shock'], [data-mood='worry'])::after {
+  .cdc-coach__avatar--react:is(
+      [data-mood='delight'],
+      [data-mood='doubt'],
+      [data-mood='shock'],
+      [data-mood='worry']
+    )::after {
     content: '';
     top: 2%;
     right: 6%;
@@ -687,7 +739,8 @@
     width: 18%;
     aspect-ratio: 1;
     background: var(--cdc-mood-c);
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0Q11 9 20 10Q11 11 10 20Q9 11 0 10Q9 9 10 0z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0Q11 9 20 10Q11 11 10 20Q9 11 0 10Q9 9 10 0z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 
   .cdc-coach__avatar--react[data-mood='delight']::before {
@@ -700,8 +753,14 @@
     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
   }
 
-  .cdc-coach__avatar--react[data-mood='doubt']::after { content: '?'; }
-  .cdc-coach__avatar--react[data-mood='shock']::after { content: '!'; right: 10%; font-size: calc(var(--cdc-coach-h) * 0.3); }
+  .cdc-coach__avatar--react[data-mood='doubt']::after {
+    content: '?';
+  }
+  .cdc-coach__avatar--react[data-mood='shock']::after {
+    content: '!';
+    right: 10%;
+    font-size: calc(var(--cdc-coach-h) * 0.3);
+  }
 
   .cdc-coach__avatar--react[data-mood='worry']::after {
     top: 24%;
@@ -715,17 +774,41 @@
   }
 
   @keyframes cdc-mark {
-    0% { opacity: 0; scale: 0.3; translate: 0 20%; }
-    20% { opacity: 1; scale: 1.15; }
-    32% { scale: 1; translate: 0 0; }
-    75% { opacity: 1; }
-    100% { opacity: 0; translate: 0 -20%; }
+    0% {
+      opacity: 0;
+      scale: 0.3;
+      translate: 0 20%;
+    }
+    20% {
+      opacity: 1;
+      scale: 1.15;
+    }
+    32% {
+      scale: 1;
+      translate: 0 0;
+    }
+    75% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      translate: 0 -20%;
+    }
   }
 
   @keyframes cdc-drop {
-    0% { opacity: 0; translate: 0 0; }
-    15%, 60% { opacity: 1; }
-    100% { opacity: 0; translate: 0 90%; }
+    0% {
+      opacity: 0;
+      translate: 0 0;
+    }
+    15%,
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      translate: 0 90%;
+    }
   }
 
   .cdc-bubble {
@@ -980,11 +1063,18 @@
      split its move's row in two like the analysis board's. After a White
      move, the index past the card repeats the move's number (then "...");
      after a Black move, it's the next move's own. */
-  html.cdc-review-moves main.analyse .tview2-column > :is(
-    interrupt:not(:has(line.cdc-var)),
-    move.empty:not(:nth-child(2), :has(+ interrupt line.cdc-var), interrupt:has(line.cdc-var) + index + move.empty),
-    interrupt:not(:has(line.cdc-var)) + index:has(+ move.empty)
-  ),
+  html.cdc-review-moves
+    main.analyse
+    .tview2-column
+    > :is(
+      interrupt:not(:has(line.cdc-var)),
+      move.empty:not(
+          :nth-child(2),
+          :has(+ interrupt line.cdc-var),
+          interrupt:has(line.cdc-var) + index + move.empty
+        ),
+      interrupt:not(:has(line.cdc-var)) + index:has(+ move.empty)
+    ),
   html.cdc-review-moves main.analyse .tview2 interrupt :is(comment, line:not(.cdc-var)) {
     display: none !important;
   }
@@ -1088,7 +1178,10 @@
     display: none;
   }
 
-  html.cdc-review-live.cdc-opening-on main.analyse .analyse__tools > :not(.ceval, .pv_box, #cdc-opening) {
+  html.cdc-review-live.cdc-opening-on
+    main.analyse
+    .analyse__tools
+    > :not(.ceval, .pv_box, #cdc-opening) {
     order: 2;
   }
 
@@ -1195,10 +1288,22 @@
     z-index: 1;
   }
 
-  .cdc-evalbar__label--white { bottom: 5px; color: #403d39; }
-  .cdc-evalbar__label--black { top: 5px; color: #fff; }
-  .cdc-evalbar--flip .cdc-evalbar__label--white { top: 5px; bottom: auto; }
-  .cdc-evalbar--flip .cdc-evalbar__label--black { bottom: 5px; top: auto; }
+  .cdc-evalbar__label--white {
+    bottom: 5px;
+    color: #403d39;
+  }
+  .cdc-evalbar__label--black {
+    top: 5px;
+    color: #fff;
+  }
+  .cdc-evalbar--flip .cdc-evalbar__label--white {
+    top: 5px;
+    bottom: auto;
+  }
+  .cdc-evalbar--flip .cdc-evalbar__label--black {
+    bottom: 5px;
+    top: auto;
+  }
 }
 
 /* ------------------------------------------------------ board overlay --- */
@@ -1222,18 +1327,67 @@
   height: 100%;
 }
 
-
 /* Last-move squares take the classification color (the free board's too). */
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='brilliant'] main.analyse cg-board square.last-move { background: rgba(38, 194, 163, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='great'] main.analyse cg-board square.last-move { background: rgba(116, 155, 191, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='best'] main.analyse cg-board square.last-move { background: rgba(129, 182, 76, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='excellent'] main.analyse cg-board square.last-move { background: rgba(129, 182, 76, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='good'] main.analyse cg-board square.last-move { background: rgba(149, 183, 118, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='book'] main.analyse cg-board square.last-move { background: rgba(168, 136, 101, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='inaccuracy'] main.analyse cg-board square.last-move { background: rgba(247, 198, 49, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='mistake'] main.analyse cg-board square.last-move { background: rgba(255, 164, 89, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='miss'] main.analyse cg-board square.last-move { background: rgba(255, 119, 105, 0.5) !important; }
-html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='blunder'] main.analyse cg-board square.last-move { background: rgba(250, 65, 45, 0.5) !important; }
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='brilliant']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(38, 194, 163, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='great']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(116, 155, 191, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='best']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(129, 182, 76, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='excellent']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(129, 182, 76, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='good']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(149, 183, 118, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='book']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(168, 136, 101, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='inaccuracy']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(247, 198, 49, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='mistake']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(255, 164, 89, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='miss']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(255, 119, 105, 0.5) !important;
+}
+html:is(.cdc-review-moves, .cdc-review-live)[data-cdc-cls='blunder']
+  main.analyse
+  cg-board
+  square.last-move {
+  background: rgba(250, 65, 45, 0.5) !important;
+}
 
 /* ------------------------------------------------------------- mobile --- */
 

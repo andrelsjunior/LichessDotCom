@@ -25,7 +25,9 @@
     gap: 5px;
     /* Clear of the clock (140px and a gap, more with the game page's clock
        extras): a name too long for the bar ends in an ellipsis. */
-    max-width: calc(100% - var(--cdc-inset-l, 0px) - var(--cdc-inset-r, 0px) - var(--cdc-clock-room, 152px));
+    max-width: calc(
+      100% - var(--cdc-inset-l, 0px) - var(--cdc-inset-r, 0px) - var(--cdc-clock-room, 152px)
+    );
     height: 20px;
     margin: calc(var(--cdc-off) + 8px) 0 0 var(--cdc-inset-l, 0px) !important;
     padding: 0 0 0 50px !important;
@@ -53,25 +55,37 @@
   html[data-cdc-ai~='white'][data-cdc-has~='round-black'] main.round .ruser-top::before,
   html[data-cdc-ai~='black']:not([data-cdc-has~='round-black']) main.round .ruser-top::before,
   html[data-cdc-ai~='black'][data-cdc-has~='round-black'] main.round .ruser-bottom::before,
-  html[data-cdc-ai~='white']:not([data-cdc-has~='analyse-black']) main.analyse > .cdc-player--bottom::before,
+  html[data-cdc-ai~='white']:not([data-cdc-has~='analyse-black'])
+    main.analyse
+    > .cdc-player--bottom::before,
   html[data-cdc-ai~='white'][data-cdc-has~='analyse-black'] main.analyse > .cdc-player--top::before,
-  html[data-cdc-ai~='black']:not([data-cdc-has~='analyse-black']) main.analyse > .cdc-player--top::before,
-  html[data-cdc-ai~='black'][data-cdc-has~='analyse-black'] main.analyse > .cdc-player--bottom::before {
+  html[data-cdc-ai~='black']:not([data-cdc-has~='analyse-black'])
+    main.analyse
+    > .cdc-player--top::before,
+  html[data-cdc-ai~='black'][data-cdc-has~='analyse-black']
+    main.analyse
+    > .cdc-player--bottom::before {
     background: var(--cdc-computer-avatar);
   }
 
   /* And its level's rating (content.js), where a player's flag would go. */
   html[data-cdc-ai~='white']:not([data-cdc-has~='round-black']) main.round .ruser-bottom::after,
   html[data-cdc-ai~='white'][data-cdc-has~='round-black'] main.round .ruser-top::after,
-  html[data-cdc-ai~='white']:not([data-cdc-has~='analyse-black']) main.analyse > .cdc-player--bottom::after,
+  html[data-cdc-ai~='white']:not([data-cdc-has~='analyse-black'])
+    main.analyse
+    > .cdc-player--bottom::after,
   html[data-cdc-ai~='white'][data-cdc-has~='analyse-black'] main.analyse > .cdc-player--top::after {
     content: '(' var(--cdc-ai-white) ')';
   }
 
   html[data-cdc-ai~='black']:not([data-cdc-has~='round-black']) main.round .ruser-top::after,
   html[data-cdc-ai~='black'][data-cdc-has~='round-black'] main.round .ruser-bottom::after,
-  html[data-cdc-ai~='black']:not([data-cdc-has~='analyse-black']) main.analyse > .cdc-player--top::after,
-  html[data-cdc-ai~='black'][data-cdc-has~='analyse-black'] main.analyse > .cdc-player--bottom::after {
+  html[data-cdc-ai~='black']:not([data-cdc-has~='analyse-black'])
+    main.analyse
+    > .cdc-player--top::after,
+  html[data-cdc-ai~='black'][data-cdc-has~='analyse-black']
+    main.analyse
+    > .cdc-player--bottom::after {
     content: '(' var(--cdc-ai-black) ')';
   }
 
@@ -124,11 +138,17 @@
     font-weight: 400;
   }
 
-  :is(main.round .ruser, main.analyse > .cdc-player) rating::before { content: '('; }
-  :is(main.round .ruser, main.analyse > .cdc-player) rating::after  { content: ')'; }
+  :is(main.round .ruser, main.analyse > .cdc-player) rating::before {
+    content: '(';
+  }
+  :is(main.round .ruser, main.analyse > .cdc-player) rating::after {
+    content: ')';
+  }
 
   /* The player's country flag, right after the name (set by content.js). */
-  :is(main.round .ruser, main.analyse > .cdc-player) :is(rating, good, bad) { order: 2; }
+  :is(main.round .ruser, main.analyse > .cdc-player) :is(rating, good, bad) {
+    order: 2;
+  }
   :is(main.round .ruser, main.analyse > .cdc-player)[data-cdc-flag]:not([data-cdc-flag=''])::after {
     order: 1;
     content: attr(data-cdc-flag);
@@ -194,12 +214,24 @@
     --cdc-mpiece-king: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wk.webp');
   }
 
-  main.analyse .material mpiece.pawn { background-image: var(--cdc-mpiece-pawn) !important; }
-  main.analyse .material mpiece.knight { background-image: var(--cdc-mpiece-knight) !important; }
-  main.analyse .material mpiece.bishop { background-image: var(--cdc-mpiece-bishop) !important; }
-  main.analyse .material mpiece.rook { background-image: var(--cdc-mpiece-rook) !important; }
-  main.analyse .material mpiece.queen { background-image: var(--cdc-mpiece-queen) !important; }
-  main.analyse .material mpiece.king { background-image: var(--cdc-mpiece-king) !important; }
+  main.analyse .material mpiece.pawn {
+    background-image: var(--cdc-mpiece-pawn) !important;
+  }
+  main.analyse .material mpiece.knight {
+    background-image: var(--cdc-mpiece-knight) !important;
+  }
+  main.analyse .material mpiece.bishop {
+    background-image: var(--cdc-mpiece-bishop) !important;
+  }
+  main.analyse .material mpiece.rook {
+    background-image: var(--cdc-mpiece-rook) !important;
+  }
+  main.analyse .material mpiece.queen {
+    background-image: var(--cdc-mpiece-queen) !important;
+  }
+  main.analyse .material mpiece.king {
+    background-image: var(--cdc-mpiece-king) !important;
+  }
 
   :is(.cdc-captured__group, main.analyse .material > div) {
     display: flex !important;

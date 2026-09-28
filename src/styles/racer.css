@@ -41,7 +41,8 @@ main.racer-home > h1.box__top::before {
   flex: none;
   width: 40px;
   height: 40px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/battle.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/battle.svg') center / contain
+    no-repeat;
 }
 
 /* "About Puzzle Racer", as a pill beside the title. */
@@ -60,14 +61,17 @@ main.racer-home > h1.box__top::before {
   color: var(--cdc-text) !important;
   font-size: 13px;
   font-weight: 700;
-  transition: background 0.15s, color 0.15s !important;
+  transition:
+    background 0.15s,
+    color 0.15s !important;
 }
 
 .racer-home__about a::before {
   content: '';
   width: 18px;
   height: 18px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/lessons.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/lessons.svg') center /
+    contain no-repeat;
 }
 
 .racer-home__about a:hover {
@@ -114,7 +118,11 @@ main.racer-home > h1.box__top::before {
   text-shadow: none !important;
   opacity: 1 !important;
   overflow: hidden;
-  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s, background 0.15s !important;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s,
+    background 0.15s !important;
 }
 
 .racer-home__create .button {
@@ -138,13 +146,18 @@ main.racer-home > h1.box__top::before {
   inset: 0 0 auto;
   height: var(--cdc-scene-h);
   background:
-    repeating-linear-gradient(90deg, #ffffffb3 0 26px, transparent 26px 52px) 0 calc(100% - 22px) / 52px 3px repeat-x,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='48'%3E%3Cpath fill='%231b1a18' d='M0 0h16v48H0z'/%3E%3Cpath fill='%23fff' d='M0 0h8v8H0zM8 8h8v8H8zM0 16h8v8H0zM8 24h8v8H8zM0 32h8v8H0zM8 40h8v8H8z'/%3E%3C/svg%3E") right 44px bottom / 16px 48px no-repeat,
+    repeating-linear-gradient(90deg, #ffffffb3 0 26px, transparent 26px 52px) 0 calc(100% - 22px) /
+      52px 3px repeat-x,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='48'%3E%3Cpath fill='%231b1a18' d='M0 0h16v48H0z'/%3E%3Cpath fill='%23fff' d='M0 0h8v8H0zM8 8h8v8H8zM0 16h8v8H0zM8 24h8v8H8zM0 32h8v8H0zM8 40h8v8H8z'/%3E%3C/svg%3E")
+      right 44px bottom / 16px 48px no-repeat,
     linear-gradient(#ffffff38, #ffffff38) 0 calc(100% - 48px) / 100% 3px no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='60'%3E%3Cpath fill='%23000' fill-opacity='.14' d='M0 60V40q30-30 60-6t60-4 60-4 60 14v20z'/%3E%3C/svg%3E") 0 calc(100% - 51px) / 240px 60px repeat-x,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='60'%3E%3Cpath fill='%23000' fill-opacity='.14' d='M0 60V40q30-30 60-6t60-4 60-4 60 14v20z'/%3E%3C/svg%3E")
+      0 calc(100% - 51px) / 240px 60px repeat-x,
     linear-gradient(#3b3936, #2b2a27) bottom / 100% 48px no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 52'%3E%3Cg fill='%23fff' fill-opacity='.8'%3E%3Ccircle cx='32' cy='32' r='17'/%3E%3Ccircle cx='56' cy='24' r='23'/%3E%3Ccircle cx='80' cy='33' r='16'/%3E%3Crect x='14' y='30' width='82' height='22' rx='11'/%3E%3C/g%3E%3C/svg%3E") 12% 22% / 110px auto no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 52'%3E%3Cg fill='%23fff' fill-opacity='.8'%3E%3Ccircle cx='32' cy='32' r='17'/%3E%3Ccircle cx='56' cy='24' r='23'/%3E%3Ccircle cx='80' cy='33' r='16'/%3E%3Crect x='14' y='30' width='82' height='22' rx='11'/%3E%3C/g%3E%3C/svg%3E") 58% 10% / 70px auto no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 52'%3E%3Cg fill='%23fff' fill-opacity='.8'%3E%3Ccircle cx='32' cy='32' r='17'/%3E%3Ccircle cx='56' cy='24' r='23'/%3E%3Ccircle cx='80' cy='33' r='16'/%3E%3Crect x='14' y='30' width='82' height='22' rx='11'/%3E%3C/g%3E%3C/svg%3E")
+      12% 22% / 110px auto no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 52'%3E%3Cg fill='%23fff' fill-opacity='.8'%3E%3Ccircle cx='32' cy='32' r='17'/%3E%3Ccircle cx='56' cy='24' r='23'/%3E%3Ccircle cx='80' cy='33' r='16'/%3E%3Crect x='14' y='30' width='82' height='22' rx='11'/%3E%3C/g%3E%3C/svg%3E")
+      58% 10% / 70px auto no-repeat,
     radial-gradient(circle at 84% 24%, #fff6 0 22px, #fff2 23px 40px, transparent 41px),
     linear-gradient(160deg, var(--cdc-race), var(--cdc-race-2));
 }
@@ -173,7 +186,8 @@ main.racer-home > h1.box__top::before {
   height: 26px;
   border-radius: 50%;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E") center / 16px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E")
+      center / 16px no-repeat,
     var(--cdc-btn-green);
   box-shadow: var(--cdc-btn-green-shadow);
   transition: transform 0.15s !important;
@@ -221,8 +235,16 @@ html[dir='rtl'] .racer-home .button:hover::after {
 
 @keyframes cdc-racer-road {
   to {
-    background-position: -52px calc(100% - 22px), right 44px bottom, 0 calc(100% - 48px), 0 calc(100% - 51px), bottom,
-      12% 22%, 58% 10%, 0 0, 0 0;
+    background-position:
+      -52px calc(100% - 22px),
+      right 44px bottom,
+      0 calc(100% - 48px),
+      0 calc(100% - 51px),
+      bottom,
+      12% 22%,
+      58% 10%,
+      0 0,
+      0 0;
   }
 }
 
@@ -257,30 +279,72 @@ html[dir='rtl'] .racer-home .button:hover::after {
   --cdc-lanes: 1;
 }
 
-.racer:has(.racer__race__track--me .car-1) { --cdc-car: #5757ff; }
-.racer:has(.racer__race__track--me .car-2) { --cdc-car: #1f9d3a; }
-.racer:has(.racer__race__track--me .car-3) { --cdc-car: #d23b3b; }
-.racer:has(.racer__race__track--me .car-4) { --cdc-car: #ec7a51; }
-.racer:has(.racer__race__track--me .car-5) { --cdc-car: #8fbf2a; }
-.racer:has(.racer__race__track--me .car-6) { --cdc-car: #ff5a1f; }
-.racer:has(.racer__race__track--me .car-7) { --cdc-car: #2e8b57; }
-.racer:has(.racer__race__track--me .car-8) { --cdc-car: #daa520; }
-.racer:has(.racer__race__track--me .car-9) { --cdc-car: #d27e1e; }
+.racer:has(.racer__race__track--me .car-1) {
+  --cdc-car: #5757ff;
+}
+.racer:has(.racer__race__track--me .car-2) {
+  --cdc-car: #1f9d3a;
+}
+.racer:has(.racer__race__track--me .car-3) {
+  --cdc-car: #d23b3b;
+}
+.racer:has(.racer__race__track--me .car-4) {
+  --cdc-car: #ec7a51;
+}
+.racer:has(.racer__race__track--me .car-5) {
+  --cdc-car: #8fbf2a;
+}
+.racer:has(.racer__race__track--me .car-6) {
+  --cdc-car: #ff5a1f;
+}
+.racer:has(.racer__race__track--me .car-7) {
+  --cdc-car: #2e8b57;
+}
+.racer:has(.racer__race__track--me .car-8) {
+  --cdc-car: #daa520;
+}
+.racer:has(.racer__race__track--me .car-9) {
+  --cdc-car: #d27e1e;
+}
 
-.racer:has(.racer__race__track--me .vehicle1) { --cdc-car-glyph: '1'; }
-.racer:has(.racer__race__track--me .vehicle2) { --cdc-car-glyph: '2'; }
-.racer:has(.racer__race__track--me .vehicle3) { --cdc-car-glyph: '3'; }
+.racer:has(.racer__race__track--me .vehicle1) {
+  --cdc-car-glyph: '1';
+}
+.racer:has(.racer__race__track--me .vehicle2) {
+  --cdc-car-glyph: '2';
+}
+.racer:has(.racer__race__track--me .vehicle3) {
+  --cdc-car-glyph: '3';
+}
 
 /* How many lanes, so the board leaves the track room (up to ten racers). */
-.racer:has(.racer__race__track:nth-child(2)) { --cdc-lanes: 2; }
-.racer:has(.racer__race__track:nth-child(3)) { --cdc-lanes: 3; }
-.racer:has(.racer__race__track:nth-child(4)) { --cdc-lanes: 4; }
-.racer:has(.racer__race__track:nth-child(5)) { --cdc-lanes: 5; }
-.racer:has(.racer__race__track:nth-child(6)) { --cdc-lanes: 6; }
-.racer:has(.racer__race__track:nth-child(7)) { --cdc-lanes: 7; }
-.racer:has(.racer__race__track:nth-child(8)) { --cdc-lanes: 8; }
-.racer:has(.racer__race__track:nth-child(9)) { --cdc-lanes: 9; }
-.racer:has(.racer__race__track:nth-child(10)) { --cdc-lanes: 10; }
+.racer:has(.racer__race__track:nth-child(2)) {
+  --cdc-lanes: 2;
+}
+.racer:has(.racer__race__track:nth-child(3)) {
+  --cdc-lanes: 3;
+}
+.racer:has(.racer__race__track:nth-child(4)) {
+  --cdc-lanes: 4;
+}
+.racer:has(.racer__race__track:nth-child(5)) {
+  --cdc-lanes: 5;
+}
+.racer:has(.racer__race__track:nth-child(6)) {
+  --cdc-lanes: 6;
+}
+.racer:has(.racer__race__track:nth-child(7)) {
+  --cdc-lanes: 7;
+}
+.racer:has(.racer__race__track:nth-child(8)) {
+  --cdc-lanes: 8;
+}
+.racer:has(.racer__race__track:nth-child(9)) {
+  --cdc-lanes: 9;
+}
+.racer:has(.racer__race__track:nth-child(10)) {
+  --cdc-lanes: 10;
+}
 
 /* Lichess sizes the board to the whole window's width, sidebar included,
  * and to its height as if the track weren't under it: with a few racers the
@@ -296,8 +360,13 @@ html[dir='rtl'] .racer-home .button:hover::after {
     grid-template-columns:
       min(
         var(---col2-uniboard-width),
-        calc(100vw - var(--cdc-sidebar-w, 0px) - 2 * var(---main-margin, 0px) - var(--cdc-coords-l) - 275px),
-        calc(100dvh - 80px - var(---block-gap, 16px) - var(--cdc-race-h) - var(--cdc-coords-off, 0px))
+        calc(
+          100vw - var(--cdc-sidebar-w, 0px) - 2 * var(---main-margin, 0px) - var(--cdc-coords-l) -
+            275px
+        ),
+        calc(
+          100dvh - 80px - var(---block-gap, 16px) - var(--cdc-race-h) - var(--cdc-coords-off, 0px)
+        )
       )
       minmax(240px, 400px) !important;
     margin-left: var(--cdc-coords-l);
@@ -347,8 +416,14 @@ html[dir='rtl'] .racer-home .button:hover::after {
   padding-bottom: 17px;
   box-sizing: border-box;
   border-radius: 14px;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--cdc-car) 65%, #fff), var(--cdc-car)) !important;
-  box-shadow: inset 0 1px 0 #ffffff4d, inset 0 -2px 0 #0000002e;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--cdc-car) 65%, #fff),
+    var(--cdc-car)
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 #ffffff4d,
+    inset 0 -2px 0 #0000002e;
   color: #fff;
   font: 400 52px / 0.5 racer-car;
   text-shadow: 0 2px 4px #0000004d;
@@ -478,7 +553,8 @@ html[dir='rtl'] .racer-home .button:hover::after {
   width: 28px;
   height: 28px;
   margin: -4px -2px -4px -4px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wp.webp') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wp.webp') center /
+    contain no-repeat;
 }
 
 .racer:has(.cg-wrap.orientation-black) .racer__pre__message__pov::before {
@@ -521,7 +597,8 @@ html[dir='rtl'] .racer-home .button:hover::after {
   content: '';
   width: 24px;
   height: 24px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/time-clock.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/time-clock.svg') center /
+    contain no-repeat;
 }
 
 .racer__spectating .puz-clock__time {
@@ -613,7 +690,9 @@ html[dir='rtl'] .racer-home .button:hover::after {
 :is(.racer, .storm) .puz-combo__bar__in {
   border-radius: 999px !important;
   background: var(--cdc-btn-green) !important;
-  box-shadow: inset 0 1px 0 #ffffff4d, 0 0 12px #81b64c99 !important;
+  box-shadow:
+    inset 0 1px 0 #ffffff4d,
+    0 0 12px #81b64c99 !important;
 }
 
 :is(.racer, .storm) .puz-combo__bar__in-full {
@@ -690,7 +769,9 @@ html[dir='rtl'] .racer-home .button:hover::after {
   padding: 6px 14px 6px 8px;
   border-radius: 999px;
   background: linear-gradient(#f5c451, #d9951f);
-  box-shadow: inset 0 1px 0 #ffffff66, 0 1px 4px #0000005c;
+  box-shadow:
+    inset 0 1px 0 #ffffff66,
+    0 1px 4px #0000005c;
   color: #fff;
   font-size: 15px;
   font-weight: 800;
@@ -701,7 +782,8 @@ html[dir='rtl'] .racer-home .button:hover::after {
   content: '';
   width: 22px;
   height: 22px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/trophies.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/trophies.svg') center /
+    contain no-repeat;
 }
 
 .racer .racer__post__next {
@@ -805,7 +887,8 @@ html[dir='rtl'] .racer-home .button:hover::after {
   inset: 0 -140px 0 0;
   border-radius: 6px;
   background:
-    repeating-linear-gradient(90deg, #ffffff24 0 18px, transparent 18px 40px) 0 100% / 40px 2px repeat-x,
+    repeating-linear-gradient(90deg, #ffffff24 0 18px, transparent 18px 40px) 0 100% / 40px 2px
+      repeat-x,
     linear-gradient(#34322f, #2c2b28);
 }
 
@@ -824,7 +907,8 @@ html[dir='rtl'] .racer .racer__race__track::before {
 
 .racer .racer__race__track--me::before {
   background:
-    repeating-linear-gradient(90deg, #ffffff38 0 18px, transparent 18px 40px) 0 100% / 40px 2px repeat-x,
+    repeating-linear-gradient(90deg, #ffffff38 0 18px, transparent 18px 40px) 0 100% / 40px 2px
+      repeat-x,
     linear-gradient(#45423e, #393733);
   box-shadow: inset 0 0 0 1px #ffffff1f;
 }
@@ -835,7 +919,9 @@ html[dir='rtl'] .racer .racer__race__track::before {
 
 @keyframes cdc-racer-lane {
   to {
-    background-position: -40px 100%, 0 0;
+    background-position:
+      -40px 100%,
+      0 0;
   }
 }
 
@@ -946,7 +1032,9 @@ html[dir='rtl'] .racer .racer__race__track::before {
   border: 1px solid var(--cdc-card-border);
   border-radius: 10px;
   background: var(--cdc-bg-panel-dark);
-  transition: border-color 0.15s, transform 0.15s !important;
+  transition:
+    border-color 0.15s,
+    transform 0.15s !important;
 }
 
 :is(.racer, .storm) .puz-history__round:hover {

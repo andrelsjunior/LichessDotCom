@@ -54,7 +54,10 @@
   background: #ffffff0a;
   color: var(--cdc-text) !important;
   font-weight: 700;
-  transition: background-color 0.15s, border-color 0.15s, color 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s !important;
 }
 
 .ublog-post .ublog-post__like--mini:hover {
@@ -281,7 +284,10 @@
   border-radius: 10px !important;
   background: var(--cdc-bg-panel) !important;
   box-shadow: none !important;
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s !important;
 }
 
 :is(.ublog-index, .ublog-post) .ublog-post-card--link:hover {
@@ -374,7 +380,8 @@
   width: 36px;
   height: 36px;
   margin-inline-end: 12px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/page-blog.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/page-blog.svg') center /
+    contain no-repeat;
 }
 
 .ublog-index .box__top h1 .user-link {
@@ -539,7 +546,10 @@
   border: 1px solid var(--cdc-card-border);
   border-radius: 10px;
   background: var(--cdc-bg-panel);
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s !important;
 }
 
 .ublog-topics__topic:hover {

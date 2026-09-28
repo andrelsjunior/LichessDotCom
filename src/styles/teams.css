@@ -43,7 +43,8 @@ main.team-list h1.box__top::before {
   flex: none;
   width: 36px;
   height: 36px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/clubs.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/clubs.svg') center / contain
+    no-repeat;
 }
 
 main.team-list .box__top .search input {
@@ -135,7 +136,10 @@ main.team-list .slist tbody tr:nth-child(2n) {
   border: 1px solid var(--cdc-card-border);
   border-radius: 10px;
   background: var(--cdc-bg-panel) !important;
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s !important;
 }
 
 html[dir='rtl'] main.team-list .slist tbody tr {
@@ -149,11 +153,21 @@ main.team-list .slist tbody tr:hover {
 }
 
 /* Lichess has no team pictures: vary the avatar tints down the list. */
-main.team-list .slist tbody tr:nth-child(6n + 2) { --cdc-team: #3692e7; }
-main.team-list .slist tbody tr:nth-child(6n + 3) { --cdc-team: #e58f2a; }
-main.team-list .slist tbody tr:nth-child(6n + 4) { --cdc-team: #9b7fd8; }
-main.team-list .slist tbody tr:nth-child(6n + 5) { --cdc-team: #e0513a; }
-main.team-list .slist tbody tr:nth-child(6n + 6) { --cdc-team: #26b6a6; }
+main.team-list .slist tbody tr:nth-child(6n + 2) {
+  --cdc-team: #3692e7;
+}
+main.team-list .slist tbody tr:nth-child(6n + 3) {
+  --cdc-team: #e58f2a;
+}
+main.team-list .slist tbody tr:nth-child(6n + 4) {
+  --cdc-team: #9b7fd8;
+}
+main.team-list .slist tbody tr:nth-child(6n + 5) {
+  --cdc-team: #e0513a;
+}
+main.team-list .slist tbody tr:nth-child(6n + 6) {
+  --cdc-team: #26b6a6;
+}
 
 main.team-list .slist td,
 main.team-list .slist th {

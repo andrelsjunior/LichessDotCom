@@ -37,7 +37,8 @@ main.swiss-home h1.box__top::before {
   flex: none;
   width: 36px;
   height: 36px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/clipboard-vote.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/clipboard-vote.svg') center /
+    contain no-repeat;
 }
 
 /* ----------------------------------------------------------- lists --- */
@@ -114,7 +115,10 @@ main.swiss-home .swisses tbody tr {
   border: 1px solid var(--cdc-card-border);
   border-radius: 10px;
   background: var(--cdc-bg-panel) !important;
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s !important;
 }
 
 main.swiss-home .swisses tbody tr:hover {

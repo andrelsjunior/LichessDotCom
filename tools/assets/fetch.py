@@ -1,13 +1,13 @@
-"""Chess.com's icons and sounds, bundled in img/icons and sounds/.
+"""Chess.com's icons and sounds, bundled in public/img/icons and public/sounds.
 
 So the extension asks for no permission on its hosts and loads nothing
 from them while it runs. Reads what the code names and downloads what's
 missing:
 
-  img/icons/<name>.svg   every img/icons/… the CSS names: a color icon from
+  public/img/icons/<name>.svg   every img/icons/… the CSS names: a color icon from
                          its design system, or one of the few images
                          of its web bundle (BUNDLE)
-  sounds/<name>.mp3      every sound in content.js's SOUND_NAMES
+  public/sounds/<name>.mp3      every sound in src/shared/sounds.ts
 
 Run it again when a rule names a new icon or a sound is added. Existing files
 are kept unless --force. Needs only Python.
@@ -48,14 +48,14 @@ def get(url):
 
 def icons():
     names = set()
-    for css in (ROOT / 'src/styles').glob('*.css'):
+    for css in (ROOT / 'src/styles').rglob('*.css'):
         names |= set(re.findall(r'img/icons/([\w-]+)\.svg', css.read_text()))
     return sorted(names)
 
 
 def sounds():
-    src = (ROOT / 'src/content.js').read_text()
-    body = re.search(r'const SOUND_NAMES = \[(.*?)\];', src, re.S).group(1)
+    src = (ROOT / 'src/shared/sounds.ts').read_text()
+    body = re.search(r'SoundNameSchema = z\.enum\(\[(.*?)\]\)', src, re.S).group(1)
     return re.findall(r"'([^']*)'", body)
 
 
@@ -69,9 +69,9 @@ def fetch(url, path, force):
 
 def main(force):
     for name in icons():
-        fetch(BUNDLE.get(name, f'{ICONS}/{name}.svg'), ROOT / f'img/icons/{name}.svg', force)
+        fetch(BUNDLE.get(name, f'{ICONS}/{name}.svg'), ROOT / f'public/img/icons/{name}.svg', force)
     for name in sounds():
-        fetch(f'{SOUNDS}/{name}.mp3', ROOT / f'sounds/{name}.mp3', force)
+        fetch(f'{SOUNDS}/{name}.mp3', ROOT / f'public/sounds/{name}.mp3', force)
 
 
 if __name__ == '__main__':

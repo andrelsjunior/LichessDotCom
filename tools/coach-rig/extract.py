@@ -2,10 +2,10 @@
 
 Run once per portrait change (needs numpy and opencv-python-headless):
     python3 tools/coach-rig/extract.py
-It writes img/coaches/rig.json (the features: the brows as sprites, the
+It writes public/img/coaches/rig.json (the features: the brows as sprites, the
 lips and lids as curves, in the portrait's pixels, and their colours) and
-img/coaches/coach-<n>-plate.webp (the portrait with its brows and mouth
-painted out, for the animated features to move over). src/coach-lottie.js
+public/img/coaches/coach-<n>-plate.webp (the portrait with its brows and mouth
+painted out, for the animated features to move over). src/content/coach
 builds the Lottie animations from rig.json in the page.
 """
 import base64, json, os
@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 
 ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
-IMG = os.path.join(ROOT, 'img', 'coaches')
+IMG = os.path.join(ROOT, 'public', 'img', 'coaches')
 N = 17  # samples per mouth curve, corner to corner
 E = 11  # samples per eye curve
 

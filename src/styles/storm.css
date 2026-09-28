@@ -33,7 +33,10 @@ html[data-cdc-has~='storm'] main {
     grid-template-columns:
       min(
         var(---col2-uniboard-width),
-        calc(100vw - var(--cdc-sidebar-w, 0px) - 2 * var(---main-margin, 0px) - var(--cdc-coords-l) - 275px)
+        calc(
+          100vw - var(--cdc-sidebar-w, 0px) - 2 * var(---main-margin, 0px) - var(--cdc-coords-l) -
+            275px
+        )
       )
       minmax(240px, 400px);
     grid-template-rows: 1fr repeat(3, auto);
@@ -46,7 +49,6 @@ html[data-cdc-has~='storm'] main {
     gap: 14px var(---block-gap, 16px);
     margin-left: var(--cdc-coords-l);
   }
-
 
   /* The files under the board get the page's padding rather than the
    * board's margin, so the right-hand column ends with the squares. */
@@ -98,7 +100,9 @@ html[data-cdc-has~='storm'] main {
   background:
     var(--cdc-storm-icon) center / 46px no-repeat,
     color-mix(in srgb, var(--cdc-storm) 18%, var(--cdc-bg-raised)) !important;
-  box-shadow: inset 0 1px 0 #ffffff1f, 0 0 0 1px color-mix(in srgb, var(--cdc-storm) 35%, transparent);
+  box-shadow:
+    inset 0 1px 0 #ffffff1f,
+    0 0 0 1px color-mix(in srgb, var(--cdc-storm) 35%, transparent);
 }
 
 /* The icon gives a jolt with each puzzle solved. */
@@ -170,7 +174,8 @@ html[data-cdc-has~='storm'] main {
   width: 28px;
   height: 28px;
   margin: -4px -2px -4px -4px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wp.webp') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/pieces/neo/wp.webp') center /
+    contain no-repeat;
 }
 
 .storm:has(.cg-wrap.orientation-black) .puz-clock__pov::before {
@@ -217,7 +222,8 @@ html[data-cdc-has~='storm'] main {
   content: '';
   width: 24px;
   height: 24px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/trophies.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/trophies.svg') center /
+    contain no-repeat;
 }
 
 .storm-play-scores a {
@@ -227,7 +233,9 @@ html[data-cdc-has~='storm'] main {
   color: var(--cdc-text) !important;
   font-size: 13px;
   font-weight: 700;
-  transition: background 0.15s, color 0.15s !important;
+  transition:
+    background 0.15s,
+    color 0.15s !important;
 }
 
 .storm-play-scores a:hover {
@@ -239,7 +247,10 @@ html[data-cdc-has~='storm'] main {
  * Four to a row, or two when the column is narrow (never three and one). */
 .storm-dashboard__high__periods {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(min(calc(50% - 4px), max(72px, (100% - 330px) * -999)), 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(calc(50% - 4px), max(72px, (100% - 330px) * -999)), 1fr)
+  );
   gap: 8px !important;
 }
 
@@ -306,14 +317,17 @@ body.zenable.zen .storm-dashboard__high__periods {
   background: var(--cdc-bg-raised);
   color: var(--cdc-text) !important;
   font-weight: 700;
-  transition: background 0.15s, color 0.15s !important;
+  transition:
+    background 0.15s,
+    color 0.15s !important;
 }
 
 .storm__about__link a::before {
   content: '';
   width: 18px;
   height: 18px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/lessons.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/lessons.svg') center /
+    contain no-repeat;
 }
 
 .storm__about__link a:hover {

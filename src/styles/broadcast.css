@@ -37,7 +37,8 @@
   flex: none;
   width: 36px;
   height: 36px;
-  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/trophies.svg') center / contain no-repeat;
+  background: url('chrome-extension://__MSG_@@extension_id__/img/icons/trophies.svg') center /
+    contain no-repeat;
 }
 
 :is(.relay-index, .relay-calendar) .box__top .search input {
@@ -128,7 +129,10 @@ html[dir='rtl'] :is(.relay-index, .relay-calendar) .box__top .search input {
   outline: none !important;
   background: var(--cdc-bg-panel) !important;
   box-shadow: none !important;
-  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s !important;
 }
 
 .relay-card:hover {
@@ -365,7 +369,9 @@ html[dir='rtl'] :is(.relay-index, .relay-calendar) .box__top .search input {
     z-index: 3;
     top: 0;
     background: var(--cdc-bg-page);
-    box-shadow: -12px 0 var(--cdc-bg-page), 12px 0 var(--cdc-bg-page);
+    box-shadow:
+      -12px 0 var(--cdc-bg-page),
+      12px 0 var(--cdc-bg-page);
   }
 
   :is(.relay-index, .relay-calendar) .page-menu__content.box > .box__top::after {

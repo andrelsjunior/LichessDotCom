@@ -86,7 +86,10 @@ main.box.page-small[data-cdc-list='players'] {
     border: 1px solid #ffffff14;
     border-radius: 10px;
     background: #ffffff06 !important;
-    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s,
+      box-shadow 0.15s !important;
   }
 
   & > table.slist > tbody > tr:hover {
