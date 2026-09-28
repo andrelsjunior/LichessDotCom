@@ -55,7 +55,7 @@ def icons():
 
 def sounds():
     src = (ROOT / 'src/shared/sounds.ts').read_text()
-    body = re.search(r'SoundNameSchema = z\.enum\(\[(.*?)\]\)', src, re.S).group(1)
+    body = re.search(r'SoundNameSchema = z\.enum\(\[(.*?)\]\)', src, re.DOTALL).group(1)
     return re.findall(r"'([^']*)'", body)
 
 

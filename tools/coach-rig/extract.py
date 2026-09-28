@@ -5,10 +5,14 @@ Run once per portrait change (needs numpy and opencv-python-headless):
 It writes public/img/coaches/rig.json (the features: the brows as sprites, the
 lips and lids as curves, in the portrait's pixels, and their colours) and
 public/img/coaches/coach-<n>-plate.webp (the portrait with its brows and mouth
-painted out, for the animated features to move over). src/content/coach
-builds the Lottie animations from rig.json in the page.
+painted out, for the animated features to move over). src/content/coach/lottie
+builds the Lottie animations from rig.json, and src/content/coach plays them
+in the Game Review's coach avatar.
 """
-import base64, json, os
+import base64
+import json
+import os
+
 import cv2
 import numpy as np
 
@@ -23,14 +27,14 @@ E = 11  # samples per eye curve
 # told apart by the teeth between them), D lower lip, T teeth, N the dark
 # mouth line.
 MOUTH = {
-    1: dict(x=(124, 176), band=(149.5, 167), S=['#f7bc93', '#e5ae89', '#eeb48e'], U=['#e09274', '#e8957a'],
-            T=['#fdf4f0', '#f4e2dc'], N=['#974f36', '#b86a52']),
-    2: dict(x=(126, 173), band=(150, 172), S=['#fbcaa7'], U=['#cf7167', '#ec8b80', '#e8988c'],
-            T=['#fdf7f6', '#f3e6e4']),
-    3: dict(x=(125, 176), band=(157, 176), S=['#cd8159', '#bf704c', '#c7784f'], U=['#a04b3b', '#aa5242'],
-            D=['#bb604e', '#d57763', '#c86b58']),
-    4: dict(x=(131, 172), band=(157.5, 167.6), S=['#fdcba8', '#f5bc98'], U=['#eea887', '#f2b996'],
-            N=['#bc7557', '#c9805f'], D=['#f1a788', '#f4ac8c'], lo_sides=(141, 162)),
+    1: {'x': (124, 176), 'band': (149.5, 167), 'S': ['#f7bc93', '#e5ae89', '#eeb48e'], 'U': ['#e09274', '#e8957a'],
+            'T': ['#fdf4f0', '#f4e2dc'], 'N': ['#974f36', '#b86a52']},
+    2: {'x': (126, 173), 'band': (150, 172), 'S': ['#fbcaa7'], 'U': ['#cf7167', '#ec8b80', '#e8988c'],
+            'T': ['#fdf7f6', '#f3e6e4']},
+    3: {'x': (125, 176), 'band': (157, 176), 'S': ['#cd8159', '#bf704c', '#c7784f'], 'U': ['#a04b3b', '#aa5242'],
+            'D': ['#bb604e', '#d57763', '#c86b58']},
+    4: {'x': (131, 172), 'band': (157.5, 167.6), 'S': ['#fdcba8', '#f5bc98'], 'U': ['#eea887', '#f2b996'],
+            'N': ['#bc7557', '#c9805f'], 'D': ['#f1a788', '#f4ac8c'], 'lo_sides': (141, 162)},
 }
 BROWS = {  # x range, y range of each brow
     1: [((104, 142), (80, 97)), ((159, 199), (80, 97))],
@@ -52,8 +56,8 @@ def lerp(a, b, t):
 
 
 def hexc(bgr):
-    b, g, r = (int(round(v)) for v in bgr)
-    return '#%02x%02x%02x' % (r, g, b)
+    b, g, r = (round(v) for v in bgr)
+    return f'#{r:02x}{g:02x}{b:02x}'
 
 
 def lab_of(h):
@@ -177,9 +181,9 @@ def mouth(i, bgr):
         curves['lo'][j] = max(curves['lo'][j], curves['ob'][j])
     curves = {k: list(np.round(v, 2)) for k, v in curves.items()}
     med = lambda px: hexc(np.median(np.array(px), axis=0)) if len(px) else None
-    return dict(x=[float(xl), float(xr)], y=[yl, yr], curves=curves,
-                colors=dict(upper=med(pix['upper']), lower=med(pix['lower']), teeth=med(pix['teeth']),
-                            line=med(pix['line'])))
+    return {'x': [float(xl), float(xr)], 'y': [yl, yr], 'curves': curves,
+                'colors': {'upper': med(pix['upper']), 'lower': med(pix['lower']), 'teeth': med(pix['teeth']),
+                            'line': med(pix['line'])}}
 
 
 def brows(i, bgr):
@@ -197,7 +201,7 @@ def brows(i, bgr):
         alpha = np.clip((skinL - box) / (skinL - coreL), 0, 1)
         # keep only the brow: its pixels and a soft margin, not the eyes
         m = (box < skinL * 0.84).astype(np.uint8)
-        n_, lbl, stats, _ = cv2.connectedComponentsWithStats(m)
+        _count, lbl, stats, _ = cv2.connectedComponentsWithStats(m)
         keep = 1 + np.argmax(stats[1:, cv2.CC_STAT_AREA])
         m = cv2.dilate((lbl == keep).astype(np.uint8), np.ones((3, 3), np.uint8))
         for ex0, ey0, ex1, ey1 in EYES[i]:
@@ -207,12 +211,12 @@ def brows(i, bgr):
         sprite = np.dstack([np.full(box.shape + (3,), color), alpha * 255]).astype(np.uint8)
         # 2x, so it stays crisp on a high-density screen
         sprite = cv2.resize(sprite, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-        ok, png = cv2.imencode('.png', sprite, [cv2.IMWRITE_PNG_COMPRESSION, 9])
+        _ok, png = cv2.imencode('.png', sprite, [cv2.IMWRITE_PNG_COMPRESSION, 9])
         ys, xs = np.nonzero(core)
-        out.append(dict(x=sx0, y=sy0, w=sx1 - sx0, h=sy1 - sy0, color=hexc(color),
-                        center=[float(sx0 + xs.mean()), float(sy0 + ys.mean())],
-                        png=base64.b64encode(png.tobytes()).decode(),
-                        mask=(sx0, sy0, m)))
+        out.append({'x': sx0, 'y': sy0, 'w': sx1 - sx0, 'h': sy1 - sy0, 'color': hexc(color),
+                        'center': [float(sx0 + xs.mean()), float(sy0 + ys.mean())],
+                        'png': base64.b64encode(png.tobytes()).decode(),
+                        'mask': (sx0, sy0, m)})
     return out
 
 
@@ -248,11 +252,11 @@ def eyes(i, bgr):
         # the corners, where lid and lower lash meet
         yt[0] = yb[0] = mid[0]
         yt[-1] = yb[-1] = mid[-1]
-        above = [bgr[max(int(round(ft(x))) - 3, 0), int(x)] for x in xe[2:-2]]
-        below = [bgr[min(int(round(fb(x))) + 2, 274), int(x)] for x in xe[2:-2]]
-        out.append(dict(x=np.round(xe, 2).tolist(), top=np.round(yt, 2).tolist(),
-                        bottom=np.round(yb, 2).tolist(),
-                        skin=[hexc(np.median(above, axis=0)), hexc(np.median(below, axis=0))]))
+        above = [bgr[max(round(ft(x)) - 3, 0), int(x)] for x in xe[2:-2]]
+        below = [bgr[min(round(fb(x)) + 2, 274), int(x)] for x in xe[2:-2]]
+        out.append({'x': np.round(xe, 2).tolist(), 'top': np.round(yt, 2).tolist(),
+                        'bottom': np.round(yb, 2).tolist(),
+                        'skin': [hexc(np.median(above, axis=0)), hexc(np.median(below, axis=0))]})
     return out
 
 
@@ -296,14 +300,14 @@ def main():
         # each lip's shading, top to bottom down the middle, for a gradient
         c = m['curves']
         k = N // 2
-        cx = int(round((m['x'][0] + m['x'][1]) / 2))
-        def shade(y0, y1, stops):
-            return [hexc(bgr[int(round(lerp(y0, y1, f))), cx - 2:cx + 3].mean(axis=0)) for f in stops]
-        m['shade'] = dict(upper=shade(c['up'][k] + 0.5, c['ot'][k] - 0.5, (0.15, 0.5, 0.85)),
-                          lower=shade(c['ob'][k], c['lo'][k], (0.2, 0.4, 0.6, 0.8, 0.92)))
+        cx = round((m['x'][0] + m['x'][1]) / 2)
+        def shade(y0, y1, stops, bgr=bgr, cx=cx):
+            return [hexc(bgr[round(lerp(y0, y1, f)), cx - 2:cx + 3].mean(axis=0)) for f in stops]
+        m['shade'] = {'upper': shade(c['up'][k] + 0.5, c['ot'][k] - 0.5, (0.15, 0.5, 0.85)),
+                          'lower': shade(c['ob'][k], c['lo'][k], (0.2, 0.4, 0.6, 0.8, 0.92))}
         out = np.dstack([plate, im[:, :, 3]])
         cv2.imwrite(os.path.join(IMG, f'coach-{i}-plate.webp'), out, [cv2.IMWRITE_WEBP_QUALITY, 92])
-        rig[i] = dict(mouth=m, brows=b, eyes=e)
+        rig[i] = {'mouth': m, 'brows': b, 'eyes': e}
     with open(os.path.join(IMG, 'rig.json'), 'w') as f:
         json.dump(rig, f, separators=(',', ':'))
 

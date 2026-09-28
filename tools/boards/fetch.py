@@ -1,20 +1,24 @@
-"""Chess.com's boards and piece sets, bundled in img/boards and img/pieces.
+"""Chess.com's boards and piece sets, bundled in public/img/boards and public/img/pieces.
 
-Reads the lists in src/boards.js (BOARDS, PIECE_SETS), downloads each one
-from its CDN and writes it as WebP:
+Reads the lists in src/content/boards/catalog.json (boards, pieceSets),
+downloads each one from its CDN and writes it as WebP:
 
-  img/boards/<id>.webp        the board, 1200px (150px squares)
-  img/boards/<id>-tile.webp   its two top-left squares, 160x80, for the menu
-  img/pieces/<set>/<wp…>.webp each piece, PIECE_PX square
+  public/img/boards/<id>.webp        the board, 1200px (150px squares)
+  public/img/boards/<id>-tile.webp   its two top-left squares, 160x80, for the menu
+  public/img/pieces/<set>/<wp…>.webp each piece, PIECE_PX square
 
-Run it again when a board or a set is added to src/boards.js. Existing files
+An entry's "host" says which CDN has it: "themes" for the newer ones
+(assets-themes.chess.com, a board there in its "format"), otherwise the older
+images.chesscomfiles.com.
+
+Run it again when a board or a set is added to the catalog. Existing files
 are kept unless --force. Needs Pillow (with WebP).
 
   python3 tools/boards/fetch.py [--force]
 """
 
 import io
-import re
+import json
 import sys
 import time
 import urllib.request
@@ -25,67 +29,85 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 FILES = 'https://images.chesscomfiles.com/chess-themes'
 THEMES = 'https://assets-themes.chess.com/image'
-PIECES = [c + p for c in 'wb' for p in 'pnbrqk']
+PIECES = [color + role for color in 'wb' for role in 'pnbrqk']
 BOARD_PX = 1200
 TILE_SQ = 80
 PIECE_PX = 300  # sharp on a big board at 2x; the CDN serves up to 300
 
 
 def lists():
-    src = (ROOT / 'src/boards.js').read_text()
-
-    def block(name):
-        body = re.search(rf'const {name} = \[(.*?)\n  \];', src, re.S).group(1)
-        return [re.findall(r"'([^']*)'", row) for row in re.findall(r'\[([^\]]*)\]', body)]
-
-    return block('BOARDS'), block('PIECE_SETS')
+    with open(ROOT / 'src/content/boards/catalog.json', encoding='utf-8') as file:
+        catalog = json.load(file)
+    return catalog['boards'], catalog['pieceSets']
 
 
 def get(url):
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 Chrome/140'})
+    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 Chrome/140'})
     for attempt in range(3):
         try:
-            with urllib.request.urlopen(req, timeout=30) as res:
-                return Image.open(io.BytesIO(res.read()))
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return Image.open(io.BytesIO(response.read()))
         except Exception:
             if attempt == 2:
                 raise
             time.sleep(1)
 
 
-def save(img, path, **opts):
+def save(image, path, **options):
     path.parent.mkdir(parents=True, exist_ok=True)
-    img.save(path, 'WEBP', method=6, **opts)
+    image.save(path, 'WEBP', method=6, **options)
+
+
+def on_themes_host(entry):
+    return entry.get('host') == 'themes'
+
+
+def board_url(board):
+    # The newer host serves 200px squares; the older one 150px as well.
+    if on_themes_host(board):
+        return f"{THEMES}/{board['id']}/200.{board.get('format', 'png')}"
+    return f"{FILES}/boards/{board['id']}/150.png"
+
+
+def piece_url(piece_set, piece):
+    if on_themes_host(piece_set):
+        return f"{THEMES}/{piece_set['id']}/{PIECE_PX}/{piece}.png"
+    return f"{FILES}/pieces/{piece_set['id']}/{PIECE_PX}/{piece}.png"
+
+
+def fetch_board(board, out, force):
+    board_id = board['id']
+    image_path, tile_path = out / f'boards/{board_id}.webp', out / f'boards/{board_id}-tile.webp'
+    if image_path.exists() and tile_path.exists() and not force:
+        return
+    image = get(board_url(board)).convert('RGB')
+    image = image.resize((BOARD_PX, BOARD_PX), Image.LANCZOS) if image.width != BOARD_PX else image
+    save(image, image_path, quality=86)
+    square = BOARD_PX // 8
+    tile = image.crop((0, 0, 2 * square, square)).resize((2 * TILE_SQ, TILE_SQ), Image.LANCZOS)
+    save(tile, tile_path, quality=86)
+    print('board', board_id)
+
+
+def fetch_piece_set(piece_set, out, force):
+    for piece in PIECES:
+        path = out / f"pieces/{piece_set['id']}/{piece}.webp"
+        if path.exists() and not force:
+            continue
+        image = get(piece_url(piece_set, piece)).convert('RGBA')
+        if image.width != PIECE_PX:
+            image = image.resize((PIECE_PX, PIECE_PX), Image.LANCZOS)
+        save(image, path, quality=88, alpha_quality=100)
+    print('pieces', piece_set['id'])
 
 
 def main(force):
-    boards, sets = lists()
-    out = ROOT / 'img'
-    for row in boards:
-        id, host = row[0], row[4] if len(row) > 4 else None
-        board, tile = out / f'boards/{id}.webp', out / f'boards/{id}-tile.webp'
-        if board.exists() and tile.exists() and not force:
-            continue
-        # The newer host serves 200px squares; the older one 150px as well.
-        url = f'{THEMES}/{id}/200.{host}' if host else f'{FILES}/boards/{id}/150.png'
-        img = get(url).convert('RGB')
-        img = img.resize((BOARD_PX, BOARD_PX), Image.LANCZOS) if img.width != BOARD_PX else img
-        save(img, board, quality=86)
-        sq = BOARD_PX // 8
-        save(img.crop((0, 0, 2 * sq, sq)).resize((2 * TILE_SQ, TILE_SQ), Image.LANCZOS), tile, quality=86)
-        print('board', id)
-    for row in sets:
-        id, host = row[0], row[2] if len(row) > 2 else None
-        for p in PIECES:
-            path = out / f'pieces/{id}/{p}.webp'
-            if path.exists() and not force:
-                continue
-            url = f'{THEMES}/{id}/{PIECE_PX}/{p}.png' if host else f'{FILES}/pieces/{id}/{PIECE_PX}/{p}.png'
-            img = get(url).convert('RGBA')
-            if img.width != PIECE_PX:
-                img = img.resize((PIECE_PX, PIECE_PX), Image.LANCZOS)
-            save(img, path, quality=88, alpha_quality=100)
-        print('pieces', id)
+    boards, piece_sets = lists()
+    out = ROOT / 'public/img'
+    for board in boards:
+        fetch_board(board, out, force)
+    for piece_set in piece_sets:
+        fetch_piece_set(piece_set, out, force)
 
 
 if __name__ == '__main__':
