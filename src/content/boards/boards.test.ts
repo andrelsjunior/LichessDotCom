@@ -16,6 +16,15 @@ const PROPERTIES = [
 
 const root = document.documentElement;
 
+// The attributes that got the `cdc` prefix in the port, mapped back to the
+// original's names, which the recordings use.
+const RENAMED: readonly (readonly [port: string, original: string])[] = [
+  ['data-cdc-tab=', 'data-view='],
+  ['data-cdc-choice=', 'data-id='],
+];
+const withLegacyNames = (markup: string): string =>
+  RENAMED.reduce((text, [port, original]) => text.replaceAll(port, original), markup);
+
 function rootState(): {
   dataset: Record<string, string | undefined>;
   properties: Record<string, string>;
@@ -39,10 +48,10 @@ function panelSummary(app: Element): unknown[] {
     tabs: panel.querySelectorAll(':scope > .cdc-src-tabs').length,
     lists: panel.querySelectorAll(':scope > .cdc-src-list').length,
     activeTabs: [...panel.querySelectorAll('.cdc-src-tabs button.active')].map(tab =>
-      dataOf(tab, 'view'),
+      dataOf(tab, 'cdcTab'),
     ),
     activeItems: [...panel.querySelectorAll('.cdc-src-item.active')].map(item =>
-      dataOf(item, 'id'),
+      dataOf(item, 'cdcChoice'),
     ),
   }));
 }
@@ -121,11 +130,11 @@ describe('the user menu', () => {
     };
 
     await draw(boardPanel());
-    markup['board'] = app().innerHTML;
+    markup['board'] = withLegacyNames(app().innerHTML);
     record('board panel opens');
-    click('.cdc-src-item[data-id="walnut"] .cdc-src-name');
+    click('.cdc-src-item[data-cdc-choice="walnut"] .cdc-src-name');
     record('walnut picked');
-    click('.cdc-src-tabs button[data-view="lichess"]');
+    click('.cdc-src-tabs button[data-cdc-tab="lichess"]');
     record('lichess tab');
     await draw(boardPanel('d3'));
     record('switched to 3D');
@@ -137,16 +146,16 @@ describe('the user menu', () => {
     record('lichess board picked');
     click('.list > button[title="brown"]');
     record('lichess board picked again');
-    click('.cdc-src-tabs button[data-view="cdc"]');
+    click('.cdc-src-tabs button[data-cdc-tab="cdc"]');
     record('extension tab');
     click('.selector > button');
     record('selector clicked');
-    click('.cdc-src-item[data-id="green"]');
+    click('.cdc-src-item[data-cdc-choice="green"]');
     record('green picked');
     await draw(piecePanel());
-    markup['piece'] = app().innerHTML;
+    markup['piece'] = withLegacyNames(app().innerHTML);
     record('piece panel opens');
-    click('.cdc-src-item[data-id="neo"]');
+    click('.cdc-src-item[data-cdc-choice="neo"]');
     record('neo picked');
     click('.list > button[title="merida"]');
     record('lichess pieces picked');
@@ -158,7 +167,7 @@ describe('the user menu', () => {
     record('a panel without a head');
     await draw(boardPanel() + piecePanel());
     record('both panels');
-    click('.sub.piece .cdc-src-item[data-id="8qetl"]');
+    click('.sub.piece .cdc-src-item[data-cdc-choice="8qetl"]');
     record('8qetl picked');
     // Snabbdom replaces the menu's own node.
     const replacement = document.createElement('div');
@@ -170,6 +179,24 @@ describe('the user menu', () => {
 
     expect(markup).toEqual(legacy.markup);
     expect(steps).toEqual(legacy.steps);
+  });
+
+  it('prefixes the data attributes it adds with cdc', async () => {
+    document.body.innerHTML = SHELL;
+    start({});
+    await draw(boardPanel());
+    const panel = app().querySelector('.sub');
+    if (!panel) throw new Error('no panel');
+    const ours = [...panel.querySelectorAll('.cdc-src-tabs, .cdc-src-list, .cdc-src-list *')];
+    const unprefixed = [panel, ...ours]
+      .flatMap(element => element.getAttributeNames())
+      .filter(name => name.startsWith('data-') && !name.startsWith('data-cdc-'));
+    expect(unprefixed).toEqual([]);
+    const tabs = [...panel.querySelectorAll('.cdc-src-tabs > button')];
+    expect(tabs.map(tab => tab.getAttributeNames())).toEqual([
+      ['type', 'class', 'data-cdc-tab'],
+      ['type', 'class', 'data-cdc-tab'],
+    ]);
   });
 
   it('looks for the menu once the page is parsed', async () => {

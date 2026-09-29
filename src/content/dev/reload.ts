@@ -31,7 +31,7 @@ async function isStale(): Promise<boolean> {
 
 async function checkForUpdate(): Promise<void> {
   if (document.visibilityState !== 'visible') return;
-  // Orphaned by an extension reload started from another tab.
+  // Another tab's check has reloaded the extension, orphaning this script.
   if (!isConnected()) {
     location.reload();
     return;

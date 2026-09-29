@@ -25,7 +25,7 @@ export function isPackageName(name: string): boolean {
   return /^LichessDotCom-v\d[\w.-]*\.zip$/.test(name);
 }
 
-// Source maps are for local debugging only, and the rest is a desktop's litter.
+// Source maps are for local debugging only, and the rest are files the OS leaves behind.
 const LEFT_OUT = [/\.map$/, /(^|\/)\.DS_Store$/, /(^|\/)Thumbs\.db$/];
 
 export function isPackaged(file: string): boolean {

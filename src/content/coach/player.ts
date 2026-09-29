@@ -38,7 +38,7 @@ export class CoachPlayer {
     this.#wanted = wanted;
   }
 
-  /** Builds and mounts the rig; throws if it can't, the coach staying a portrait. */
+  /** Builds and mounts the rig. Throws if it can't, and the coach stays a portrait. */
   async load(): Promise<void> {
     const rig = (await loadRigs())[String(this.coach)];
     if (!rig) throw new Error(`no rig for coach ${this.coach}`);
@@ -59,8 +59,11 @@ export class CoachPlayer {
       meta: data.meta,
       mood: this.#mood,
       wanted: this.#wanted,
+      avatar: this.avatar,
     });
     layers.face.addEventListener('complete', () => expression.finish());
+    // A talking loop checks at each turn whether the avatar is still there.
+    layers.face.addEventListener('loopComplete', () => expression.step());
     expression.show();
     const blinks = new Blinks({
       animation: layers.blink,

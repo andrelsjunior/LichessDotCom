@@ -11,14 +11,25 @@ const SamplesSchema = z.array(z.number()).check(z.minLength(2));
 const sameLength = (lists: readonly (readonly number[])[]): boolean =>
   lists.every(list => list.length === lists[0]?.length);
 
+// Corner to corner: the upper lip's top, the opening's top and bottom, the
+// lower lip's bottom. rig.json keeps extract.py's short keys.
+const MouthCurvesSchema = z.pipe(
+  z
+    .object({ up: SamplesSchema, ot: SamplesSchema, ob: SamplesSchema, lo: SamplesSchema })
+    .check(z.refine(({ up, ot, ob, lo }) => sameLength([up, ot, ob, lo]))),
+  z.transform(({ up, ot, ob, lo }) => ({
+    upperTop: up,
+    openingTop: ot,
+    openingBottom: ob,
+    lowerBottom: lo,
+  })),
+);
+
 const MouthSchema = z.object({
   // The corners' x, then their y.
   x: PairSchema,
   y: PairSchema,
-  // Corner to corner: the upper lip's top, the opening's top and bottom, the lower lip's bottom.
-  curves: z
-    .object({ up: SamplesSchema, ot: SamplesSchema, ob: SamplesSchema, lo: SamplesSchema })
-    .check(z.refine(({ up, ot, ob, lo }) => sameLength([up, ot, ob, lo]))),
+  curves: MouthCurvesSchema,
   // Null where the portrait doesn't show them.
   colors: z.object({ teeth: z.nullable(HexColorSchema), line: z.nullable(HexColorSchema) }),
   // Each lip's shading, top to bottom.
@@ -65,7 +76,6 @@ export const RigFileSchema = z.record(z.string(), CoachRigSchema);
 
 export type CoachRig = z.infer<typeof CoachRigSchema>;
 export type RigMouth = CoachRig['mouth'];
-export type RigBrow = CoachRig['brows'][number];
 export type RigEye = CoachRig['eyes'][number];
 export type RigFile = z.infer<typeof RigFileSchema>;
 

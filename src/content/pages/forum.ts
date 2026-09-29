@@ -4,7 +4,8 @@ import { onEveryTick } from '#content/sync-loop.ts';
 
 // The forum index (styles/forum/categories.css): the categories become cards
 // and their table header goes, so each count gets its column's name ("Topics",
-// "Posts", translated) to show as a label. Server-rendered, so it's safe.
+// "Posts", translated) to show as a label. The index is server-rendered, so
+// editing it is safe.
 
 function labelCounts(table: HTMLTableElement): void {
   setData(table, 'cdcLabels', '');

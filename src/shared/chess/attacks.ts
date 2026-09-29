@@ -32,24 +32,25 @@ const DIAGONAL: readonly Step[] = [
  */
 export function attackers(board: Board, target: Square, by: Color): Role[] {
   const [file, rank] = squareCoords(target);
-  const at = (df: number, dr: number): Piece | undefined => {
-    const square = squareAt(file + df, rank + dr);
+  const at = (fileStep: number, rankStep: number): Piece | undefined => {
+    const square = squareAt(file + fileStep, rank + rankStep);
     return square ? board.get(square) : undefined;
   };
   const found: Role[] = [];
   const take = (piece: Piece | undefined, roles: readonly Role[]): void => {
     if (piece?.color === by && roles.includes(piece.role)) found.push(piece.role);
   };
-  // A pawn attacks towards the other side: from the rank behind the target.
+  // A pawn attacks forwards, so its attackers stand on the rank behind the target.
   const behind = by === 'white' ? -1 : 1;
   take(at(-1, behind), ['pawn']);
   take(at(1, behind), ['pawn']);
-  for (const [df, dr] of KNIGHT_JUMPS) take(at(df, dr), ['knight']);
-  for (const [df, dr] of [...ORTHOGONAL, ...DIAGONAL]) take(at(df, dr), ['king']);
+  for (const [fileStep, rankStep] of KNIGHT_JUMPS) take(at(fileStep, rankStep), ['knight']);
+  for (const [fileStep, rankStep] of [...ORTHOGONAL, ...DIAGONAL])
+    take(at(fileStep, rankStep), ['king']);
   const slide = (steps: readonly Step[], roles: readonly Role[]): void => {
-    for (const [df, dr] of steps) {
-      for (let k = 1; squareAt(file + df * k, rank + dr * k); k++) {
-        const piece = at(df * k, dr * k);
+    for (const [fileStep, rankStep] of steps) {
+      for (let k = 1; squareAt(file + fileStep * k, rank + rankStep * k); k++) {
+        const piece = at(fileStep * k, rankStep * k);
         if (!piece) continue;
         take(piece, roles);
         break;

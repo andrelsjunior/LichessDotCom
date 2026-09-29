@@ -1,6 +1,8 @@
-import { parseSquare, squareCoords } from '#shared/chess/squares.ts';
+import { parseSquare } from '#shared/chess/squares.ts';
 import type { Color } from '#shared/chess/types.ts';
+import type { Point } from '#shared/geometry.ts';
 import { html, type SafeHtml } from '#shared/html.ts';
+import { squareOnScreen } from '#page/board/geometry.ts';
 import type { ReviewArrow } from '#page/board/review-arrows.ts';
 import { GOOD, type MoveClass } from '#page/review/classes/classes.ts';
 import { classSvg } from '#page/review/classes/icon-svg.ts';
@@ -22,15 +24,16 @@ export function landingSquare(uci: string, san: string): string {
   return (san.startsWith('O-O-O') ? 'c' : 'g') + uci.charAt(1);
 }
 
-/** A square's column and row on screen, from the top left. */
-export function screenCoords(square: string, orientation: Color): readonly [number, number] {
+function badgeCell(square: string, orientation: Color): Point {
   const parsed = parseSquare(square);
-  const [file, rank] = parsed ? squareCoords(parsed) : [-1, Number.NaN];
-  return orientation === 'white' ? [file, 7 - rank] : [7 - file, rank];
+  const whiteAtBottom = orientation === 'white';
+  if (parsed) return squareOnScreen(parsed, whiteAtBottom);
+  // No square to land on: where the original's file -1 and rank NaN put it.
+  return whiteAtBottom ? [-1, Number.NaN] : [8, Number.NaN];
 }
 
 export function badgeMarkup({ moveClass, uci, san, orientation }: BadgeInput): SafeHtml {
-  const [column, row] = screenCoords(landingSquare(uci, san), orientation);
+  const [column, row] = badgeCell(landingSquare(uci, san), orientation);
   const style = `left:${(column + 1) * 12.5}%;top:${row * 12.5}%`;
   return html`<div class="cdc-badge" style="${style}">${classSvg(moveClass)}</div>`;
 }

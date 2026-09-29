@@ -1,18 +1,10 @@
+import { roleOfLetter } from './pieces.ts';
 import { squareAt } from './squares.ts';
-import type { Color, Piece, Role, Square } from './types.ts';
-
-const ROLE_BY_LETTER: Readonly<Record<string, Role>> = {
-  p: 'pawn',
-  n: 'knight',
-  b: 'bishop',
-  r: 'rook',
-  q: 'queen',
-  k: 'king',
-};
+import type { Color, Piece, Square } from './types.ts';
 
 /**
  * The pieces of a FEN's placement field ("rnbqkbnr/pppppppp/8/…"). Crazyhouse
- * adds a `~` after a promoted piece and its pockets in brackets: both skipped.
+ * adds a `~` after a promoted piece, and its pockets in brackets: both are skipped.
  */
 export function parsePlacement(placement: string): Map<Square, Piece> {
   const board = new Map<Square, Piece>();
@@ -25,7 +17,7 @@ export function parsePlacement(placement: string): Map<Square, Piece> {
         file += Number(char);
         continue;
       }
-      const role = ROLE_BY_LETTER[char.toLowerCase()];
+      const role = roleOfLetter(char);
       const square = squareAt(file, 7 - i);
       if (role && square)
         board.set(square, { color: char === char.toUpperCase() ? 'white' : 'black', role });
@@ -40,10 +32,17 @@ export interface Position {
   readonly turn: Color;
 }
 
-export function parseFen(fen: string): Position {
-  const [placement = '', turn] = fen.split(' ');
-  return { board: parsePlacement(placement), turn: turn === 'b' ? 'black' : 'white' };
+/** The side to move, or null when the FEN has no such field or an unknown one. */
+export function sideToMove(fen: string): Color | null {
+  const field = fen.split(' ')[1];
+  if (field === 'w') return 'white';
+  return field === 'b' ? 'black' : null;
 }
 
-/** The side to move, from a FEN. */
-export const fenTurn = (fen: string): Color => (fen.split(' ')[1] === 'b' ? 'black' : 'white');
+/** The side to move, white when the FEN doesn't say. */
+export const fenTurn = (fen: string): Color => sideToMove(fen) ?? 'white';
+
+export function parseFen(fen: string): Position {
+  const [placement = ''] = fen.split(' ');
+  return { board: parsePlacement(placement), turn: fenTurn(fen) };
+}

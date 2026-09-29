@@ -57,7 +57,13 @@ describe('buildCoachAnimations', () => {
       expect(await sha256Hex(canonicalJson(built.face))).toBe(expected.face);
       expect(await sha256Hex(canonicalJson(built.lids))).toBe(expected.lids);
       expect(await sha256Hex(canonicalJson(built.blink))).toBe(expected.blink);
-      expect(built.meta).toEqual(expected.meta);
+      const { face, lids, blink } = expected.meta;
+      // The original named the transitions `trans`.
+      expect(built.meta).toEqual({
+        face: { pose: face.pose, transitions: face.trans, talk: face.talk },
+        lids: { pose: lids.pose, transitions: lids.trans },
+        blink,
+      });
       expect(built.face.layers.map(layer => layer.nm)).toEqual(expected.layers.face);
     },
   );
@@ -71,20 +77,35 @@ describe('buildCoachAnimations', () => {
 });
 
 describe('RigFileSchema', () => {
-  const rig = rigOf(1);
+  // As extract.py writes it.
+  const written = rigFile['1'];
+
+  it('names the mouth curves in full', () => {
+    const { curves } = rigOf(1).mouth;
+    expect(curves).toEqual({
+      upperTop: written.mouth.curves.up,
+      openingTop: written.mouth.curves.ot,
+      openingBottom: written.mouth.curves.ob,
+      lowerBottom: written.mouth.curves.lo,
+    });
+  });
 
   it.each([
     [
       'a mouth curve of another length',
-      { ...rig, mouth: { ...rig.mouth, curves: { ...rig.mouth.curves, lo: [1, 2] } } },
+      { ...written, mouth: { ...written.mouth, curves: { ...written.mouth.curves, lo: [1, 2] } } },
     ],
     [
       'a color that is not #rrggbb',
-      { ...rig, mouth: { ...rig.mouth, colors: { teeth: 'white', line: null } } },
+      { ...written, mouth: { ...written.mouth, colors: { teeth: 'white', line: null } } },
     ],
-    ['a third brow', { ...rig, brows: [...rig.brows, rig.brows[0]] }],
-    ['an eye without its bottom', { ...rig, eyes: [{ ...rig.eyes[0], bottom: [] }, rig.eyes[1]] }],
+    ['a third brow', { ...written, brows: [...written.brows, written.brows[0]] }],
+    [
+      'an eye without its bottom',
+      { ...written, eyes: [{ ...written.eyes[0], bottom: [] }, written.eyes[1]] },
+    ],
   ])('refuses %s', (_, broken) => {
+    expect(RigFileSchema.safeParse({ 1: written }).success).toBe(true);
     expect(RigFileSchema.safeParse({ 1: broken }).success).toBe(false);
   });
 });

@@ -16,9 +16,9 @@ export function roundsProgress(text: string): string | null {
   return total ? `${Math.min(100, (100 * played) / total)}%` : null;
 }
 
-// On the home's cards, and in a tournament's info panel, where the bar spans
+// On the home page's cards and in a tournament's info panel, where the bar spans
 // the paragraph around the count. A tournament's page rewrites its count in
-// place when a round starts, so we keep the count read last, not a flag.
+// place when a round starts, so we keep the last count read rather than a flag.
 export function syncRounds(): void {
   const counts = '.swiss-home .swisses .rounds, main.swiss .swiss__meta__round';
   for (const rounds of queryAll(document, counts, HTMLElement)) {
@@ -32,8 +32,8 @@ export function syncRounds(): void {
 }
 
 // The leaders' ranks in medal colors. CSS can't tell which page of the
-// standings it's on (the pager's buttons go while searching), so the rank's
-// own text says. Rows are re-ranked live, hence every tick.
+// standings is shown (the pager's buttons disappear while searching), so we
+// read the rank's own text. Rows are re-ranked live, hence every tick.
 export function syncMedals(): void {
   for (const rank of queryAll(document, 'main.swiss .swiss__standing td.rank', HTMLElement)) {
     const text = rank.textContent.trim();
@@ -41,9 +41,9 @@ export function syncMedals(): void {
   }
 }
 
-// From 1260px the page doesn't scroll, its middle column does. Page keys act
-// on the focused scroller, so the column takes the focus once, unless
-// something has it.
+// From 1260px the page doesn't scroll, only its middle column does. Page keys
+// act on the focused scroller, so the column takes the focus once, unless
+// something else has it.
 export function syncFocus(): void {
   const column = queryOne(document, 'main.swiss .swiss__main:not([tabindex])', HTMLElement);
   if (!column || !matchMedia('(min-width: 1260px)').matches) return;

@@ -11,8 +11,8 @@ export async function replaceDir(
   dir: string,
   fill: (staging: string) => Promise<void>,
 ): Promise<void> {
-  // Siblings, so the renames stay on one file system; a run cut short leaves
-  // them behind, hence the clearing first.
+  // The folders are siblings, so the renames stay on one file system. A run cut
+  // short leaves them behind, so they're cleared first.
   const next = `${dir}.next`;
   const previous = `${dir}.previous`;
   const clear = async (): Promise<void> => {

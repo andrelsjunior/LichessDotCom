@@ -1,4 +1,4 @@
-import { createElement, queryOne } from '#shared/dom.ts';
+import { createCustomElement, queryOne } from '#shared/dom.ts';
 
 // A bar in the markup of the round's `.ruser` (name, <rating>, rating
 // change), so both pages share one style (styles/playerbar.css).
@@ -11,7 +11,7 @@ function userParts(link: HTMLAnchorElement): Element[] {
   // (trim() counts it as white space).
   for (const node of link.childNodes) if (node instanceof Text) node.data = node.data.trim();
   const parts: Element[] = [link];
-  if (rating) parts.push(createElement('rating', { text: rating }));
+  if (rating) parts.push(createCustomElement('rating', { text: rating }));
   if (change) parts.push(change);
   return parts;
 }
@@ -25,5 +25,5 @@ export function fillPlayerBar(bar: HTMLElement, source: Element | null): void {
     return;
   }
   // Anonymous, or the computer.
-  bar.replaceChildren(createElement('name', { text: source?.textContent.trim() ?? '' }));
+  bar.replaceChildren(createCustomElement('name', { text: source?.textContent.trim() ?? '' }));
 }

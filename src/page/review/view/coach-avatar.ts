@@ -1,8 +1,8 @@
-import { COACH_COUNT, CoachIdSchema, CoachMoodSchema } from '#shared/coach.ts';
+import { COACH_COUNT, CoachMoodSchema } from '#shared/coach.ts';
 import { queryOne } from '#shared/dom.ts';
 import { html, type SafeHtml } from '#shared/html.ts';
 import { postCoachState } from '#shared/protocol.ts';
-import { readStored, StorageKey, writeStored } from '#shared/storage.ts';
+import { StorageKey, writeStored } from '#shared/storage.ts';
 import { CLASS_COLORS, classMood, type MoveClass } from '#page/review/classes/classes.ts';
 import type { AvatarState, Session } from '#page/review/session.ts';
 
@@ -78,13 +78,4 @@ export function nextCoach(session: Session, avatar: HTMLElement): void {
   writeStored(StorageKey.coach, coach);
   avatar.dataset.cdcCoachId = String(coach);
   tellCoach(session);
-}
-
-/** The coach kept from the last review, or one picked at random the first time. */
-export function storedCoach(): number {
-  const stored = readStored(StorageKey.coach, CoachIdSchema);
-  if (stored !== null) return stored;
-  const coach = 1 + Math.floor(Math.random() * COACH_COUNT);
-  writeStored(StorageKey.coach, coach);
-  return coach;
 }

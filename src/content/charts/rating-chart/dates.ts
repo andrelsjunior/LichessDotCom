@@ -1,6 +1,6 @@
 import { z } from 'zod/mini';
 
-// Times are UTC midnights in ms, as Lichess's points name days, not moments.
+// Times are UTC midnights in ms, because Lichess's points are days, not moments.
 
 export const DAY_MS = 86_400_000;
 
@@ -24,7 +24,7 @@ export interface HistorySpan {
   readonly end: number;
 }
 
-// Where each range would start, before the history's own start.
+// Where each range would start if the history went back far enough.
 const RANGE_FLOORS: Readonly<Record<RangeKey, (span: HistorySpan) => number>> = {
   '1M': ({ end }) => addMonths(end, -1),
   '3M': ({ end }) => addMonths(end, -3),

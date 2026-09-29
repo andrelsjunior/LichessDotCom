@@ -16,7 +16,7 @@ export interface RatingTicks {
   readonly ticks: readonly number[];
 }
 
-/** A rating scale around `low`–`high` with some air, on round steps, about four of them. */
+/** A rating scale around `low`–`high` with some margin, in about four round steps. */
 export function niceTicks(low: number, high: number): RatingTicks {
   const [lowest, highest] = low === high ? [low - 20, high + 20] : [low, high];
   const padding = (highest - lowest) * 0.08;

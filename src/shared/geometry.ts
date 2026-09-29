@@ -1,4 +1,4 @@
-/** A point, in whatever units its context draws in (px, squares, a viewBox's). */
+/** A point, in the units of whatever draws it (px, squares, viewBox units). */
 export type Point = readonly [x: number, y: number];
 
 /** A rectangle in window coordinates; a DOMRect is one. */
@@ -16,7 +16,7 @@ export interface Size {
   readonly height: number;
 }
 
-/** Room kept free on each side, in px (a chart's, around its plot). */
+/** Space kept free on each side, in px (a chart's margins around its plot, for one). */
 export interface Padding {
   readonly top: number;
   readonly right: number;

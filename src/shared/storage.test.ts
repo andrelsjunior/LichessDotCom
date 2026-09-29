@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi, type Mock } from 'vitest';
 import { z } from 'zod/mini';
 import {
   readStored,
@@ -23,6 +23,18 @@ function blockStorage(): void {
       },
     });
   }
+}
+
+// happy-dom binds Storage's methods onto each instance the first time they're
+// used: a spy on Storage.prototype misses a storage already written to, and
+// stays bound to a fresh one after mockRestore. So the full storage is a stand-in.
+function fillStorage(): Mock<(key: string, value: string) => void> {
+  const setItem = vi.fn<(key: string, value: string) => void>(() => {
+    throw new DOMException('full', 'QuotaExceededError');
+  });
+  const full = { getItem: () => null, setItem, removeItem: () => {} };
+  Object.defineProperty(window, 'localStorage', { configurable: true, get: () => full });
+  return setItem;
 }
 
 afterEach(() => {
@@ -63,10 +75,10 @@ describe('storage', () => {
   });
 
   it('loses only the value when the storage is full', () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new DOMException('full', 'QuotaExceededError');
-    });
+    const setItem = fillStorage();
     expect(() => writeStored(StorageKey.coach, 2)).not.toThrow();
+    expect(() => writeStoredJson('cdc-test', { a: 1 })).not.toThrow();
+    expect(setItem).toHaveBeenCalledTimes(2);
   });
 
   it('writes and removes quietly on a blocked storage, but reads throw', () => {
@@ -74,7 +86,7 @@ describe('storage', () => {
     expect(() => writeStored(StorageKey.coach, 2)).not.toThrow();
     expect(() => writeStoredJson('cdc-test', { a: 1 }, 'session')).not.toThrow();
     expect(() => removeStored(StorageKey.coach)).not.toThrow();
-    // Read as missing, a once-per-game check could never hold there.
+    // Read as missing, a once-per-game check would pass on every load.
     expect(() => readStored(StorageKey.coach, z.string())).toThrow('denied');
     expect(() => readStoredJson('cdc-test', z.unknown(), 'session')).toThrow('denied');
   });

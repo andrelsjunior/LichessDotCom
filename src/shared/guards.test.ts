@@ -22,7 +22,7 @@ describe('createGuard', () => {
   });
 
   it('turns away a schema that rewrites the value, as the guard hands back the input', () => {
-    // Checked by the type-check: a string would pass as its length.
+    // A type-level check: with a transform, a string would pass as its length.
     const length = z.pipe(
       z.string(),
       z.transform(value => value.length),

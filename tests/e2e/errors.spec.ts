@@ -4,7 +4,7 @@ import { isFromExtension } from './support/errors.ts';
 import { openLichess } from './support/lichess.ts';
 
 // Every test fails on an error from the extension's scripts (fixtures.ts).
-// A watch never seen catching anything proves nothing: here it catches some.
+// A watch never seen catching anything proves nothing, so here it catches some.
 
 test('the error watch catches what the content script throws and logs', async ({
   page,
@@ -20,7 +20,7 @@ test('the error watch catches what the content script throws and logs', async ({
   await expect
     .poll(() => extensionErrors.map(({ kind }) => kind).toSorted())
     .toEqual(['console', 'exception']);
-  // Caught: they mustn't fail this test's own check.
+  // These were expected: they mustn't fail the fixture's own check.
   extensionErrors.splice(0);
 });
 

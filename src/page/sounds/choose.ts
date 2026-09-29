@@ -41,7 +41,7 @@ export function soundFromSan(san: string, ply: number | undefined, orientation: 
 // After a legal move only the side to move can be in check, so any king
 // under attack will do: no need for the last move's highlight, which is
 // missing when "Highlight last move" is off.
-export const isAnyKingInCheck = (pieces: Board): boolean =>
+const isAnyKingInCheck = (pieces: Board): boolean =>
   [...pieces].some(
     ([square, piece]) => piece.role === 'king' && isAttacked(pieces, square, opposite(piece.color)),
   );

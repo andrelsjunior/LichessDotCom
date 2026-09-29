@@ -1,30 +1,8 @@
-import { parseFen, parseSquare, squareCoords } from '#shared/chess/index.ts';
-import type { Color, Role } from '#shared/chess/index.ts';
+import { parseFen, parseSquare, ROLE_LETTERS, squareCoords } from '#shared/chess/index.ts';
 import { pieceOn } from './material.ts';
 
-export const ROLE_LETTERS: Readonly<Record<Role, string>> = {
-  pawn: 'p',
-  knight: 'n',
-  bishop: 'b',
-  rook: 'r',
-  queen: 'q',
-  king: 'k',
-};
-
-const ROLE_BY_LETTER: Readonly<Record<string, Role>> = {
-  p: 'pawn',
-  n: 'knight',
-  b: 'bishop',
-  r: 'rook',
-  q: 'queen',
-  k: 'king',
-};
-
-/** A role from its letter, either case ("Q", "n"). */
-export const roleOfLetter = (letter: string): Role | undefined =>
-  ROLE_BY_LETTER[letter.toLowerCase()];
-
-export const colorLetter = (color: Color): string => (color === 'white' ? 'w' : 'b');
+// The review's comments and facts still import the letters from here.
+export { colorLetter, ROLE_LETTERS, roleOfLetter } from '#shared/chess/index.ts';
 
 /** A square's file, 0 for a to 7 for h; -1 for no square. */
 function fileIndex(name: string): number {

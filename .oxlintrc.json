@@ -16,7 +16,6 @@
   "ignorePatterns": [
     "dist/**",
     "coverage/**",
-    "legacy/**",
     "store/templates/**",
     "playwright-report/**",
     "test-results/**"

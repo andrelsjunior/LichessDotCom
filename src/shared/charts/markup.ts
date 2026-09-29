@@ -1,7 +1,7 @@
 import { html, type HtmlValue, type SafeHtml, trustedHtml } from '#shared/html.ts';
 
-// Markup the rating history and the distribution share, so their chips, axes
-// and tooltips look alike (styles/ratingchart.css styles both).
+// Markup shared by the rating history and the distribution, so that their
+// chips, axes and tooltips look alike (styles/ratingchart.css styles both).
 
 const SWATCH = trustedHtml('<span class="cdc-rchart__swatch"></span>');
 
@@ -19,7 +19,7 @@ interface TipRow {
 }
 
 export const tipRow = ({ color, name, value }: TipRow): SafeHtml =>
-  html`<div class="cdc-rchart__tiprow" style="--c:${color}">${SWATCH}<span>${name}</span><strong>${value}</strong></div>`;
+  html`<div class="cdc-rchart__tiprow" style="--cdc-series-color:${color}">${SWATCH}<span>${name}</span><strong>${value}</strong></div>`;
 
 interface AxisLabel {
   readonly x: number;

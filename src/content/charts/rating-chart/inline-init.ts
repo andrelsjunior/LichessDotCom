@@ -1,8 +1,8 @@
 import { queryAll } from '#shared/dom.ts';
 
-// A rating's stats page doesn't use #page-init-data: it hands the module its
-// data in the call itself, a JS object around a JSON array, and the script
-// stays in the page:
+// A rating's stats page doesn't use #page-init-data: it passes the module its
+// data in the call itself, as a JS object around a JSON array, in a script
+// that stays in the page:
 // loadEsm('chart.ratingHistory',{init:{data:[…],singlePerfName:'Blitz'}})
 
 export interface InlineInit {
@@ -13,8 +13,8 @@ export interface InlineInit {
 const MODULE = "'chart.ratingHistory'";
 const PERF_NAME = /singlePerfName:\s*'((?:[^'\\]|\\.)*)'/;
 
-// Where the array opened at `open` closes, or -1. Only its strings, which
-// JSON double-quotes, can hold a bracket that doesn't count.
+// Where the array opened at `open` closes, or -1. A bracket inside a string
+// doesn't count, and JSON strings are always double-quoted.
 function closingBracket(text: string, open: number): number {
   let depth = 0;
   let inString = false;

@@ -31,7 +31,7 @@ function dayTicks(start: number, end: number, formats: DateFormats): TimeTick[] 
   });
 }
 
-// Up to 800 days: each month's first, the year named in January.
+// Up to 800 days: the first of each month, January's with the year.
 function monthTicks(start: number, end: number, formats: DateFormats): TimeTick[] {
   const from = new Date(start);
   const ticks: TimeTick[] = [];

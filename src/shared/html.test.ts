@@ -27,7 +27,7 @@ describe('html', () => {
   });
 
   it('takes no lookalike for its output, so page text can’t skip the escaping', () => {
-    // Checked by the type-check.
+    // A type-level check.
     expectTypeOf<{ value: string; toString: () => string }>().not.toExtend<SafeHtml>();
     expectTypeOf(html`<br>`).toExtend<SafeHtml>();
   });

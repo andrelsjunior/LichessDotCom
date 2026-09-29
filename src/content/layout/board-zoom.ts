@@ -3,15 +3,15 @@ import { closestTo, setStyleProperty } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { readStored, removeStored, StorageKey, writeStored } from '#shared/storage.ts';
 
-// The board's size: all the room the game, analysis or puzzle layout gives it,
-// unless resized by hand (styles/board/pieces.css). Lichess's own zoom pref may
-// date from its layout, so it's not used: a drag on the board's handle starts
-// from our size, and the `---zoom` it sets on <body> is copied to `--cdc-zoom`
-// and kept under our own key. Dragged back to full, the key goes.
+// The board takes all the room the game, analysis or puzzle layout gives it,
+// unless the user resizes it (styles/board/pieces.css). Lichess's own zoom pref
+// may date from its old layout, so we ignore it: a drag on the board's handle
+// starts from our size, and the `---zoom` it sets on <body> is copied to
+// `--cdc-zoom` and stored under our own key. Dragging back to full size removes the key.
 
 const FULL = 100;
 
-// A missing key is no zoom, not the 0 that coercing null would make of it.
+// A missing key means no zoom, not the 0 that coercing null would give.
 const StoredZoomSchema = z.pipe(z.string(), z.coerce.number());
 
 function setZoom(zoom: number): void {
@@ -32,7 +32,7 @@ let drag: MutationObserver | null = null;
 
 function startDrag(event: Event): void {
   if (drag || !closestTo(event.target, 'cg-resize', Element)) return;
-  // In the capture phase: before Lichess's handler reads the zoom to start from.
+  // In the capture phase, so it runs before Lichess's handler reads the zoom to start from.
   const current = getComputedStyle(document.documentElement).getPropertyValue('--cdc-zoom');
   document.body.style.setProperty('---zoom', current === '' ? String(FULL) : current);
   const observer = new MutationObserver(followDrag);

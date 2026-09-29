@@ -5,11 +5,11 @@ import type { Feature } from '#shared/features.ts';
 import { parseJson } from '#shared/json.ts';
 import { readPageInitData } from '#shared/page-init-data.ts';
 
-// The color(s) the computer plays, in `data-cdc-ai` on <html>: its player bar
-// gets the "Play the computer" monitor as its avatar (styles/playerbar.css).
-// Lichess draws that bar like an anonymous player's; only the game's data tells
-// them apart. Its level's rating goes in `--cdc-ai-<color>` for the bar, and to
-// the game info (game-meta.ts).
+// The color(s) the computer plays, in `data-cdc-ai` on <html>, so its player
+// bar gets the "Play the computer" monitor as its avatar (styles/playerbar.css).
+// Lichess draws that bar like an anonymous player's, and only the game's data
+// tells them apart. The estimated rating of its level goes in `--cdc-ai-<color>`
+// for the bar, and into the game info (game-meta.ts).
 
 // Lichess gives its levels no rating: these are the usual estimates of what
 // each one plays at.
@@ -61,8 +61,8 @@ export function markComputerPlayers(players: readonly ComputerPlayer[]): void {
 export const aiPlayers: Feature = {
   name: 'computer players',
   start: () => {
-    // Lichess removes its init data once read: only a script there while the
-    // page parses sees it.
+    // Lichess removes its init data once read, so only a script running while
+    // the page parses sees it.
     if (!isParsing()) return;
     readPageInitData(text => markComputerPlayers(readComputerPlayers(text)));
   },

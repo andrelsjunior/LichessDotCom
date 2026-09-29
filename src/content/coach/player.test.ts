@@ -1,10 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod/mini';
 import { CoachMoodSchema } from '#shared/coach.ts';
+import type { CoachState } from '#shared/protocol.ts';
 import { delayUntil, nextBlink } from './blinks.ts';
 import { syllableEnd } from './expression.ts';
 import { coach } from './index.ts';
+import { CoachPlayer } from './player.ts';
 import { blinkMeta } from './lottie/blink.ts';
+import { buildCoachAnimations } from './lottie/build.ts';
 import type { TalkLoop } from './lottie/meta.ts';
 import { RigFileSchema } from './lottie/rig.ts';
 import rigFile from './lottie/fixtures/rig.json' with { type: 'json' };
@@ -167,15 +170,19 @@ const ACTIONS: Readonly<Record<Step['do'], (step: Step, stage: Stage) => void>> 
   },
 };
 
+// The port also listens for the face's loopComplete, so talking stops once the
+// avatar is gone (the original's loop ran on forever).
+const isPortOnly = ([, call, event]: readonly unknown[]): boolean =>
+  call === 'on' && event === 'loopComplete';
+
 describe('the coach player', () => {
   it('plays the rig as the original did, call for call', async () => {
-    const rigs = RigFileSchema.parse(rigFile);
     vi.stubGlobal('chrome', {
       runtime: { getURL: (path: string) => `chrome-extension://abc/${path}` },
     });
     vi.stubGlobal('fetch', (url: string) => {
       fakes.log.push(['fetch', url]);
-      return Promise.resolve({ json: () => Promise.resolve(rigs) });
+      return Promise.resolve({ json: () => Promise.resolve(rigFile) });
     });
     vi.spyOn(Math, 'random').mockReturnValue(0.25);
     vi.spyOn(console, 'warn').mockImplementation(() => fakes.log.push(['warn']));
@@ -190,9 +197,73 @@ describe('the coach player', () => {
       const step = StepSchema.parse(expected.step);
       ACTIONS[step.do](step, stage);
       await flush();
-      expect({ step: i, log: fakes.log.slice(start) }).toEqual({ step: i, log: expected.log });
+      const log = fakes.log.slice(start).filter(entry => !isPortOnly(entry));
+      expect({ step: i, log }).toEqual({ step: i, log: expected.log });
       expect(panel.innerHTML).toBe(expected.dom);
     }
+  });
+});
+
+describe('talking', () => {
+  const loop: TalkLoop = [744, 815, [754, 766, 775, 789, 800, 815]];
+
+  it('stops at the end of the syllable under way', () => {
+    expect(syllableEnd(loop, 744)).toBe(754);
+    expect(syllableEnd(loop, 753.6)).toBe(766);
+    expect(syllableEnd(loop, 814.9)).toBe(815);
+  });
+
+  it('stops at the next syllable once the review panel is gone, and loops no more', async () => {
+    vi.stubGlobal('chrome', {
+      runtime: { getURL: (path: string) => `chrome-extension://abc/${path}` },
+    });
+    vi.stubGlobal('fetch', () => Promise.resolve({ json: () => Promise.resolve(rigFile) }));
+    vi.spyOn(Math, 'random').mockReturnValue(0.25);
+    const host = document.createElement('div');
+    host.innerHTML = avatarMarkup(1, true);
+    document.body.append(host);
+    const avatar = host.querySelector('.cdc-coach__avatar');
+    if (!(avatar instanceof HTMLElement)) throw new Error('no avatar');
+    let state: CoachState = { coach: 1, mood: 'happy', talking: false };
+    const player = new CoachPlayer({ avatar, coach: 1, wanted: () => state });
+    const loading = player.load();
+    await flush();
+    const face = fakes.latest('face');
+    if (!face) throw new Error('no face');
+    face.fire('DOMLoaded');
+    await loading;
+    const rig = RigFileSchema.parse(rigFile)['1'];
+    if (!rig) throw new Error('no rig');
+    const { meta } = buildCoachAnimations(rig, 1);
+    const [talkStart, talkEnd] = meta.face.talk.happy;
+    const faceCalls = (from: number): unknown[][] =>
+      fakes.log.slice(from).filter(([name]) => name === face.name);
+
+    const talking = fakes.log.length;
+    state = { ...state, talking: true };
+    player.update();
+    expect(faceCalls(talking)).toEqual([
+      [face.name, 'loop', true],
+      [face.name, 'playSegments', [talkStart, talkEnd], true],
+    ]);
+
+    host.remove();
+    face.currentFrame = 3;
+    const gone = fakes.log.length;
+    face.fire('loopComplete');
+    const now = talkStart + 3;
+    expect(faceCalls(gone)).toEqual([
+      [face.name, 'loop', false],
+      [face.name, 'playSegments', [now, syllableEnd(meta.face.talk.happy, now)], true],
+    ]);
+    const stopping = fakes.log.length;
+    face.fire('complete');
+    face.fire('loopComplete');
+    expect(faceCalls(stopping)).toEqual([
+      [face.name, 'resetSegments', true],
+      [face.name, 'goToAndStop', meta.face.pose.happy, true],
+    ]);
+    player.destroy();
   });
 });
 
@@ -210,15 +281,5 @@ describe('blink scheduling', () => {
     expect(delayUntil(meta, 344, 520)).toBeCloseTo((176 / 60) * 1000);
     expect(delayUntil(meta, 534, 84)).toBe(3500);
     expect(delayUntil(meta, 520, 520)).toBe(0);
-  });
-});
-
-describe('talking', () => {
-  const loop: TalkLoop = [744, 815, [754, 766, 775, 789, 800, 815]];
-
-  it('stops at the end of the syllable under way', () => {
-    expect(syllableEnd(loop, 744)).toBe(754);
-    expect(syllableEnd(loop, 753.6)).toBe(766);
-    expect(syllableEnd(loop, 814.9)).toBe(815);
   });
 });

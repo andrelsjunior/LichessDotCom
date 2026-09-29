@@ -39,23 +39,23 @@ test.describe('the rating history on a rating’s stats page', () => {
   });
 
   test('switches range with its pills, and keeps the range', async ({ page }) => {
-    const pills = page.locator('.cdc-rchart__ranges [data-range]');
+    const pills = page.locator('.cdc-rchart__ranges [data-cdc-range]');
     await expect(pills).toHaveCount(6);
-    await expect(page.locator('.cdc-rchart__ranges [data-range].active')).toHaveCount(1);
+    await expect(page.locator('.cdc-rchart__ranges [data-cdc-range].active')).toHaveCount(1);
     const line = page.locator('.cdc-rchart__line').first();
     const curve = (): Promise<string> => line.evaluate(path => path.style.getPropertyValue('d'));
     await expect.poll(curve).not.toBe('');
     const before = await curve();
-    const active = await page.locator('.cdc-rchart__ranges .active').getAttribute('data-range');
+    const active = await page.locator('.cdc-rchart__ranges .active').getAttribute('data-cdc-range');
     const other = active === 'ALL' ? '1M' : 'ALL';
-    await page.locator(`.cdc-rchart__ranges [data-range="${other}"]`).click();
-    await expect(page.locator(`.cdc-rchart__ranges [data-range="${other}"]`)).toHaveClass(
+    await page.locator(`.cdc-rchart__ranges [data-cdc-range="${other}"]`).click();
+    await expect(page.locator(`.cdc-rchart__ranges [data-cdc-range="${other}"]`)).toHaveClass(
       /\bactive\b/,
     );
     await expect.poll(curve).not.toBe(before);
     expect(await storedValue(page, RANGE_KEY)).toBe(other);
     await page.reload({ waitUntil: 'load' });
-    await expect(page.locator(`.cdc-rchart__ranges [data-range="${other}"]`)).toHaveClass(
+    await expect(page.locator(`.cdc-rchart__ranges [data-cdc-range="${other}"]`)).toHaveClass(
       /\bactive\b/,
     );
   });

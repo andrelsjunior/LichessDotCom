@@ -24,7 +24,8 @@ the page world would crash on it.
 | `page-init-data.ts`                            | the page's `#page-init-data`, captured before Lichess removes it                                                   |
 | `features.ts`, `frame.ts`, `poll.ts`           | starting features, once-per-frame work, waiting for Lichess's globals                                              |
 | `lang.ts`, `text.ts`, `math.ts`, `geometry.ts` | the page's language, small text and number helpers, points and boxes                                               |
-| `chess/`, `charts/`, `coach.ts`, `sounds.ts`   | chess basics, chart pieces, the coach's moods, the sound names                                                     |
+| `chess/`, `chessground.ts`                     | chess basics (squares, FEN, piece letters and values, attacks), a board's pieces read from chessground's classes   |
+| `charts/`, `coach.ts`, `sounds.ts`             | chart pieces, the coach's moods and the stored coach (`pickCoach`), the sound names                                |
 | `testing/`                                     | helpers only tests import, and the vitest setup filling happy-dom's gaps                                           |
 
 Each directory has its own `tsconfig.json`, so a page-world file that names

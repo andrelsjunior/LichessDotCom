@@ -32,7 +32,7 @@
   background: var(--cdc-menu-hover) !important;
 }
 
-/* Extension / Lichess tabs (content/boards/panel.ts), their pill sliding
+/* The Extension / Lichess tabs (content/boards/panel.ts), whose pill slides
  * (content/ui/tab-bars.ts). */
 #dasher_app .cdc-src-tabs {
   --cdc-tab-bg: var(--cdc-bg-raised-hover);

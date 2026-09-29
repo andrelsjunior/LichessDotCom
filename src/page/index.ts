@@ -1,7 +1,7 @@
 import { startFeatures } from '#shared/features.ts';
 import { motion } from './motion/index.ts';
 import { sounds } from './sounds/index.ts';
-import { flipLabel } from './flip-label.ts';
+import { flipLabel } from './board/flip-label.ts';
 import { shapes } from './board/index.ts';
 import { review } from './review/index.ts';
 import { distribution } from './charts/distribution/index.ts';

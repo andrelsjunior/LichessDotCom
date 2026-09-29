@@ -23,7 +23,7 @@ export interface Names {
   readonly cumulative: string;
 }
 
-// Lichess's own translations (`i18n.site`), in English if they ever move.
+// Lichess's own translations (`i18n.site`), with English as the fallback if a key goes missing.
 export const seriesNames = (): Names => ({
   players: translate('players', 'Players'),
   cumulative: translate('cumulative', 'Cumulative'),

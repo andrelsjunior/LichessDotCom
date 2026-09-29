@@ -30,7 +30,7 @@ function placeDots(svg: SVGSVGElement, hits: readonly Hit[], x: number, plot: Pl
   const guide = queryOne(svg, '.cdc-rchart__guide', SVGElement);
   if (guide) setAttributes(guide, { x1: x, x2: x });
   for (const dot of queryAll(svg, '.cdc-rchart__dot', SVGElement)) {
-    const hit = hits.find(({ row }) => row.index === Number(dot.dataset.i));
+    const hit = hits.find(({ row }) => row.index === Number(dot.dataset.cdcSeries));
     dot.classList.toggle('cdc-rchart__dot--on', hit !== undefined);
     if (hit) setAttributes(dot, { cx: x, cy: plot.y(hit.value) });
   }

@@ -1,6 +1,6 @@
 /**
- * `from`, then every `step` (> 0) up to `to`. Summed one step at a time, so
- * fractional steps drift exactly as a plain loop's would.
+ * The values from `from` up to `to`, `step` (> 0) apart. They're summed one
+ * step at a time, so fractional steps drift exactly as a plain loop's would.
  */
 export function steps(from: number, to: number, step: number): number[] {
   const values: number[] = [];

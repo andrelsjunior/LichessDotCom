@@ -6,8 +6,8 @@ import { expectSidebar } from './support/sidebar.ts';
 import { ourSounds } from './support/sounds.ts';
 
 // Every public page gets the extension: the theme, the sidebar, both of its
-// scripts, and no error from them. `ours` is something the extension adds
-// on that page in particular, where it adds something of its own.
+// scripts, and no error from them. `ours`, when set, is something the
+// extension adds on that page only.
 
 interface PublicPage {
   readonly name: string;

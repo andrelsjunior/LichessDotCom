@@ -15,20 +15,20 @@ const TABS: readonly (readonly [View, string])[] = [
 export const viewOf = (pick: string): View => (pick === LICHESS ? LICHESS : 'cdc');
 
 /**
- * Rings the current pick. Only in its own tab: with one of our boards on,
- * Lichess's current board isn't what the page shows.
+ * Rings the current pick, in its own tab only: while one of our boards is on,
+ * Lichess's current board isn't the one the page shows.
  */
 export function markPanel(panel: HTMLElement, picker: Picker): void {
   const current = picker.current();
   setData(panel, 'cdcSrcOn', viewOf(current));
   for (const item of queryAll(panel, '.cdc-src-item', HTMLElement))
-    item.classList.toggle('active', item.dataset.id === current);
+    item.classList.toggle('active', item.dataset.cdcChoice === current);
 }
 
 function showView(panel: HTMLElement, view: View): void {
   setData(panel, 'cdcView', view);
   for (const tab of queryAll(panel, '.cdc-src-tabs button', HTMLElement))
-    tab.classList.toggle('active', tab.dataset.view === view);
+    tab.classList.toggle('active', tab.dataset.cdcTab === view);
 }
 
 function tabBar(onTab: (view: View) => void): HTMLElement {
@@ -36,7 +36,7 @@ function tabBar(onTab: (view: View) => void): HTMLElement {
   for (const [view, label] of TABS) {
     const tab = createElement('button', {
       text: label,
-      attrs: { type: 'button', class: '', 'data-view': view },
+      attrs: { type: 'button', class: '', 'data-cdc-tab': view },
     });
     tab.addEventListener('click', () => onTab(view));
     bar.append(tab);
@@ -48,7 +48,7 @@ function choiceList(picker: Picker, onPick: (id: string) => void): HTMLElement {
   const list = createElement('div', { className: 'cdc-src-list' });
   for (const { id, name } of picker.choices) {
     const item = createElement('button', {
-      attrs: { type: 'button', class: 'cdc-src-item', 'data-id': id },
+      attrs: { type: 'button', class: 'cdc-src-item', 'data-cdc-choice': id },
     });
     const thumb = createElement('span', { className: 'cdc-src-thumb' });
     setStyleProperty(thumb, 'background-image', `url('${picker.thumbnail(id)}')`);
@@ -66,8 +66,8 @@ export interface DressOptions {
 }
 
 /**
- * Puts the tabs after the panel's title and our choices after them.
- * Snabbdom leaves the nodes it didn't make where they are.
+ * Puts the tabs after the panel's title and our choices after them. Snabbdom
+ * leaves alone the nodes it didn't create, so ours can sit among Lichess's.
  */
 export function dressPanel(panel: HTMLElement, picker: Picker, options: DressOptions): void {
   const tabs = tabBar(view => {

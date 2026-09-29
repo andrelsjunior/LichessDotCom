@@ -6,8 +6,11 @@ import type { z } from 'zod/mini';
  * remembered, so checking it again is free.
  *
  * It narrows the input, not a parsed copy, so the schema must not rewrite the
- * value: no `lenient`, catch, default or coerce. The signature only turns away
- * transforms and pipes: zod's types can't tell the others apart.
+ * value: no `lenient`, catch, default or coerce. The signature only rejects
+ * transforms and pipes, as zod's types can't tell the others apart.
+ *
+ * A method described with `z.custom` and `typeof` is only checked to be a
+ * function: its parameters and return type are taken on trust.
  */
 export function createGuard<T>(schema: z.ZodMiniType<T, T>): (value: unknown) => value is T {
   const passed = new WeakSet<object>();

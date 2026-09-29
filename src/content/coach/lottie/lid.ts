@@ -15,9 +15,9 @@ export interface LidShapes {
 }
 
 /**
- * The lid `closed` of the way shut (0 to 1). Shut, its edge is one smooth arc
- * from corner to corner, as deep as the eye and a hair past its lower lash,
- * so no white shows.
+ * The lid when it is `closed` of the way shut (0 to 1). When shut, its edge is
+ * one smooth arc from corner to corner, as deep as the eye and just past its
+ * lower lash, so no white shows.
  */
 export function lidShapes({ x: columns, top, bottom }: RigEye, closed: number): LidShapes {
   const last = columns.length - 1;

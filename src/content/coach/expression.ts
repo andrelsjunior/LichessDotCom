@@ -23,6 +23,7 @@ interface ExpressionOptions {
   readonly mood: CoachMood;
   /** What the review last asked for. */
   readonly wanted: () => CoachState;
+  readonly avatar: HTMLElement;
 }
 
 export class Expression {
@@ -30,20 +31,22 @@ export class Expression {
   readonly #lids: AnimationItem;
   readonly #meta: AnimationMeta;
   readonly #wanted: () => CoachState;
+  readonly #avatar: HTMLElement;
   #mood: CoachMood;
   #talking = false;
-  /** Set while a move plays; called when the face's segment completes. */
+  /** Set while a transition or a last syllable plays; called when the face's segment completes. */
   #pending: (() => void) | null = null;
 
-  constructor({ face, lids, meta, mood, wanted }: ExpressionOptions) {
+  constructor({ face, lids, meta, mood, wanted, avatar }: ExpressionOptions) {
     this.#face = face;
     this.#lids = lids;
     this.#meta = meta;
     this.#mood = mood;
     this.#wanted = wanted;
+    this.#avatar = avatar;
   }
 
-  /** Straight to the mood's pose, the features already on when the plate comes in. */
+  /** Jumps to the mood's pose, so the features are drawn by the time the plate shows. */
   show(): void {
     this.#face.goToAndStop(this.#meta.face.pose[this.#mood], true);
     this.#lids.goToAndStop(this.#meta.lids.pose[this.#mood], true);
@@ -56,19 +59,23 @@ export class Expression {
     pending?.();
   }
 
-  /** Takes the next move towards what the review wants, unless one is playing. */
+  /** Takes the next step towards what the review wants, unless one is still playing. */
   step(): void {
     if (this.#pending) return;
     const wanted = this.#wanted();
-    if (this.#talking && (wanted.mood !== this.#mood || !wanted.talking)) this.#stopTalking();
-    else if (wanted.mood !== this.#mood) this.#changeMood(wanted.mood);
-    else if (wanted.talking && !this.#talking) this.#startTalking();
+    const { mood } = wanted;
+    // The review stops posting once its panel closes, and the talking loop
+    // would then run forever: talk only while the avatar is in the page.
+    const talking = wanted.talking && this.#avatar.isConnected;
+    if (this.#talking && (mood !== this.#mood || !talking)) this.#stopTalking();
+    else if (mood !== this.#mood) this.#changeMood(mood);
+    else if (talking && !this.#talking) this.#startTalking();
   }
 
   #changeMood(mood: CoachMood): void {
     const { face, lids } = this.#meta;
-    const faceSegment = face.trans[`${this.#mood}>${mood}`];
-    const lidsSegment = lids.trans[`${this.#mood}>${mood}`];
+    const faceSegment = face.transitions[`${this.#mood}>${mood}`];
+    const lidsSegment = lids.transitions[`${this.#mood}>${mood}`];
     // A segment stops a frame short of its end: land on the pose by hand.
     const settle = (): void => {
       this.#mood = mood;

@@ -8,12 +8,12 @@ import { queryOne, setData, setStyleProperty } from '#shared/dom.ts';
 export function createThumbPlacer(root: HTMLElement, thumb: HTMLElement): () => void {
   let placedAt = '';
   return () => {
-    const active = queryOne(root, '[data-range].active', HTMLElement);
+    const active = queryOne(root, '[data-cdc-range].active', HTMLElement);
     if (!active) return;
     const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = active;
     const at = `${offsetLeft},${offsetTop},${offsetWidth}`;
     if (at === placedAt) return;
-    // A range click asks for the slide (data-cdc-slide).
+    // Only a click on a range pill asks for the slide, with data-cdc-slide.
     const slide = placedAt !== '' && root.dataset.cdcSlide === '1';
     thumb.classList.toggle('cdc-rchart__thumb--still', !slide);
     setStyleProperty(thumb, 'width', `${offsetWidth}px`);

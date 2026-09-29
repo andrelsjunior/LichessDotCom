@@ -18,7 +18,7 @@ export type ServiceAccount = z.infer<typeof ServiceAccountSchema>;
 const TokenSchema = z.object({ access_token: z.string() });
 
 export function parseServiceAccount(json: string): ServiceAccount {
-  // Neither JSON.parse's message nor zod's: both can quote the key.
+  // Neither JSON.parse's message nor zod's is shown, as both can quote the key.
   let value: unknown;
   try {
     value = JSON.parse(json);

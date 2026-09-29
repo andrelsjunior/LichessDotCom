@@ -36,14 +36,23 @@ export async function digest(texts: readonly string[]): Promise<string> {
   return btoa(String.fromCharCode(...new Uint8Array(hash)));
 }
 
-// A file that can't be fetched counts as empty.
-const readText = (path: string): Promise<string> =>
+const readText = (path: string): Promise<string | null> =>
   fetch(chrome.runtime.getURL(path), { cache: 'no-store' }).then(
     response => response.text(),
-    () => '',
+    () => null,
   );
 
-export async function fingerprint(): Promise<string> {
+export interface Fingerprint {
+  /** A digest of the files; one that can't be fetched counts as empty. */
+  readonly digest: string;
+  /** False while a build swaps the folder, as the manifest is missing then. */
+  readonly hasManifest: boolean;
+}
+
+export async function fingerprint(): Promise<Fingerprint> {
   const files = loadedFiles(chrome.runtime.getManifest());
-  return digest(await Promise.all(files.map(readText)));
+  // loadedFiles lists the manifest first.
+  const [manifest = null, ...others] = await Promise.all(files.map(readText));
+  const texts = [manifest, ...others].map(text => text ?? '');
+  return { digest: await digest(texts), hasManifest: manifest !== null };
 }

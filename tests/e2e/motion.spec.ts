@@ -32,8 +32,8 @@ test.describe('with reduced motion asked for', () => {
         element.getAnimations().map(animation => animation.constructor.name),
       );
     await expect.poll(animations).toContain('CSSAnimation');
-    // The witness: Lichess's own sheets, which the extension switched off for
-    // its rewritten copies, stop it when switched back on.
+    // The control: the extension switched Lichess's own sheets off for its
+    // rewritten copies, and switching them back on stops the animation.
     await page.evaluate(() => {
       for (const link of document.querySelectorAll('link[rel="stylesheet"]'))
         if (link instanceof HTMLLinkElement && link.disabled) link.disabled = false;

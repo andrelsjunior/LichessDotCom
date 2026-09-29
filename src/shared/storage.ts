@@ -23,9 +23,10 @@ type Area = 'local' | 'session';
 const area = (name: Area): Storage => (name === 'local' ? localStorage : sessionStorage);
 
 /**
- * A stored value that passes `schema`, or null. A blocked storage throws, as
- * the original's did: read as missing, a once-per-game check could never hold
- * there, as the writes are lost. So read before changing the page.
+ * The stored value if it passes `schema`, else null. A blocked storage throws,
+ * as it did in the original: since its writes are lost too, reading it as
+ * missing would make a once-per-game check pass on every load. So read before
+ * changing the page.
  */
 export function readStored<T>(
   key: string,
@@ -45,7 +46,7 @@ export function readStoredJson<T>(
   return parseJson(area(from).getItem(key), schema);
 }
 
-/** Stores a value; a full or blocked storage only costs the value. */
+/** Stores a value. A full or blocked storage loses the value without throwing. */
 export function writeStored(key: string, value: string | number, to: Area = 'local'): void {
   try {
     area(to).setItem(key, String(value));
@@ -58,7 +59,7 @@ export function writeStoredJson(key: string, value: unknown, to: Area = 'local')
   writeStored(key, JSON.stringify(value), to);
 }
 
-/** Removes a value; like a write, a blocked storage only costs the value. */
+/** Removes a value. As with a write, a blocked storage doesn't throw. */
 export function removeStored(key: string, from: Area = 'local'): void {
   try {
     area(from).removeItem(key);

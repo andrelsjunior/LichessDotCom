@@ -15,8 +15,8 @@ const SPECIAL_FLAGS: ReadonlyMap<string, string> = new Map([
 // Regional indicator A is U+1F1E6.
 const REGIONAL_OFFSET = 0x1f1e6 - 'A'.charCodeAt(0);
 
-// Two letters are regional indicators; a code without an emoji (Lichess's
-// own flag, most regions) shows nothing.
+// A two-letter code maps to regional indicators. A code without an emoji
+// (Lichess's own flag, most regions) shows nothing.
 export function flagEmoji(code: string | undefined): string {
   if (code === undefined) return '';
   const special = SPECIAL_FLAGS.get(code);

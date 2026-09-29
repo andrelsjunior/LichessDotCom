@@ -47,19 +47,26 @@ interface ElementOptions {
   readonly attrs?: Readonly<Record<string, string>>;
 }
 
-export function createElement<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  options?: ElementOptions,
-): HTMLElementTagNameMap[K];
-export function createElement(tag: string, options?: ElementOptions): HTMLElement;
-export function createElement(tag: string, options: ElementOptions = {}): HTMLElement {
-  const element = document.createElement(tag);
+/** Sets the class, the id, the text, then the attributes, in that order. */
+export function applyOptions<T extends HTMLElement>(element: T, options: ElementOptions = {}): T {
   if (options.className !== undefined) element.className = options.className;
   if (options.id !== undefined) element.id = options.id;
   if (options.text !== undefined) element.textContent = options.text;
   for (const [name, value] of Object.entries(options.attrs ?? {}))
     element.setAttribute(name, value);
   return element;
+}
+
+export function createElement<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  options?: ElementOptions,
+): HTMLElementTagNameMap[K] {
+  return applyOptions(document.createElement(tag), options);
+}
+
+/** An element lib.dom has no type for, such as Lichess's `rating` or chessground's `piece`. */
+export function createCustomElement(tag: string, options?: ElementOptions): HTMLElement {
+  return applyOptions(document.createElement(tag), options);
 }
 
 /**

@@ -6,10 +6,10 @@ import { mountDistribution } from './chart.ts';
 import { DistributionSchema } from './schema.ts';
 
 // The weekly rating distribution (/stat/rating/distribution/<perf>). Lichess
-// draws it with Chart.js into a canvas that CSS can't restyle; we draw it in
-// SVG from the same data, in the look of the rating history chart. In the page
-// world for Lichess's translated labels. Lichess's canvas is only hidden once
-// ours is in.
+// draws it with Chart.js into a canvas that CSS can't restyle, so we draw it
+// in SVG from the same data, in the look of the rating history chart. It runs
+// in the page world, which has Lichess's translated labels. Lichess's canvas
+// is only hidden once ours is in.
 
 const PAGE = /\/stat\/rating\/distribution\//;
 

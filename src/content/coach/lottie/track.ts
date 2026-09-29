@@ -29,8 +29,8 @@ export const easeOut: EasingFactory = () => ({
 export const still = <T>(value: T): { readonly a: 0; readonly k: T } => ({ a: 0, k: value });
 
 /**
- * Keys sorted by frame (to a hundredth), one per frame, the last one written
- * winning; a property that never changes is still.
+ * Keys sorted by frame (rounded to a hundredth), one per frame, where the last
+ * one written wins. A property that never changes is written as still.
  */
 function track<Value, KeyframeValue>(
   keys: readonly Key<Value>[],

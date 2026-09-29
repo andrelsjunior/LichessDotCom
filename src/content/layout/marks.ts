@@ -3,10 +3,11 @@ import type { Feature } from '#shared/features.ts';
 import { nonEmpty } from '#shared/text.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 
-// What some rules would otherwise ask a `:has()`, copied onto the element as a
-// data attribute. A `:has()` holding an attribute selector, a `:not()` or `*`
-// puts Chrome on a slow path for every insertion: each move restyled most of
-// the page. Marked as the page parses, before it's first drawn, then on every tick.
+// Facts some rules would otherwise read with a `:has()`, copied onto the element
+// as a data attribute. A `:has()` holding an attribute selector, a `:not()` or
+// `*` puts Chrome on a slow path for every insertion, and each move restyled
+// most of the page. The marks are set as the page parses, before it's first
+// drawn, then on every tick.
 
 interface Mark {
   readonly selector: string;

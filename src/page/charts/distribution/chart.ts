@@ -67,8 +67,7 @@ class DistributionChart {
     parts.root.classList.toggle('cdc-dist--intro', animate);
   }
 
-  // Centers each pill over its line, inside the plot. A pill is measured once
-  // it's filled, since its text sets its width.
+  // A pill's width depends on its text, so it can only be centered once filled.
   #placeMarks(geometry: Geometry): void {
     const { parts, players, markers } = this.#setup;
     for (const [k, mark] of [...parts.marks.children].entries()) {
@@ -85,8 +84,8 @@ class DistributionChart {
     }
   }
 
-  // Highlights the column under the pointer and dims the ones after it. The
-  // columns left lit are the players rated below its end, the share the curve shows.
+  // Dims the columns after the hovered one, so the lit columns are the players
+  // the cumulative curve counts at that point.
   hover(event: MouseEvent): void {
     const geometry = this.#geometry;
     if (!geometry) return;
@@ -96,7 +95,7 @@ class DistributionChart {
     const bin = clamp(Math.floor((pointerX(event, parts.svg) - PADDING.left) / binWidth), 0, last);
     parts.svg.classList.toggle('cdc-dist__svg--hover', true);
     for (const bar of this.#bars()) {
-      const index = Number(bar.dataset.i);
+      const index = Number(bar.dataset.cdcBar);
       bar.classList.toggle('cdc-dist__bar--on', index === bin);
       bar.classList.toggle('cdc-dist__bar--dim', index > bin);
     }
@@ -120,7 +119,7 @@ class DistributionChart {
     hideTip(parts.tip);
     for (const bar of this.#bars()) {
       bar.classList.toggle('cdc-dist__bar--on', false);
-      bar.classList.toggle('cdc-dist__bar--dim', Number(bar.dataset.i) > this.#lit);
+      bar.classList.toggle('cdc-dist__bar--dim', Number(bar.dataset.cdcBar) > this.#lit);
     }
   }
 
@@ -134,7 +133,7 @@ function redrawOnResize(plot: HTMLElement, draw: (animate: boolean) => void): vo
   new ResizeObserver(() => {
     const size = `${Math.round(plot.clientWidth)}x${Math.round(plot.clientHeight)}`;
     if (size === lastSize) return;
-    // The first draw is the one that animates the columns in.
+    // Only the first draw animates the columns in.
     const first = lastSize === '';
     lastSize = size;
     draw(first);
@@ -148,7 +147,7 @@ export function mountDistribution(host: HTMLElement, data: DistributionData): vo
   const markers = markersOf(data, yourRatingLabel());
   const formats = numberFormats(pageLocale());
   const root = createElement('div', { className: 'cdc-dist' });
-  setStyleProperty(root, '--c', color);
+  setStyleProperty(root, '--cdc-series-color', color);
   const total = formats.count.format(players.total);
   setHtml(root, chartShell({ color, names: seriesNames(), total }));
   host.append(root);

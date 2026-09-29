@@ -1,5 +1,5 @@
-import { parsePlacement } from '#shared/chess/fen.ts';
-import type { Color, Square } from '#shared/chess/types.ts';
+import { parseFen, sideToMove } from '#shared/chess/fen.ts';
+import type { Square } from '#shared/chess/types.ts';
 
 // Checkmate on the analysis board: a red badge on the mated king's square,
 // then after a moment the square turns red under a "Checkmate" label.
@@ -14,10 +14,10 @@ interface MateNode {
 /** The mated king's square, if the position is checkmate. */
 export function matedKing(node: MateNode | null): Square | null {
   if (!node?.san?.endsWith('#') || !node.fen) return null;
-  const [placement = '', turn] = node.fen.split(' ');
-  // The side to move is the one mated.
-  const mated: Color = turn === 'w' ? 'white' : 'black';
-  for (const [square, piece] of parsePlacement(placement)) {
+  // The side to move is the one mated. A FEN that doesn't say whose turn it is
+  // reads as black's, as it did in the original.
+  const mated = sideToMove(node.fen) ?? 'black';
+  for (const [square, piece] of parseFen(node.fen).board) {
     if (piece.role === 'king' && piece.color === mated) return square;
   }
   return null;

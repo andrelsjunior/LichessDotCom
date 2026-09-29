@@ -6,10 +6,10 @@ import { computerRatings } from './ai-players.ts';
 
 // The game's info where there's no chat (styles/game/game-info.css). Lichess
 // writes its lines as runs of text ("3+0 • Rated • Blitz"), so each part gets a
-// span, to be a pill or a line of its own; the players' names get one too, to
-// be cut short on their own, and the ratings lose their brackets to be chips.
-// It's server-rendered, so editing it is safe; each piece is marked once done,
-// as Lichess may put new ones in.
+// span of its own, shown as a pill or its own line. The players' names get one
+// too, so they can be truncated alone, and the ratings lose their brackets to
+// show as chips. The info is server-rendered, so editing it is safe; each piece
+// is marked once done, as Lichess may add new ones.
 
 /** The parts of a line of the game info. */
 export const infoParts = (text: string): string[] =>
@@ -43,7 +43,8 @@ function wrapName(link: HTMLElement): void {
   if (rating.textContent !== bare) rating.textContent = bare;
 }
 
-// The computer has no rating: its level's stands in (see ai-players.ts).
+// The computer has no rating, so we show its level's estimated rating instead
+// (see ai-players.ts).
 function addComputerRatings(meta: HTMLElement, ratings: ReadonlyMap<Color, string>): void {
   for (const [color, rating] of ratings) {
     const selector = `.game__meta__players .player.${color} > span.user-link`;

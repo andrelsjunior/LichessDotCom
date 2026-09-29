@@ -15,7 +15,7 @@ export async function evaluateInContentScript(page: Page, expression: string): P
         if (context.name === WORLD_NAME) resolve(context.id);
       });
     });
-    // Enabling reports the contexts already there.
+    // Enabling the runtime also reports the contexts that already exist.
     await session.send('Runtime.enable');
     const { result, exceptionDetails } = await session.send('Runtime.evaluate', {
       contextId: await world,

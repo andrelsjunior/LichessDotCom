@@ -71,7 +71,10 @@ async function expectExtensionTab(panel: Locator, picker: Picker): Promise<void>
   await expect(panel.locator('.cdc-src-tabs > button')).toHaveCount(2);
   await expect(pickerTab(panel, 'cdc')).toHaveClass(/\bactive\b/);
   await expect(panel.locator('.cdc-src-item')).toHaveCount(picker.choices);
-  await expect(panel.locator('.cdc-src-item.active')).toHaveAttribute('data-id', picker.defaultId);
+  await expect(panel.locator('.cdc-src-item.active')).toHaveAttribute(
+    'data-cdc-choice',
+    picker.defaultId,
+  );
 }
 
 for (const picker of PICKERS) {

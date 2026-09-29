@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { setHtml } from '#shared/html.ts';
 import { LegacySchema } from './fixtures/schema.ts';
-import { arrowOutline, arrowPath, squareCenter } from './geometry.ts';
+import { arrowOutline, arrowPath, squareCenter, squareOnScreen } from './geometry.ts';
 import { matedKing } from './mate.ts';
 import { arrowsMarkup, fillsMarkup, mateMarkup } from './render.ts';
 // What the original script drew.
@@ -61,6 +61,22 @@ describe('squareCenter', () => {
     'places $square as the original did (white at the bottom: $white)',
     ({ square, white, center }) => {
       expect(squareCenter(square, white)).toEqual(center);
+    },
+  );
+});
+
+describe('squareOnScreen', () => {
+  it('counts columns and rows from the top left as shown', () => {
+    expect(squareOnScreen('a1', true)).toEqual([0, 7]);
+    expect(squareOnScreen('a1', false)).toEqual([7, 0]);
+    expect(squareOnScreen('h8', true)).toEqual([7, 0]);
+    expect(squareOnScreen('c6', false)).toEqual([5, 5]);
+  });
+
+  it.each(legacy.centers)(
+    'puts $square half a square before its center (white at the bottom: $white)',
+    ({ square, white, center }) => {
+      expect(squareOnScreen(square, white)).toEqual([center[0] - 0.5, center[1] - 0.5]);
     },
   );
 });

@@ -1,10 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
   attackers,
+  colorLetter,
+  COLORS,
+  fenTurn,
   isAttacked,
   parseFen,
   parsePlacement,
   parseSquare,
+  PIECE_VALUES,
+  ROLE_LETTERS,
+  roleOfLetter,
+  ROLES,
+  sideToMove,
   squareAt,
   squareCoords,
 } from './index.ts';
@@ -29,6 +37,40 @@ describe('parseFen', () => {
     expect(board.get('e4')).toEqual({ color: 'white', role: 'pawn' });
     expect(board.get('e2')).toBeUndefined();
     expect(board.get('d8')).toEqual({ color: 'black', role: 'queen' });
+  });
+});
+
+describe('the side to move', () => {
+  it.each([
+    ['8/8/8/8/8/8/8/8 w - - 0 1', 'white', 'white'],
+    ['8/8/8/8/8/8/8/8 b - - 0 1', 'black', 'black'],
+    ['8/8/8/8/8/8/8/8', null, 'white'],
+    ['8/8/8/8/8/8/8/8 x', null, 'white'],
+  ])('reads %s', (fen, side, turn) => {
+    expect(sideToMove(fen)).toBe(side);
+    expect(fenTurn(fen)).toBe(turn);
+    expect(parseFen(fen).turn).toBe(turn);
+  });
+});
+
+describe('piece letters', () => {
+  it('names the piece images wp, wn… bk', () => {
+    const codes = COLORS.flatMap(color =>
+      ROLES.map(role => colorLetter(color) + ROLE_LETTERS[role]),
+    );
+    expect(codes.join(' ')).toBe('wp wn wb wr wq wk bp bn bb br bq bk');
+  });
+
+  it('reads role letters in either case', () => {
+    expect(roleOfLetter('Q')).toBe('queen');
+    expect(roleOfLetter('n')).toBe('knight');
+    expect(roleOfLetter('x')).toBeUndefined();
+    expect(roleOfLetter('constructor')).toBeUndefined();
+    for (const role of ROLES) expect(roleOfLetter(ROLE_LETTERS[role])).toBe(role);
+  });
+
+  it('values the pieces, the king at nothing', () => {
+    expect(ROLES.map(role => PIECE_VALUES[role])).toEqual([1, 3, 3, 5, 9, 0]);
   });
 });
 

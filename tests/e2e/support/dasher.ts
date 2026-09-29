@@ -21,11 +21,11 @@ export async function openPicker(page: Page, kind: PickerKind): Promise<Locator>
 }
 
 export const pickerTab = (panel: Locator, view: 'cdc' | 'lichess'): Locator =>
-  panel.locator(`.cdc-src-tabs > button[data-view="${view}"]`);
+  panel.locator(`.cdc-src-tabs > button[data-cdc-tab="${view}"]`);
 
 /** One of the extension's choices in the panel's Extension tab. */
 export const ourChoice = (panel: Locator, id: string): Locator =>
-  panel.locator(`.cdc-src-list .cdc-src-item[data-id="${id}"]`);
+  panel.locator(`.cdc-src-list .cdc-src-item[data-cdc-choice="${id}"]`);
 
 /** Lichess's own choices, in its tab. */
 export const lichessChoices = (panel: Locator): Locator => panel.locator('.list > button');

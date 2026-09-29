@@ -2,11 +2,11 @@ import { z } from 'zod/mini';
 import { DevCheckRequestSchema, type DevCheckResponse } from '#shared/dev-check.ts';
 import { fingerprint } from './fingerprint.ts';
 
-// Unpacked installs only. A build (`pnpm dev`, `pnpm build`) rewrites the
-// folder Chrome loads, so when a Lichess tab asks, the files on disk are
-// compared with the ones running and the extension reloads if they changed.
-// The running fingerprint is kept in chrome.storage, which the store's package
-// goes without: loaded unpacked, that package just doesn't reload itself.
+// Only for unpacked installs. A build (`pnpm dev`, `pnpm build`) rewrites the
+// folder Chrome loads, so when a Lichess tab asks, we compare the files on disk
+// with the running ones and reload the extension if they changed. The running
+// fingerprint is kept in chrome.storage. The store's package has no storage
+// permission, so it never reloads itself, even when loaded unpacked.
 
 const LOADED_KEY = 'dev:loaded';
 const LoadedSchema = z.object({ [LOADED_KEY]: z.optional(z.string()) });
@@ -22,14 +22,17 @@ async function loadedFingerprint(): Promise<string> {
   const stored = LoadedSchema.safeParse(await chrome.storage.session.get(LOADED_KEY)).data;
   const loaded = stored?.[LOADED_KEY];
   if (loaded) return loaded;
-  const current = await fingerprint();
-  await chrome.storage.session.set({ [LOADED_KEY]: current });
-  return current;
+  const { digest } = await fingerprint();
+  await chrome.storage.session.set({ [LOADED_KEY]: digest });
+  return digest;
 }
 
 async function answer(sendResponse: (response: DevCheckResponse) => void): Promise<void> {
   const [loaded, current] = await Promise.all([loadedFingerprint(), fingerprint()]);
-  const stale = reloading || loaded !== current;
+  // While a build swaps the folder the manifest is missing, and a reload then
+  // would find no extension to load.
+  const changed = current.hasManifest && loaded !== current.digest;
+  const stale = reloading || changed;
   sendResponse({ reload: stale });
   if (!stale || reloading) return;
   reloading = true;

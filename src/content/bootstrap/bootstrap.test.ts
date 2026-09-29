@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ReadyStateSchema, setReadyState } from '#shared/testing/ready-state.ts';
-import { chooseCoach, coachChoice } from './coach-choice.ts';
+import { coachChoice } from './coach-choice.ts';
 import { fontFaces, fonts } from './fonts.ts';
 import { reloadIfInjectedLate } from './late-reload.ts';
 // What the original script did in the same cases.
@@ -41,13 +41,6 @@ describe('coach choice', () => {
       expect(localStorage.getItem('cdc-coach')).toBe(storedAfter);
     },
   );
-
-  it('picks again for a coach that isn’t a whole number (the original kept "2.5")', () => {
-    localStorage.setItem('cdc-coach', '2.5');
-    vi.spyOn(Math, 'random').mockReturnValue(0.5);
-    expect(chooseCoach()).toBe(3);
-    expect(localStorage.getItem('cdc-coach')).toBe('3');
-  });
 });
 
 describe('late reload', () => {

@@ -17,7 +17,7 @@ import type {
   VectorProperty,
 } from './types.ts';
 
-// Lottie's building blocks, each call a fresh object (see track.ts).
+// Lottie's building blocks. Each call returns a fresh object (see track.ts).
 
 const opaque = (hex: string): VectorProperty => still([...hexToRgb(hex), 1]);
 
@@ -53,7 +53,7 @@ interface GradientOptions {
   /** Top to bottom, with each one's offset (0 to 1). */
   readonly colors: readonly string[];
   readonly offsets: readonly number[];
-  /** The rows it runs down between. */
+  /** The rows it runs between, from top to bottom. */
   readonly from: number;
   readonly to: number;
 }

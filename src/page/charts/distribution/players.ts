@@ -8,7 +8,7 @@ export interface Players {
   readonly total: number;
   /** The share of players rated below each column's end. */
   readonly shares: readonly number[];
-  /** Where the last column ends: Lichess caps the top. */
+  /** The rating where the last column ends, the top of the axis. */
   readonly maxRating: number;
 }
 
@@ -26,7 +26,7 @@ export function countPlayers(counts: readonly number[]): Players {
 export const binOf = (rating: number, players: Players): number =>
   clamp(Math.floor((rating - MIN_RATING) / BIN_SIZE), 0, players.counts.length - 1);
 
-/** A rating off the chart stands at its edge. */
+/** A rating off the chart is drawn at its edge. */
 export const onChart = (rating: number, players: Players): number =>
   clamp(rating, MIN_RATING, players.maxRating);
 

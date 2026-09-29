@@ -33,7 +33,7 @@ function blinkKeys(): BlinkKeys {
       const end = start + BLINK_FRAMES;
       scale.push([start, [100, 0, 100]], [start + 4, [100, 100, 100]]);
       scale.push([start + 6, [100, 100, 100]], [end, [100, 0, 100]]);
-      // Open, the lid is a line along the top of the eye: hide its lash.
+      // An open lid is a line along the top of the eye, so its lash is hidden.
       lash.push([start, 0], [start + 2, 100], [start + 10, 100], [end, 0]);
     }
   }

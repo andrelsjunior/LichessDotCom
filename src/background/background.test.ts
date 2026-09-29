@@ -41,7 +41,8 @@ interface Fake {
 interface FakeOptions {
   readonly manifest: object;
   readonly storage?: boolean;
-  readonly files: Record<string, string>;
+  /** The files on disk; a missing one fails to fetch. */
+  readonly files: Record<string, string | undefined>;
 }
 
 function fakeChrome({ manifest, storage = true, files }: FakeOptions): Fake {
@@ -161,6 +162,30 @@ describe('the background worker', () => {
     steps.push({ step: 'while reloading', ...(await ask(fake, { type: 'cdc:dev-check' })) });
     vi.advanceTimersByTime(100);
     expect({ listeners, loaded, steps, log: fake.log }).toEqual(legacy.unpacked);
+  });
+
+  it('unpacked: waits out a build swapping the folder, then reloads', async () => {
+    const disk: Record<string, string | undefined> = files();
+    const fake = await startWorker({ manifest: CHROME_MANIFEST, files: disk });
+    for (const listener of fake.listeners.startup) listener();
+    await until(() => fake.session['dev:loaded'] !== undefined);
+    const reloads = (): number => fake.log.filter(entry => entry.event === 'reload').length;
+    // Half-way through the swap: the manifest is gone, a script has changed.
+    disk['manifest.json'] = undefined;
+    disk['content.js'] = 'js v2';
+    const midSwap = await ask(fake, { type: 'cdc:dev-check' });
+    vi.advanceTimersByTime(100);
+    expect({ midSwap, reloads: reloads() }).toEqual({
+      midSwap: { kept: true, responses: [{ reload: false }] },
+      reloads: 0,
+    });
+    disk['manifest.json'] = '{}';
+    const swapped = await ask(fake, { type: 'cdc:dev-check' });
+    vi.advanceTimersByTime(100);
+    expect({ swapped, reloads: reloads() }).toEqual({
+      swapped: { kept: true, responses: [{ reload: true }] },
+      reloads: 1,
+    });
   });
 
   it('Firefox: fingerprints its background scripts, a missing file as empty', async () => {

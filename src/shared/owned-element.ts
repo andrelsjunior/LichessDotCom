@@ -1,6 +1,6 @@
 export interface OwnedElement<T extends Element> {
   readonly element: T;
-  /** Just built: whatever was drawn into the last one is gone. */
+  /** True when the element was just built, so whatever was drawn into the last one is gone. */
   readonly isNew: boolean;
 }
 

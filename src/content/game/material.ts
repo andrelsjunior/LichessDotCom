@@ -1,3 +1,4 @@
+import { colorLetter, PIECE_VALUES, ROLE_LETTERS } from '#shared/chess/pieces.ts';
 import { opposite, type Color, type Role } from '#shared/chess/types.ts';
 import { html, type SafeHtml } from '#shared/html.ts';
 
@@ -18,22 +19,12 @@ export const CAPTURABLE_ROLES: readonly CapturableRole[] = [
 type Army = Readonly<Record<CapturableRole, number>>;
 
 const START: Army = { pawn: 8, knight: 2, bishop: 2, rook: 2, queen: 1 };
-// Variants that start with other pieces. Crazyhouse shows none: taken pieces
-// change sides into the pockets, which show them.
+// Variants that start with other pieces. Crazyhouse shows no captured pieces:
+// they change sides into the pockets, which show them.
 const VARIANT_START = new Map<string, Readonly<Record<Color, Army>>>([
   ['racingKings', { white: { ...START, pawn: 0 }, black: { ...START, pawn: 0 } }],
   ['horde', { white: { pawn: 36, knight: 0, bishop: 0, rook: 0, queen: 0 }, black: START }],
 ]);
-const VALUE: Army = { pawn: 1, knight: 3, bishop: 3, rook: 5, queen: 9 };
-const LETTER: Readonly<Record<CapturableRole | 'king', string>> = {
-  pawn: 'p',
-  knight: 'n',
-  bishop: 'b',
-  rook: 'r',
-  queen: 'q',
-  king: 'k',
-};
-const COLOR_LETTER: Readonly<Record<Color, string>> = { white: 'w', black: 'b' };
 
 export interface MaterialPiece {
   readonly color: Color;
@@ -67,7 +58,7 @@ function countMissing(start: Army, onBoard: Army): Army {
 }
 
 const materialOf = (army: Army): number =>
-  CAPTURABLE_ROLES.reduce((sum, role) => sum + army[role] * VALUE[role], 0);
+  CAPTURABLE_ROLES.reduce((sum, role) => sum + army[role] * PIECE_VALUES[role], 0);
 
 function group(pieceUrl: string, count: number): SafeHtml {
   const piece = html`<img src="${pieceUrl}" alt="" draggable="false">`;
@@ -84,8 +75,8 @@ interface RowOptions {
 }
 
 function rowMarkup({ color, missing, lead, checks, piecesUrl }: RowOptions): SafeHtml {
-  const pieceUrl = (role: CapturableRole | 'king'): string =>
-    `${piecesUrl}${COLOR_LETTER[color]}${LETTER[role]}.webp`;
+  const pieceUrl = (role: Role): string =>
+    `${piecesUrl}${colorLetter(color)}${ROLE_LETTERS[role]}.webp`;
   const groups = CAPTURABLE_ROLES.filter(role => missing[role] > 0).map(role =>
     group(pieceUrl(role), missing[role]),
   );

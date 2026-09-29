@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod/mini';
+import { SquareSchema } from '#shared/chess/square-schema.ts';
 import { SoundNameSchema } from '#shared/sounds.ts';
-import { ColorSchema, renderBoard, SquareSchema } from './fixtures/boards.ts';
+import { ColorSchema, renderBoard } from './fixtures/boards.ts';
 import { fakeSoundPlayer } from './fixtures/sound-player.ts';
 import { hookSoundPlayer } from './player.ts';
 import { createSession } from './session.ts';

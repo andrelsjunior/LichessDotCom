@@ -5,7 +5,7 @@ import { PointSchema, type RatingHistory, RatingHistorySchema } from './schema.t
 export type RatingPoint = readonly [time: number, rating: number];
 
 export interface Series {
-  /** Its place in Lichess's list, which picks its color and ids it in our markup. */
+  /** Its position in Lichess's list, which sets its color and identifies it in our markup. */
   readonly index: number;
   readonly name: string;
   readonly color: string;

@@ -1,5 +1,5 @@
 import type { Color } from '#shared/chess/types.ts';
-import { createElement } from '#shared/dom.ts';
+import { createCustomElement, createElement } from '#shared/dom.ts';
 import { createSvgElement } from '#shared/svg.ts';
 import type { Frame } from './schema.ts';
 
@@ -16,11 +16,11 @@ export function renderBoard({ orientation, shapes = [], viewBox }: BoardMarkup):
   const main = createElement('main', { className: 'analyse' });
   const board = createElement('div', { className: 'analyse__board main-board' });
   const wrap = createElement('div', { className: `cg-wrap orientation-${orientation}` });
-  const container = createElement('cg-container');
+  const container = createCustomElement('cg-container');
   main.append(board);
   board.append(wrap);
   wrap.append(container);
-  container.append(createElement('cg-board'));
+  container.append(createCustomElement('cg-board'));
   const svg = createSvgElement('svg', { class: 'cg-shapes' });
   if (viewBox !== null) svg.setAttribute('viewBox', viewBox ?? '-4 -4 8 8');
   const group = createSvgElement('g');

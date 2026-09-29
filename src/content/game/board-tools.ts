@@ -63,7 +63,7 @@ function onMouseOver(event: MouseEvent): void {
   tools.classList.toggle(HOVER, target !== null);
 }
 
-// Leaving the window.
+// The pointer left the window.
 function onMouseOut(event: MouseEvent): void {
   if (!event.relatedTarget) tools?.classList.toggle(HOVER, false);
 }

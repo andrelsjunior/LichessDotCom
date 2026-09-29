@@ -44,14 +44,14 @@ async function fetchExport(id: string): Promise<GameExport | null> {
   }
 }
 
-// TV plays its games at /tv/<channel>, so the path won't do: the analysis
-// button, there once a game is over, links to the game.
+// TV shows its games at /tv/<channel>, so the path has no game id. Once a game
+// is over, the analysis button links to the game.
 function currentGameId(): string | null {
   const link = document.querySelector('main.round :is(i5d, rm6) a.analysis')?.getAttribute('href');
   return gameIdFrom(nonEmpty(link) ?? location.pathname);
 }
 
-// The list starts with a move number; the moves are the other tag.
+// The list starts with a move number, and the moves use the other tag.
 function moveElements(list: HTMLElement, result: HTMLElement): HTMLElement[] {
   const indexTag = list.firstElementChild?.tagName;
   return [...list.children].filter(

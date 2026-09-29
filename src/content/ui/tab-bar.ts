@@ -52,7 +52,7 @@ export class TabBar {
       this.#item = null;
       return;
     }
-    // Hidden: placed once it shows.
+    // The tab is hidden: place the highlight once it shows.
     if (!(item instanceof HTMLElement) || item.offsetWidth === 0) return;
     const bar = this.element.getBoundingClientRect();
     const offset = tabOffset(bar, item.getBoundingClientRect(), this.element);

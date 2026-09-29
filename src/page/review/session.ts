@@ -1,14 +1,14 @@
 import { z } from 'zod/mini';
 import type { Color } from '#shared/chess/types.ts';
 import type { TreeNode } from '#page/lichess/tree.ts';
-import type { StreamState } from '#page/review/comment/markup.ts';
-import type { Stockfish } from '#page/review/engine/stockfish.ts';
-import type { PositionRecord } from '#page/review/evaluation/score.ts';
-import type { ReviewLanguage } from '#page/review/i18n/types.ts';
-import type { ClassCounts } from '#page/review/judge/summary.ts';
-import type { MoveVerdict } from '#page/review/judge/types.ts';
-import type { GameRating } from '#page/review/rating/rate-game.ts';
-import type { ReviewElements } from '#page/review/view/elements.ts';
+import type { StreamState } from './comment/markup.ts';
+import type { Stockfish } from './engine/stockfish.ts';
+import type { PositionRecord } from './evaluation/score.ts';
+import type { ReviewLanguage } from './i18n/types.ts';
+import type { ClassCounts } from './judge/summary.ts';
+import type { MoveVerdict } from './judge/types.ts';
+import type { GameRating } from './rating/rate-game.ts';
+import type { ReviewElements } from './view/elements.ts';
 
 // Everything the review keeps while a page is open, shared by its parts.
 

@@ -492,7 +492,7 @@ git rebase origin/main`, never a merge: `main` stays a straight line) and
    pull removes, so the old worker reloads it into an error. Tell the user
    to remove that entry in `chrome://extensions` and load
    `<main checkout>/dist/chrome` instead (the extension id changes with the
-   path). Drop this note along with `legacy/`.
+   path). Drop this note once the main checkout loads `dist/chrome`.
 3. Remove any throwaway files you created.
 4. Don't bump the version: CI stamps `<BASE_VERSION>.<commits on main>` into
    each release and publishes it as `v<version>`. Raise `BASE_VERSION`

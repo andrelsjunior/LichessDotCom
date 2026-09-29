@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { withLegacyNames } from '#shared/charts/fixtures/names.ts';
 import { addMonths, initialRange, rangeStart } from './dates.ts';
 import { ratingChart } from './index.ts';
 import { extractInlineInit, readInlineInit } from './inline-init.ts';
@@ -147,7 +148,8 @@ describe('the feature', () => {
       document.documentElement.lang = 'en';
       document.body.innerHTML = body;
       ratingChart.start();
-      expect(document.querySelector('.rating-history-container')?.outerHTML ?? null).toBe(after);
+      const chart = document.querySelector('.rating-history-container');
+      expect(chart ? withLegacyNames(chart.outerHTML) : null).toBe(after);
     },
   );
 });

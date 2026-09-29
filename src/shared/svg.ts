@@ -20,7 +20,7 @@ export function createSvgElement<K extends keyof SVGElementTagNameMap>(
   return element;
 }
 
-/** Sizes an SVG to `width` × `height` pixels, its units being pixels too. */
+/** Sizes an SVG to `width` × `height` pixels, with a viewBox in pixels too. */
 export function sizeSvg(svg: SVGSVGElement, width: number, height: number): void {
   setAttributes(svg, { width, height });
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);

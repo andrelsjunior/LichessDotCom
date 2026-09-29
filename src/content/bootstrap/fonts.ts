@@ -1,10 +1,10 @@
 import { createElement, onDomReady } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 
-// Lichess sets light (300) weights on Roboto and Noto Sans all over the site;
-// ours is solid text. Those families (and our own 'CDC Sans') are pointed at
-// the system UI font, so light weights render as regular. The faces must come
-// after Lichess's own to win, hence added to <head> rather than in the manifest CSS.
+// Lichess sets light (300) weights on Roboto and Noto Sans all over the site.
+// We point those families (and our own 'CDC Sans') at the system UI font, so
+// light weights render as regular. The faces must come after Lichess's own to
+// win, so they're added to <head> rather than put in the manifest CSS.
 
 const FAMILIES = ['Roboto', 'Noto Sans', 'CDC Sans'];
 

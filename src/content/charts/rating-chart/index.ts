@@ -27,8 +27,8 @@ function boot(initData: string | null): void {
   const host = queryOne(document, HOST, HTMLElement);
   if (!host) return;
   const series = pageSeries(initData);
-  // Nothing to draw (a rating never played): Lichess hides its chart but
-  // keeps its box, an empty gap. Ours drops the box.
+  // Nothing to draw (a rating never played): Lichess hides its chart but leaves
+  // its box, an empty gap, so we hide the box.
   if (series?.length === 0) host.classList.toggle('cdc-rchart-none', true);
   if (!series || series.length === 0 || host.querySelector('.cdc-rchart')) return;
   mountChart(host, series);

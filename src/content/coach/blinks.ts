@@ -1,9 +1,9 @@
 import type { AnimationItem } from 'lottie-web/build/player/lottie_light';
 import type { BlinkMeta, Segment } from './lottie/meta.ts';
 
-// The blinks, each played when its time comes, the eyes open and the
-// animation paused in between: left running through the open eyes, lottie
-// drew the face every frame, and Chrome the page with it.
+// Each blink is played when its time comes, and the animation is paused while
+// the eyes stay open. Left running, lottie redrew the face on every frame, and
+// Chrome redrew the page with it.
 
 /** The loop's next blink from `frame` on, wrapping round to the first. */
 export const nextBlink = (blinks: readonly Segment[], frame: number): Segment | undefined =>
@@ -31,7 +31,7 @@ export class Blinks {
     this.#options = options;
   }
 
-  /** From the eyes open, at a random point of the loop. */
+  /** Starts with the eyes open, at a random point of the loop. */
   start(): void {
     const { animation, meta } = this.#options;
     animation.goToAndStop(0, true);
@@ -61,7 +61,7 @@ export class Blinks {
 
   #play([first, last]: Segment): void {
     if (this.#stopped) return;
-    // No one to blink for once the review panel is gone: wait for it.
+    // Nobody sees the blinks once the review panel is gone: wait for it to come back.
     if (!this.#options.avatar.isConnected) {
       this.#waiting = first;
       return;

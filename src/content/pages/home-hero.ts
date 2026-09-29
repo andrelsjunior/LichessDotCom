@@ -7,7 +7,7 @@ import { heroText, type HeroText } from './hero-texts.ts';
 
 // The home page's hero card (styles/home/hero.css), in the page's language.
 
-export function buildHero(text: HeroText, user: string | undefined): HTMLElement {
+function buildHero(text: HeroText, user: string | undefined): HTMLElement {
   const hero = createElement('section', { className: 'cdc-hero' });
   hero.append(
     createElement('p', { className: 'cdc-hero__eyebrow', text: text.eyebrow }),

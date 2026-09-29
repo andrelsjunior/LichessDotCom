@@ -1,5 +1,7 @@
+import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
-import { findProblems, isChecked } from './source-rules.ts';
+import { fromRoot } from './paths.ts';
+import { ALIASES, findProblems, isChecked } from './source-rules.ts';
 
 // The broken code below is spelled in pieces, or this file would break the
 // rules it tests.
@@ -13,6 +15,44 @@ describe('isChecked', () => {
     expect(isChecked('src/styles/game/index.css')).toBe(true);
     expect(isChecked('src/content/boards/catalog.json')).toBe(false);
     expect(isChecked('README.md')).toBe(false);
+  });
+});
+
+describe('the alias rule', () => {
+  it("refuses an alias into the importer's own folder or below", () => {
+    expect(
+      findProblems('src/page/review/start.ts', "import { x } from '#page/review/view/x.ts';"),
+    ).toEqual(['imports #page/review/view/x.ts through an alias: use ./']);
+    expect(
+      findProblems('src/shared/a.ts', "import type { T } from '#shared/chess/types.ts';"),
+    ).toHaveLength(1);
+  });
+
+  it('accepts an alias to another folder, and ./ for its own', () => {
+    expect(
+      findProblems('src/page/review/start.ts', "import { x } from '#page/lichess/tree.ts';"),
+    ).toEqual([]);
+    expect(findProblems('src/page/review/start.ts', "import { x } from './view/x.ts';")).toEqual(
+      [],
+    );
+    expect(
+      findProblems('src/page/review/view/x.ts', "import { y } from '#page/review/game/y.ts';"),
+    ).toEqual([]);
+  });
+
+  it('knows the aliases package.json declares', async () => {
+    const manifest: unknown = JSON.parse(await readFile(fromRoot('package.json'), 'utf8'));
+    const imports =
+      typeof manifest === 'object' && manifest !== null && 'imports' in manifest
+        ? manifest.imports
+        : {};
+    const declared = Object.entries(imports ?? {})
+      .filter(([alias]) => alias.endsWith('/*'))
+      .map(([alias, target]) => [
+        alias.slice(0, -1),
+        String(target).replace(/^\.\//, '').slice(0, -1),
+      ]);
+    expect(Object.fromEntries(declared)).toEqual(ALIASES);
   });
 });
 

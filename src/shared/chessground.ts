@@ -1,8 +1,8 @@
-import { COLORS, ROLES, type Color, type Piece } from '#shared/chess/types.ts';
+import { COLORS, ROLES, type Color, type Piece } from './chess/types.ts';
 
-// Chessground's board as its classes say, readable from either world. The
-// square a piece stands on is a property chessground's script sets, which
-// only the page world sees (#page/lichess/chessground.ts).
+// Reads chessground's board from its classes, which both worlds can see. The
+// square a piece stands on is a property set by chessground's script, so only
+// the page world can read it (#page/lichess/chessground.ts).
 
 /** The side at the bottom of a board's `.cg-wrap`. */
 export const wrapOrientation = (wrap: Element): Color =>

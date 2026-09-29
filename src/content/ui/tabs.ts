@@ -35,8 +35,8 @@ export function createTabBars(): TabBars {
     return null;
   }
 
-  // On the document, after Lichess's own handlers: a click that got here
-  // uncancelled, on a link, is a page about to load.
+  // On the document, after Lichess's own handlers: an uncancelled click on a
+  // link that gets this far means a page is about to load.
   function onClick(event: MouseEvent): void {
     const clicked = clickedTab(event.target);
     if (!clicked?.tab.matches(clicked.bar.kind.tab) || !leavesPage(event, clicked.tab)) return;
@@ -44,7 +44,7 @@ export function createTabBars(): TabBars {
     clicked.bar.queue();
   }
 
-  // Back to this page from the history cache: the link didn't stay picked.
+  // Back on this page from the history cache: the followed link must not stay picked.
   function onPageShow(event: PageTransitionEvent): void {
     if (!event.persisted) return;
     for (const bar of bars.values()) {

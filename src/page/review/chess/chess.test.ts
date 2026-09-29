@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { parseFen } from '#shared/chess/index.ts';
 import { fixtureGames } from '#page/review/fixtures/replay.ts';
 import { attackerValues, isHanging, isSacrifice } from './material.ts';
-import { normalizeUci, roleOfLetter, uciToSan } from './notation.ts';
+import { normalizeUci, uciToSan } from './notation.ts';
 // What the original script wrote for these moves.
 import legacy from './fixtures/legacy.json' with { type: 'json' };
 
@@ -53,11 +53,5 @@ describe('material', () => {
     const { board } = parseFen('8/8/8/8/3q4/4K3/8/8 w - - 0 1');
     expect(attackerValues(board, 'd4', 'white')).toEqual([100]);
     expect(isHanging(board, 'd4', { color: 'black', role: 'queen' })).toBe(true);
-  });
-
-  it('reads role letters in either case', () => {
-    expect(roleOfLetter('Q')).toBe('queen');
-    expect(roleOfLetter('n')).toBe('knight');
-    expect(roleOfLetter('x')).toBeUndefined();
   });
 });

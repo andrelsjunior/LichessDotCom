@@ -11,9 +11,15 @@ const HEAD_WIDTH = 0.52;
 const HEAD_LENGTH = 0.34;
 const START_GAP = 0.35;
 
-export function squareCenter(square: Square, whiteAtBottom: boolean): Point {
+/** A square's column and row as shown. */
+export function squareOnScreen(square: Square, whiteAtBottom: boolean): Point {
   const [file, rank] = squareCoords(square);
-  return whiteAtBottom ? [file + 0.5, 7.5 - rank] : [7.5 - file, rank + 0.5];
+  return whiteAtBottom ? [file, 7 - rank] : [7 - file, rank];
+}
+
+export function squareCenter(square: Square, whiteAtBottom: boolean): Point {
+  const [column, row] = squareOnScreen(square, whiteAtBottom);
+  return [column + 0.5, row + 0.5];
 }
 
 export interface ArrowPath {

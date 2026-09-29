@@ -7,7 +7,7 @@ import type { TimeTick } from './time-ticks.ts';
 /** The chart's frame, filled in by each draw. */
 export function chartShell(): SafeHtml {
   const ranges = RANGE_KEYS.map(
-    key => html`<button type="button" data-range="${key}">${key}</button>`,
+    key => html`<button type="button" data-cdc-range="${key}">${key}</button>`,
   );
   return html`<div class="cdc-rchart__top"><div class="cdc-rchart__legend"></div><div class="cdc-rchart__ranges"><span class="cdc-rchart__thumb"></span>${ranges}</div></div><div class="cdc-rchart__plot"><svg class="cdc-rchart__svg" aria-hidden="true"></svg><div class="cdc-rchart__tip"></div></div>`;
 }
@@ -15,7 +15,7 @@ export function chartShell(): SafeHtml {
 export const gradientId = (index: number): string => `cdc-rg-${index}`;
 
 function dateLabels(plot: Plot, ticks: readonly TimeTick[]): SafeHtml[] {
-  // Labels too close to the plot's edges would be cut.
+  // Labels too close to the plot's edges would be clipped.
   return ticks
     .filter(
       ([time]) =>
@@ -33,11 +33,11 @@ export function plotMarkup(plot: Plot, ticks: readonly TimeTick[]): SafeHtml {
   );
   const series = plot.rows.map(
     ({ index, color }) =>
-      html`<g class="cdc-rchart__series" data-i="${index}" style="--c:${color}"><path class="cdc-rchart__area" fill="url(#${gradientId(index)})"/><path class="cdc-rchart__line"/></g>`,
+      html`<g class="cdc-rchart__series" data-cdc-series="${index}" style="--cdc-series-color:${color}"><path class="cdc-rchart__area" fill="url(#${gradientId(index)})"/><path class="cdc-rchart__line"/></g>`,
   );
   const dots = plot.rows.map(
     ({ index, color }) =>
-      html`<circle class="cdc-rchart__dot" data-i="${index}" r="4.5" style="--c:${color}"/>`,
+      html`<circle class="cdc-rchart__dot" data-cdc-series="${index}" r="4.5" style="--cdc-series-color:${color}"/>`,
   );
   // One clip, wiped open, reveals every line and fill together, left to right.
   const clip = html`<clipPath id="cdc-rclip"><rect class="cdc-rchart__wipe" x="${PADDING.left - 4}" y="0" width="${plotWidth + 8}" height="${HEIGHT}"/></clipPath>`;

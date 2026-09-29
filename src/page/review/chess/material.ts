@@ -1,14 +1,8 @@
-import { attackers, opposite, parseFen, parseSquare } from '#shared/chess/index.ts';
+import { attackers, opposite, parseFen, parseSquare, PIECE_VALUES } from '#shared/chess/index.ts';
 import type { Board, Color, Piece, Role, Square } from '#shared/chess/index.ts';
 
-export const PIECE_VALUES: Readonly<Record<Role, number>> = {
-  pawn: 1,
-  knight: 3,
-  bishop: 3,
-  rook: 5,
-  queen: 9,
-  king: 0,
-};
+// The review's facts still import the values from here.
+export { PIECE_VALUES } from '#shared/chess/index.ts';
 
 // As an attacker the king is worth the most: it can only take what's undefended.
 const ATTACKER_VALUES: Readonly<Record<Role, number>> = { ...PIECE_VALUES, king: 100 };

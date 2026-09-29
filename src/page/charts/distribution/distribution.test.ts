@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/mini';
+import { unprefixedNames, withLegacyNames } from '#shared/charts/fixtures/names.ts';
+import { queryAll } from '#shared/dom.ts';
 import { fakeLayout } from '#shared/testing/layout.ts';
 import { distribution } from './index.ts';
 import { binOf, countPlayers, markersOf, onChart } from './players.ts';
@@ -18,7 +20,7 @@ const ActionSchema = z.discriminatedUnion('type', [
 
 const size = { width: 640, height: 360 };
 
-// The sizes the original's recording used.
+// The element sizes used when the original's output was recorded.
 function stubLayout() {
   return fakeLayout((element, metric) => {
     const plot = element.matches('.cdc-dist__plot');
@@ -54,7 +56,7 @@ function setPage({ path, lang, i18n, init, host, wrapper }: Page): void {
   document.body.innerHTML = body + data;
 }
 
-const pageMarkup = () => document.body.firstElementChild?.outerHTML;
+const pageMarkup = (): string => withLegacyNames(document.body.firstElementChild?.outerHTML ?? '');
 
 afterEach(() => {
   window.i18n = undefined;
@@ -144,6 +146,36 @@ describe('the distribution chart', () => {
       }
     },
   );
+
+  it('prefixes its data attributes and CSS variables with cdc', () => {
+    const [scenario] = legacyChart.scenarios;
+    if (!scenario) throw new Error('no scenario');
+    const { resize } = stubLayout();
+    setPage({ ...scenario, init: JSON.stringify(scenario.json), host: true });
+    distribution.start();
+    resize();
+    document
+      .querySelector('#rating_distribution svg')
+      ?.dispatchEvent(new PointerEvent('pointermove', { clientX: 300 }));
+    const chart = document.querySelector('.cdc-dist');
+    if (!chart) throw new Error('no chart');
+    expect(unprefixedNames(chart)).toEqual([]);
+    // The stylesheets and chart.ts read these names: check they're on the right elements.
+    const bars = queryAll(chart, '.cdc-dist__bar', SVGElement);
+    expect(bars.length).toBe(scenario.json.freq.length);
+    for (const [i, bar] of bars.entries()) {
+      expect(bar.dataset.cdcBar).toBe(String(i));
+      expect(bar.getAttribute('style')).toBe(`--cdc-bar-index:${i}`);
+    }
+    const markers = chart.querySelectorAll('.cdc-dist__mline, .cdc-dist__mark');
+    expect(markers).toHaveLength(4);
+    for (const marker of markers)
+      expect(marker.getAttribute('style')).toMatch(/^--cdc-marker-color: ?#[0-9a-f]{6}\b/);
+    const series = chart.querySelectorAll('.cdc-dist__chip, .cdc-rchart__tiprow');
+    expect(series).toHaveLength(4);
+    for (const element of series)
+      expect(element.getAttribute('style')).toMatch(/^--cdc-series-color:#[0-9a-f]{6}$/);
+  });
 
   it.each(legacy.rejected.map(page => [page.name, page]))(
     'leaves the page alone with %s',

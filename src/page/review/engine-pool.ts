@@ -1,5 +1,5 @@
 import type { Analysis } from '#page/lichess/analysis.ts';
-import { Stockfish } from '#page/review/engine/stockfish.ts';
+import { Stockfish } from './engine/stockfish.ts';
 import type { Session } from './session.ts';
 
 /**

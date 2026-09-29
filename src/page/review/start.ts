@@ -1,13 +1,13 @@
+import { pickCoach } from '#shared/coach.ts';
 import { analysis as pageAnalysis, type Analysis } from '#page/lichess/analysis.ts';
-import { analyseGame } from '#page/review/game/analyse-game.ts';
-import { pageLanguage } from '#page/review/i18n/language.ts';
+import { analyseGame } from './game/analyse-game.ts';
+import { pageLanguage } from './i18n/language.ts';
 import { createSession, type Mode, type Session } from './session.ts';
-import { watchClicks } from '#page/review/view/clicks.ts';
-import { storedCoach } from '#page/review/view/coach-avatar.ts';
-import { createElements } from '#page/review/view/elements.ts';
-import { render, setMode } from '#page/review/view/render.ts';
-import { refitStream } from '#page/review/view/stream.ts';
-import { watchTips } from '#page/review/view/tooltip.ts';
+import { watchClicks } from './view/clicks.ts';
+import { createElements } from './view/elements.ts';
+import { render, setMode } from './view/render.ts';
+import { refitStream } from './view/stream.ts';
+import { watchTips } from './view/tooltip.ts';
 
 // Starts the review once Lichess's analysis controller is up: on a game's
 // analysis, the review of its moves; on the free analysis board, the coach.
@@ -20,7 +20,7 @@ const REVIEWED_VARIANTS: ReadonlySet<string> = new Set(['standard', 'fromPositio
 export function createReview(): Session {
   const session: Session = createSession({
     language: pageLanguage(),
-    coach: storedCoach(),
+    coach: pickCoach(),
     elements: createElements(),
     redraw: force => render(session, force),
     setMode: mode => setMode(session, mode),

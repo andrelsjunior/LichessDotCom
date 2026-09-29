@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+  applyOptions,
   closestTo,
+  createCustomElement,
   createElement,
   onDomReady,
   queryAll,
@@ -50,6 +52,30 @@ describe('createElement', () => {
       attrs: { href: '/z' },
     });
     expect(link.outerHTML).toBe('<a class="cdc-x" id="cdc-y" href="/z">&lt;b&gt;</a>');
+  });
+
+  it('builds a tag of the type it names', () => {
+    expect(createElement('a')).toBeInstanceOf(HTMLAnchorElement);
+    expect(createElement('main')).toBeInstanceOf(HTMLElement);
+  });
+});
+
+describe('createCustomElement', () => {
+  it('builds a tag lib.dom doesn’t know, with the same options', () => {
+    const rating = createCustomElement('rating', { className: 'cdc-x', text: '1500' });
+    expect(rating).toBeInstanceOf(HTMLElement);
+    expect(rating.tagName).toBe('RATING');
+    expect(rating.outerHTML).toBe('<rating class="cdc-x">1500</rating>');
+    const piece = createCustomElement('piece', { attrs: { 'data-x': '1' } });
+    expect(piece.outerHTML).toBe('<piece data-x="1"></piece>');
+  });
+});
+
+describe('applyOptions', () => {
+  it('returns the element it was given, with nothing set for no options', () => {
+    const element = document.createElement('span');
+    expect(applyOptions(element)).toBe(element);
+    expect(element.outerHTML).toBe('<span></span>');
   });
 });
 

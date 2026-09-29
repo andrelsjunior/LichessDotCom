@@ -7,7 +7,6 @@
   "ignorePatterns": [
     "dist/**",
     "coverage/**",
-    "legacy/**",
     "public/**",
     "store/**",
     "pnpm-lock.yaml",

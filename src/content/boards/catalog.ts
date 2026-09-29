@@ -1,4 +1,6 @@
 import { z } from 'zod/mini';
+import { colorLetter, ROLE_LETTERS } from '#shared/chess/pieces.ts';
+import { COLORS, ROLES } from '#shared/chess/types.ts';
 import catalogJson from './catalog.json' with { type: 'json' };
 
 // The bundled boards and piece sets, in public/img. The first of each list is
@@ -36,15 +38,13 @@ export interface Choice {
 
 export const { boards: BOARDS, pieceSets: PIECE_SETS } = CatalogSchema.parse(catalogJson);
 
-const COLORS = ['w', 'b'];
-const ROLES = ['p', 'n', 'b', 'r', 'q', 'k'];
-
 /** Each piece as its images are named: wp, wn… bk. */
 export const PIECE_CODES: readonly string[] = COLORS.flatMap(color =>
-  ROLES.map(role => `${color}${role}`),
+  ROLES.map(role => `${colorLetter(color)}${ROLE_LETTERS[role]}`),
 );
 
-// A board is 1200px, its tile in the menu its two top-left squares; a piece 300px.
+// A board image is 1200px, and its tile in the menu shows its two top-left
+// squares. A piece image is 300px.
 export const boardPath = (id: string): string => `img/boards/${id}.webp`;
 export const boardTilePath = (id: string): string => `img/boards/${id}-tile.webp`;
 export const piecePath = (setId: string, code: string): string =>

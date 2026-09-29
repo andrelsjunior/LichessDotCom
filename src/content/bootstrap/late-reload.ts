@@ -3,10 +3,10 @@ import { isParsing } from '#shared/dom.ts';
 import { readStored, SessionKey, writeStored } from '#shared/storage.ts';
 
 // Firefox injects the content scripts into the open tabs when the extension is
-// installed, updated or reloaded, into a finished page: its init data read and
-// gone, an older copy's page-world scripts still running. Start it afresh.
+// installed, updated or reloaded. Such a page has finished loading: its init
+// data is gone, and an older copy's page-world scripts still run. So we reload it.
 
-// Once per window, so a page that somehow always finishes first can't loop.
+// At most once per window, so a page that always finishes loading first can't loop.
 const RELOAD_WINDOW_MS = 30_000;
 
 /** True when it reloaded the page: the content script should then stop. */

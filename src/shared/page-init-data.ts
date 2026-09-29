@@ -2,9 +2,9 @@ import { isParsing } from './dom.ts';
 
 // Lichess inlines the data of each page's module in <script id="page-init-data">
 // and removes the element once the module has read it. We hold on to the node
-// while the page parses: its text stays readable after Lichess takes it out,
-// and is complete by DOMContentLoaded (the element ends the page, so it can
-// arrive split across network chunks).
+// while the page parses, as its text stays readable after Lichess removes it.
+// The text is only complete at DOMContentLoaded: the element ends the page, so
+// it can arrive split across network chunks.
 
 const ID = 'page-init-data';
 
@@ -25,12 +25,12 @@ function watch(): void {
     () => {
       observer.disconnect();
       const text = node?.textContent ?? null;
-      // Some pages carry megabytes of it: don't keep it alive.
+      // Some pages carry megabytes of it, so don't keep the node alive.
       node = null;
       const waiting = readers ?? [];
       readers = null;
-      // One listener serves every feature's reader: one that throws mustn't
-      // keep the others from their data.
+      // One listener serves every feature's reader, so a reader that throws
+      // must not keep the others from their data.
       for (const read of waiting) {
         try {
           read(text);

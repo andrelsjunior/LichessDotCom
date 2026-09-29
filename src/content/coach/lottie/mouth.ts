@@ -16,10 +16,10 @@ const MOUTH_POINTS = 11;
 
 /** The portrait's curves at one point. */
 interface Sample {
-  readonly up: number;
-  readonly ot: number;
-  readonly ob: number;
-  readonly lo: number;
+  readonly upperTop: number;
+  readonly openingTop: number;
+  readonly openingBottom: number;
+  readonly lowerBottom: number;
 }
 
 /** One point of the posed mouth: where each edge is at `x`. */
@@ -41,22 +41,24 @@ function resample(curve: readonly number[], position: number): number {
 }
 
 function samples({ curves }: RigMouth): Sample[] {
-  const span = curves.up.length - 1;
+  const span = curves.upperTop.length - 1;
   return Array.from({ length: MOUTH_POINTS }, (_, i) => {
     const position = (span * i) / (MOUTH_POINTS - 1);
     return {
-      up: resample(curves.up, position),
-      ot: resample(curves.ot, position),
-      ob: resample(curves.ob, position),
-      lo: resample(curves.lo, position),
+      upperTop: resample(curves.upperTop, position),
+      openingTop: resample(curves.openingTop, position),
+      openingBottom: resample(curves.openingBottom, position),
+      lowerBottom: resample(curves.lowerBottom, position),
     };
   });
 }
 
-/** Teeth as painted on a coach who shows them, else only once the mouth opens. */
+/** How far the teeth show: as painted if the portrait shows them, else once the mouth opens. */
 function teethDepth(mouth: RigMouth, pose: MouthPose, painted: readonly Sample[]): number {
   if (pose.teeth !== null) return pose.teeth;
-  if (mouth.colors.teeth !== null) return Math.max(...painted.map(({ ot, ob }) => ob - ot)) + 2;
+  if (mouth.colors.teeth !== null) {
+    return Math.max(...painted.map(sample => sample.openingBottom - sample.openingTop)) + 2;
+  }
   return 2.4 * Math.min(1, (pose.open + pose.raise) / 3);
 }
 
@@ -79,10 +81,10 @@ function mouthPoint({ mouth, pose, teeth }: Posed, sample: Sample, k: number): M
   const baseline = chord + cornerLift * across * across + pose.bend * middle;
   // The jaw: flat-ish for a talking mouth, an ellipse for an "O".
   const jaw = middle ** lerp(0.9, 0.5, pose.round);
-  const upperEdge = sample.up - chord;
-  const openTop = sample.ot - chord;
-  const openBottom = sample.ob - chord;
-  const lowerEdge = sample.lo - chord;
+  const upperEdge = sample.upperTop - chord;
+  const openTop = sample.openingTop - chord;
+  const openBottom = sample.openingBottom - chord;
+  const lowerEdge = sample.lowerBottom - chord;
   const openingTop = baseline + openTop - pose.raise * jaw;
   const openingBottom = openingTop + (openBottom - openTop) * (1 - pose.close) + pose.open * jaw;
   return {

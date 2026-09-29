@@ -6,8 +6,8 @@ import { CoachPlayer } from './player.ts';
 // Brings the Game Review's coach to life. The page world draws the coach's
 // avatar and posts which coach it is, its mood about the move and whether
 // it's talking (the comment typing out); this plays the coach's rig in it.
-// Here rather than in the page world: the rig's files are the extension's,
-// which the page's CSP keeps out of its reach.
+// It runs here rather than in the page world because the rig's files are the
+// extension's, which the page's CSP keeps out of reach.
 
 let wanted: CoachState = { coach: 0, mood: 'neutral', talking: false };
 let player: CoachPlayer | null = null;

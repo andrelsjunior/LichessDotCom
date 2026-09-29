@@ -50,7 +50,7 @@
   gap: 6px;
 }
 
-/* A legend, not a toggle. */
+/* These chips are a legend, not toggles. */
 .cdc-dist__chip,
 .cdc-dist__chip:hover {
   border-color: var(--cdc-card-border);
@@ -120,7 +120,7 @@
 }
 
 .cdc-dist__mline {
-  stroke: var(--c);
+  stroke: var(--cdc-marker-color);
   stroke-width: 1.5;
   stroke-dasharray: 4 4;
   pointer-events: none;
@@ -139,7 +139,7 @@
   opacity: 1;
 }
 
-/* A marker's pill: who, and the rating. */
+/* A marker's pill: the player's name and rating. */
 .cdc-dist__marks {
   position: absolute;
   inset: 0;
@@ -163,7 +163,7 @@
   white-space: nowrap;
 }
 
-/* The player you came from: a dark pill; yours stays bright. */
+/* The player you came from gets a dark pill; yours stays bright. */
 .cdc-dist__mark--other {
   border: 1px solid #ffffff2e;
   background: var(--cdc-bg-raised);
@@ -186,7 +186,7 @@
   transform-box: fill-box;
   transform-origin: bottom;
   animation: cdc-dist-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--k) * 7ms);
+  animation-delay: calc(var(--cdc-bar-index) * 7ms);
 }
 
 .cdc-dist__svg--intro .cdc-dist__cumul {

@@ -41,7 +41,7 @@ export const createFaceKeys = (): FaceKeys => ({
 
 interface PoseOptions {
   readonly mood: CoachMood;
-  /** Over the mood's own mouth. */
+  /** Changes to the mood's own mouth pose. */
   readonly mouth?: Partial<MouthPose>;
   /** How far the brows lift over the mood's (negative is up); null leaves them out. */
   readonly browLift?: number | null;
@@ -78,7 +78,7 @@ export function writeCircuit(writer: FaceWriter, circuit: readonly CoachMood[]):
   for (const [k, mood] of circuit.entries()) writePose(writer, k * FACE_STEP, { mood });
 }
 
-/** A syllable's mouth: the jaw drops and the lips part, a shut mouth (doubt, worry) less. */
+/** A syllable's mouth: the jaw drops and the lips part, less so for a shut mouth (doubt, worry). */
 const syllableMouth = (rest: MouthPose, amplitude: number): Partial<MouthPose> => ({
   open: rest.open + amplitude * 2.4,
   width: rest.width * (1 - 0.04 * amplitude),

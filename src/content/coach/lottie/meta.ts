@@ -16,19 +16,19 @@ export type TalkLoop = readonly [start: number, end: number, stops: readonly num
 export interface FaceMeta {
   /** The frame each mood's pose is held at. */
   readonly pose: Readonly<Record<CoachMood, number>>;
-  readonly trans: Transitions;
+  readonly transitions: Transitions;
   readonly talk: Readonly<Record<CoachMood, TalkLoop>>;
 }
 
 export interface LidsMeta {
   readonly pose: Readonly<Record<CoachMood, number>>;
-  readonly trans: Transitions;
+  readonly transitions: Transitions;
 }
 
 export interface BlinkMeta {
   readonly loop: number;
   readonly fps: number;
-  /** Each blink's frames, a double one as one. */
+  /** Each blink's frames; a double blink counts as one. */
   readonly at: readonly Segment[];
 }
 

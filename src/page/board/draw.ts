@@ -1,3 +1,4 @@
+import { wrapOrientation } from '#shared/chessground.ts';
 import { createElement, queryOne } from '#shared/dom.ts';
 import { html, setHtml } from '#shared/html.ts';
 import { createSvgElement } from '#shared/svg.ts';
@@ -50,7 +51,8 @@ export function createShapeDrawer({ mateLabel, redraw }: DrawOptions): () => voi
     // has Chrome check the whole page's styles.
     root.classList.toggle('cdc-shapes', true);
 
-    const whiteAtBottom = !container.closest('.cg-wrap')?.classList.contains('orientation-black');
+    const wrap = container.closest('.cg-wrap');
+    const whiteAtBottom = !wrap || wrapOrientation(wrap) === 'white';
     const { fills, arrows } = readShapes(svg, { reviewing: isReviewing(root) });
     arrows.push(...reviewArrows().map(arrow => reviewArrow(arrow, whiteAtBottom)));
     const node = currentNode();

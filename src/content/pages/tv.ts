@@ -35,9 +35,9 @@ export function channelTip(name: string | undefined, champion: string | undefine
   return champion ? `${name} · ${champion}` : name;
 }
 
-// The channels' column scrolls on its own: the channel on air is scrolled
-// into view once the column has a height. Server-rendered, and TV reloads
-// for its next game, so once is enough.
+// The channels' column scrolls on its own, and the channel on air is scrolled
+// into view once the column has a height. The column is server-rendered and
+// TV reloads for its next game, so doing it once is enough.
 export function syncChannels(): void {
   const list = queryOne(document, 'main.tv-single .subnav__inner:not([data-cdc-tv])', HTMLElement);
   if (!list || list.clientHeight === 0) return;

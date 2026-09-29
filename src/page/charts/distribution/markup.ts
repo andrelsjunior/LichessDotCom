@@ -19,7 +19,7 @@ const CUMULATIVE_COLOR = '#f1f1f0';
 
 function chip(color: string, name: string, value: string): SafeHtml {
   const strong = value === '' ? '' : html`<strong>${value}</strong>`;
-  return html`<span class="cdc-rchart__chip cdc-dist__chip" style="--c:${color}">${chipLabel(name)}${strong}</span>`;
+  return html`<span class="cdc-rchart__chip cdc-dist__chip" style="--cdc-series-color:${color}">${chipLabel(name)}${strong}</span>`;
 }
 
 interface Shell {
@@ -37,7 +37,7 @@ export function chartShell({ color, names, total }: Shell): SafeHtml {
 
 function axis(geometry: Geometry, players: Players, formats: NumberFormats): SafeHtml {
   const { x, yCount, yShare, width, height, counts } = geometry;
-  // Every 100 points, or fewer when they'd collide.
+  // A label every 100 points, or every 200 or 500 when they would overlap.
   const pxPerPoint = geometry.plotWidth / (players.maxRating - MIN_RATING);
   const every = [100, 200, 500].find(points => pxPerPoint * points >= 44) ?? 500;
   const ratings = steps(Math.ceil(MIN_RATING / every) * every, players.maxRating, every).map(
@@ -70,7 +70,7 @@ function columns(geometry: Geometry, players: Players, lit: number): SafeHtml {
       width: Math.max(0.5, binWidth - gap),
       bottom,
     });
-    return html`<path class="cdc-dist__bar${dim}" data-i="${i}" style="--k:${i}" d="${path}"/>`;
+    return html`<path class="cdc-dist__bar${dim}" data-cdc-bar="${i}" style="--cdc-bar-index:${i}" d="${path}"/>`;
   });
   return html`<g class="cdc-dist__bars">${bars}</g>`;
 }
@@ -101,17 +101,17 @@ export function plotMarkup({ geometry, players, markers, lit, color, formats }: 
   const gradient = html`<linearGradient id="cdc-dist-g" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="${top}" y2="${bottom}"><stop offset="0" stop-color="${color}"/><stop offset="1" stop-color="${color}" stop-opacity="0.35"/></linearGradient>`;
   const lines = markers.map(({ color: markerColor, rating }, k) => {
     const x = geometry.x(onChart(rating, players));
-    return html`<line class="cdc-dist__mline" style="--c:${markerColor}" x1="${x}" x2="${x}" y1="${k * MARKER_ROW + 24}" y2="${bottom}"/>`;
+    return html`<line class="cdc-dist__mline" style="--cdc-marker-color:${markerColor}" x1="${x}" x2="${x}" y1="${k * MARKER_ROW + 24}" y2="${bottom}"/>`;
   });
   const hit = hitArea({ x: PADDING.left, y: top, width: geometry.plotWidth, height: bottom - top });
   return html`<defs>${gradient}</defs>${axis(geometry, players, formats)}${columns(geometry, players, lit)}${lines}<path class="cdc-dist__cumul" pathLength="1" d="${cumulativeCurve(geometry, players)}"/><circle class="cdc-dist__dot" r="4.5"/>${hit}`;
 }
 
-/** The markers' pills, HTML over the top of their lines. */
+/** The markers' pills, in HTML over the top of their lines. */
 export function marksMarkup(markers: readonly Marker[], formats: NumberFormats): SafeHtml {
   const marks = markers.map(
     ({ kind, color, label, rating }) =>
-      html`<span class="cdc-dist__mark cdc-dist__mark--${kind}" style="--c:${color}">${label} <strong>${formats.count.format(rating)}</strong></span>`,
+      html`<span class="cdc-dist__mark cdc-dist__mark--${kind}" style="--cdc-marker-color:${color}">${label} <strong>${formats.count.format(rating)}</strong></span>`,
   );
   return html`${marks}`;
 }

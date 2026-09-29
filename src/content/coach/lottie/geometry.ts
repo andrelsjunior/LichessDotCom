@@ -10,7 +10,7 @@ export const lerp = (from: number, to: number, share: number): number => from + 
 const roundPoints = (points: readonly Point[]): Point[] =>
   points.map(([x, y]) => [roundTenth(x), roundTenth(y)]);
 
-/** An item of a list the rig's schema has checked the length of. */
+/** An item of a list whose length the rig's schema has checked. */
 export function valueAt<T>(list: readonly T[], index: number): T {
   const value = list[index];
   if (value === undefined) throw new RangeError(`no item ${index} in a list of ${list.length}`);
@@ -64,8 +64,8 @@ const bezierPath = ({ vertices, ins, outs, closed }: PathParts): BezierPath => (
 });
 
 /**
- * A closed shape from a top curve (left to right) and a bottom one sharing
- * its ends, the corners: each curve smooth, the corners sharp.
+ * A closed shape from a top curve (left to right) and a bottom curve sharing
+ * its ends, the corners. Each curve is smooth, and the corners are sharp.
  */
 export function outline(top: readonly Point[], bottom: readonly Point[]): BezierPath {
   const back = bottom.toReversed();

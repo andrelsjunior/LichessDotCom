@@ -120,7 +120,7 @@ const ANALYSIS_BARS: BarSelectors = {
   clock: side => `main.analyse .analyse__clock.${side}`,
 };
 
-// The probe's witness: a "doesn't scroll" means nothing unless it sees a page that does.
+// The scroll probe's "doesn't scroll" means nothing unless it can see a page that does.
 test('the scroll probe sees a page that scrolls', async ({ page }) => {
   await openLichess(page, '/');
   expect(await wheelScroll(page)).toBeGreaterThan(0);

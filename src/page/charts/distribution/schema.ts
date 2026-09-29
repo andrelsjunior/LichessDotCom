@@ -3,8 +3,8 @@ import { lenient } from '#shared/zod.ts';
 
 // The distribution page's init data (ui/chart/src/ratingDistribution.ts).
 export const DistributionSchema = z.object({
-  // Players per 25 points, from 400. One column isn't a chart, and no player
-  // at all leaves nothing to scale.
+  // Players per 25 points from 400. A chart needs two columns at least, and
+  // a player to set its scale.
   freq: z.array(z.number()).check(
     z.minLength(2),
     z.refine(counts => counts.some(count => count > 0)),

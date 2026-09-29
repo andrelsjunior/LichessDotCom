@@ -40,12 +40,12 @@ const TALK_FRAMES = SYLLABLES.reduce((sum, [frames]) => sum + frames, 0);
 
 function lipShade(mouth: RigMouth, lip: 'upper' | 'lower'): GradientFillItem {
   const { curves, shade } = mouth;
-  const middle = Math.floor(curves.up.length / 2);
+  const middle = Math.floor(curves.upperTop.length / 2);
   if (lip === 'upper') {
-    const [from, to] = [valueAt(curves.up, middle), valueAt(curves.ot, middle)];
+    const [from, to] = [valueAt(curves.upperTop, middle), valueAt(curves.openingTop, middle)];
     return verticalGradient({ colors: shade.upper, offsets: [0.15, 0.5, 0.85], from, to });
   }
-  const [from, to] = [valueAt(curves.ob, middle), valueAt(curves.lo, middle)];
+  const [from, to] = [valueAt(curves.openingBottom, middle), valueAt(curves.lowerBottom, middle)];
   return verticalGradient({ colors: shade.lower, offsets: [0.2, 0.4, 0.6, 0.8, 0.92], from, to });
 }
 
@@ -155,7 +155,7 @@ export function faceAnimation(
     animation: animation({ name: `coach ${coach} face`, layers, end, assets: browAssets(rig) }),
     meta: {
       pose: poseFrames(circuit, FACE_STEP),
-      trans: transitions(circuit, FACE_STEP),
+      transitions: transitions(circuit, FACE_STEP),
       talk,
     },
   };

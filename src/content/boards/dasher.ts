@@ -26,8 +26,8 @@ function syncPanels(states: readonly PanelState[]): void {
       state.open = false;
       continue;
     }
-    // A panel opens on the tab of what's on the board. Snabbdom draws a new
-    // one when 3D goes back to 2D (its class changes): that one keeps the tab.
+    // A panel opens on the tab of what the board shows. Snabbdom draws a new
+    // panel when 3D goes back to 2D (its class changes), and that one keeps the tab.
     if (!state.open) state.view = viewOf(state.picker.current());
     state.open = true;
     if (panel.matches('.d2') && !panel.querySelector(':scope > .cdc-src-tabs')) {

@@ -15,7 +15,7 @@ import { capturedPieces } from './game/captured.ts';
 import { boardTools } from './game/board-tools.ts';
 import { moveTimes } from './game/move-times.ts';
 import { newGame } from './game/new-game.ts';
-import { flags } from './game/flags.ts';
+import { countryFlags } from './game/flags.ts';
 import { boardInset } from './layout/board-inset.ts';
 import { evalGauge } from './analysis/eval-gauge.ts';
 import { puzzleSession } from './pages/puzzle.ts';
@@ -58,7 +58,7 @@ function main(): void {
     boardTools,
     moveTimes,
     newGame,
-    flags,
+    countryFlags,
     boardInset,
     evalGauge,
     puzzleSession,

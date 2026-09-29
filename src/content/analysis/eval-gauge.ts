@@ -3,11 +3,11 @@ import { queryOne, setData, setDataText } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { onEveryTick } from '#content/sync-loop.ts';
 
-// The score on Lichess's eval bar, on the analysis board and on puzzles, for
-// styles/board/coordinates.css to draw the bar like the Game Review's.
+// Copies the engine's score onto Lichess's eval bar, on the analysis board and
+// on puzzles, so styles/board/coordinates.css can draw the bar like the Game Review's.
 
 export interface GaugeScore {
-  /** Short: "1.2", "M3", or '' when there's no score. */
+  /** The short form ("1.2", "M3"), or '' when there's no score. */
   readonly label: string;
   readonly lead: Color;
 }

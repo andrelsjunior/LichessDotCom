@@ -6,7 +6,7 @@ import type { CoachMood } from '#shared/coach.ts';
 export interface MouthPose {
   /** The mouth's width, as a share of the portrait's. */
   readonly width: number;
-  /** Both corners up (negative) or down; `liftLeft` / `liftRight` one of them. */
+  /** Moves both corners up (negative) or down; `liftLeft` / `liftRight` move one. */
   readonly lift: number;
   readonly liftLeft: number;
   readonly liftRight: number;

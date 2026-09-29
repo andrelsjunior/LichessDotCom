@@ -2,10 +2,10 @@ import { closestTo, setData } from '#shared/dom.ts';
 import type { Feature } from '#shared/features.ts';
 import { oncePerFrame } from '#shared/frame.ts';
 
-// What the page holds, for the rules that would ask `html:has(main.round)` or
-// `main.analyse:has(.mchat)`: a word each in `data-cdc-has` on <html>. <html>
-// and <main> hold the board, and Chrome checked a `:has()` on them again on
-// each move, restyling all it styles.
+// What the page holds, one word each in `data-cdc-has` on <html>, for the rules
+// that would otherwise use `html:has(main.round)` or `main.analyse:has(.mchat)`.
+// <html> and <main> hold the board, and Chrome checked a `:has()` on them again
+// on every move, restyling everything the rule styles.
 
 const CLOCK_EXTRAS = ':is(.berserked, .go-berserk, .moretime, .tour-rank, .rclock-turn__text)';
 
@@ -54,7 +54,7 @@ export function syncHasFlags(): void {
 }
 
 // The pieces and the clock's digits change all the time and hold none of the
-// flags: a change only there isn't worth a check.
+// flags, so a change there alone isn't worth a check.
 const isBoardOrClock = (record: MutationRecord): boolean =>
   closestTo(record.target, 'cg-container, .time', Element) !== null;
 

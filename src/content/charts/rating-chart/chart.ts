@@ -87,27 +87,27 @@ class RatingChart {
     svg.classList.toggle('cdc-rchart__svg--intro', animate);
     this.#update();
     this.#renderLegend();
-    for (const button of queryAll(root, '[data-range]', HTMLElement))
-      button.classList.toggle('active', button.dataset.range === this.#range);
+    for (const button of queryAll(root, '[data-cdc-range]', HTMLElement))
+      button.classList.toggle('active', button.dataset.cdcRange === this.#range);
     this.#placeThumb();
   }
 
-  // Same range, other ratings shown: a new scale on the same samples, so the
-  // curves move to their new place rather than being drawn again.
+  // Showing or hiding a rating keeps the range's samples and only rescales
+  // them, so the curves glide to their new place instead of being redrawn.
   #update(): void {
     if (!this.#layout) return;
     const { svg } = this.#parts;
     const plot = scalePlot(this.#layout, this.#hidden);
     this.#plot = plot;
     for (const group of queryAll(svg, '.cdc-rchart__series', SVGElement)) {
-      const row = plot.rows.find(({ index }) => index === Number(group.dataset.i));
+      const row = plot.rows.find(({ index }) => index === Number(group.dataset.cdcSeries));
       if (!row) continue;
       group.classList.toggle('cdc-rchart__series--hidden', this.#hidden.has(row.index));
       const { line, area, top, low } = seriesPaths(plot, row);
       setPath(queryOne(group, '.cdc-rchart__line', SVGElement), line);
       setPath(queryOne(group, '.cdc-rchart__area', SVGElement), area);
-      // Each fill fades out just under its own curve: faded at the plot's
-      // bottom, the higher ratings' fills would cover the lower curves.
+      // Each fill fades out just under its own curve. If they all faded at the
+      // plot's bottom, the higher ratings' fills would cover the lower curves.
       const gradient = queryOne(svg, `#${gradientId(row.index)}`, SVGElement);
       if (gradient) setAttributes(gradient, { y1: top, y2: Math.min(plot.bottom, low + 70) });
     }
@@ -129,7 +129,7 @@ class RatingChart {
 
   click(event: MouseEvent): void {
     const range = RangeKeySchema.safeParse(
-      closestTo(event.target, '[data-range]', HTMLElement)?.dataset.range,
+      closestTo(event.target, '[data-cdc-range]', HTMLElement)?.dataset.cdcRange,
     );
     if (range.success && range.data !== this.#range) {
       this.#range = range.data;
@@ -139,13 +139,13 @@ class RatingChart {
       this.draw(true);
     }
     const chip = closestTo(event.target, '.cdc-rchart__chip', HTMLElement);
-    if (chip) this.#toggleSeries(Number(chip.dataset.i));
+    if (chip) this.#toggleSeries(Number(chip.dataset.cdcSeries));
   }
 
   #toggleSeries(index: number): void {
     const shown = this.#plot?.rows.filter(row => !this.#hidden.has(row.index)).length ?? 0;
     if (this.#hidden.has(index)) this.#hidden.delete(index);
-    // Never hide the last one shown: an empty chart has no scale.
+    // Never hide the last rating shown: with none, the chart has no scale.
     else if (shown > 1) this.#hidden.add(index);
     else return;
     this.leave();
@@ -168,7 +168,7 @@ function redrawOnResize(plot: HTMLElement, draw: (animate: boolean) => void): vo
   new ResizeObserver(() => {
     const width = Math.round(plot.clientWidth);
     if (Math.abs(width - lastWidth) < 2) return;
-    // The first draw is the one that wipes the curves in.
+    // Only the first draw wipes the curves in.
     const first = lastWidth === 0;
     lastWidth = width;
     draw(first);
@@ -178,7 +178,7 @@ function redrawOnResize(plot: HTMLElement, draw: (animate: boolean) => void): vo
 /** Adds our chart to Lichess's rating history card. */
 export function mountChart(host: HTMLElement, series: readonly Series[]): void {
   const span = historySpan(series);
-  // Before anything is added: should a blocked storage throw, Lichess's chart stays.
+  // Read before adding anything, so that Lichess's chart stays if blocked storage throws.
   const range = initialRange(readStored(StorageKey.ratingChartRange, RangeKeySchema), span);
   const formats = dateFormats(pageLocale());
   const root = createElement('div', { className: 'cdc-rchart' });

@@ -22,7 +22,7 @@ const StatusSchema = z.object({
   lastAsyncUploadState: z.optional(z.string()),
 });
 
-// Loose: a failed upload is reported with all the store said about it.
+// Loose, so a failed upload is reported with everything the store said.
 const UploadSchema = z.looseObject({
   uploadState: z.optional(z.string()),
   crxVersion: z.optional(z.string()),
@@ -56,7 +56,7 @@ interface Session {
   readonly auth: Record<string, string>;
 }
 
-// An empty version is no version, as for the store's dashboard.
+// An empty version means no version, as in the store's dashboard.
 function channelVersion(channels: Channels): string | undefined {
   const version = channels?.[0]?.crxVersion;
   return version === '' ? undefined : version;

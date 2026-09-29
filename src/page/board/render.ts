@@ -1,6 +1,6 @@
 import type { Square } from '#shared/chess/types.ts';
 import { html, trustedHtml, type SafeHtml } from '#shared/html.ts';
-import { arrowOutline, arrowPath, squareCenter } from './geometry.ts';
+import { arrowOutline, arrowPath, squareOnScreen } from './geometry.ts';
 import type { MatePhase } from './mate.ts';
 import type { Arrow, SquareFill } from './svg-shapes.ts';
 
@@ -38,9 +38,9 @@ export interface Mate {
 
 // Positions are in percent of the board, from its top left corner.
 export function mateMarkup({ king, phase, whiteAtBottom, label }: Mate): SafeHtml {
-  const [column, row] = squareCenter(king, whiteAtBottom);
-  const x = (column - 0.5) * 12.5;
-  const y = (row - 0.5) * 12.5;
+  const [column, row] = squareOnScreen(king, whiteAtBottom);
+  const x = column * 12.5;
+  const y = row * 12.5;
   if (phase === 'badge') {
     return html`<div class="cdc-mate__badge" style="left:${x + 12.5}%;top:${y}%">${MATE_ICON}</div>`;
   }

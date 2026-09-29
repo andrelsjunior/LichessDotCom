@@ -1,10 +1,8 @@
 import { z } from 'zod/mini';
-import { isSquare } from '#shared/chess/squares.ts';
-import type { Square } from '#shared/chess/types.ts';
+import { SquareSchema } from '#shared/chess/square-schema.ts';
 
 // The shape of fixtures/legacy.json: what the original script drew.
 
-const SquareSchema = z.custom<Square>(value => typeof value === 'string' && isSquare(value));
 const PointSchema = z.tuple([z.number(), z.number()]);
 
 const ShapeSchema = z.object({
@@ -21,7 +19,7 @@ const NodeSchema = z.object({
   children: z.array(z.unknown()),
 });
 
-export const FrameSchema = z.object({
+const FrameSchema = z.object({
   name: z.string(),
   orientation: z.enum(['white', 'black']),
   viewBox: z.optional(z.nullable(z.string())),

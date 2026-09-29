@@ -1,5 +1,5 @@
-// The home hero's text in the languages styles/home/ also names the cards and
-// speeds in; English otherwise.
+// The home hero's text, in the languages styles/home/ also translates the cards
+// and speeds into; English otherwise.
 
 export interface HeroText {
   readonly eyebrow: string;

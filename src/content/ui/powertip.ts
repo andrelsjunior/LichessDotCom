@@ -8,8 +8,8 @@ import { ratingState, ratingText } from './card-ratings.ts';
 // every hover, so an observer catches each new one before it's painted:
 // polling would show Lichess's markup first.
 
-// Lichess right-aligns the ratings in fixed columns, padding the short ones
-// with no-break spaces. Our chips center their value, so the padding goes.
+// Lichess right-aligns the ratings in fixed-width columns by padding the short
+// ones with no-break spaces. Our chips center their value, so we drop the padding.
 export function cleanRatings(card: HTMLElement): void {
   for (const rating of queryAll(card, '.upt__info__ratings > span', HTMLElement)) {
     const text = ratingText(rating.textContent);

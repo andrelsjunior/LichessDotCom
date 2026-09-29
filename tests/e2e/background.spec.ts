@@ -4,8 +4,9 @@ import { expect, test } from './fixtures.ts';
 import { evaluateInContentScript } from './support/content-world.ts';
 import { openLichess } from './support/lichess.ts';
 
-// The background worker. The dev auto-reload itself needs a real rebuild and
-// is out of scope; its bookkeeping and its answer to the tabs are in.
+// The background worker. The dev auto-reload itself would need a real
+// rebuild, so it isn't tested here; its bookkeeping and its replies to the
+// tabs are.
 
 const LOADED_KEY = 'dev:loaded';
 
@@ -22,7 +23,7 @@ test('the background worker starts, and tells a tab its files haven’t changed'
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  // The install cleanup, and in an unpacked install the dev reload's listener.
+  // The install cleanup's listener, and in an unpacked install the dev reload's.
   const listening = await worker.evaluate(() => ({
     installed: chrome.runtime.onInstalled.hasListeners(),
     message: chrome.runtime.onMessage.hasListeners(),
@@ -33,7 +34,7 @@ test('the background worker starts, and tells a tab its files haven’t changed'
     worker.evaluate(async key => (await chrome.storage.session.get(key))[key], LOADED_KEY);
   await expect.poll(loaded).toMatch(/^[A-Za-z0-9+/]{27}=$/);
 
-  // A Lichess tab asks, as its content script does on focus.
+  // A Lichess tab asks whether to reload, as its content script does on focus.
   await openLichess(page, '/');
   const answer = await evaluateInContentScript(
     page,

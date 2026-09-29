@@ -6,8 +6,8 @@ import { flagEmoji } from './flag-emoji.ts';
 
 // Country flags in the player bars (styles/playerbar.css). The round data has
 // no country, so it comes from the players' profiles: `/api/users` takes a
-// batch of names. The bars are snabbdom's: the flag is an attribute shown by
-// CSS, put back whenever a bar is drawn again.
+// batch of names. Snabbdom draws the bars, so the flag is an attribute that CSS
+// shows, set again whenever a bar is redrawn.
 
 const BARS =
   'main.round .ruser, main.analyse > .cdc-player, main.round .game__meta__players a.user-link';
@@ -64,7 +64,7 @@ export function createFlagsSync(): () => void {
   };
 }
 
-export const flags: Feature = {
+export const countryFlags: Feature = {
   name: 'country flags',
   start: () => onEveryTick('country flags', createFlagsSync()),
 };

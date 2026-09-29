@@ -93,7 +93,7 @@ await test('the Firefox build', async suite => {
   await suite.test('the free analysis board gets the coach, and its face', async () => {
     const page = await openLichess(browser, '/analysis');
     assert.equal((await contentScriptMarks(page)).panel, PANEL_COLOR);
-    // The page script's panel, the content script's rig over the portrait.
+    // The page script adds the coach's panel, the content script its face over the portrait.
     await page.waitForSelector('#cdc-review .cdc-coach .cdc-coach__rig svg', {
       timeout: TIMEOUT_MS,
     });

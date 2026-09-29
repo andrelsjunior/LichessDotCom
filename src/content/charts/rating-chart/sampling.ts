@@ -46,8 +46,8 @@ export function sampleRange(series: readonly Series[], start: number, end: numbe
   const times = sampleTimes(start, end);
   const anyPlayed = series.some(one => playedBetween(one, start, end));
   const rows = series.flatMap((one): SampledSeries[] => {
-    // A rating not played in the range only shows when none was: the chart
-    // is then the flat lines of where each rating stands.
+    // A rating not played in the range is only shown when none was played in
+    // it; each is then a flat line at its last value.
     if (anyPlayed && !playedBetween(one, start, end)) return [];
     const values = ratingsAt(one.points, times);
     return values.some(value => value !== null) ? [{ ...one, values }] : [];

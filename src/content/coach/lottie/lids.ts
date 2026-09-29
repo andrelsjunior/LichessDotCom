@@ -8,8 +8,8 @@ import { SIDES, type CoachRig } from './rig.ts';
 import { easeOut, numberTrack, pathTrack, type Key } from './track.ts';
 import type { Animation, BezierPath } from './types.ts';
 
-// The upper lids: where they rest in each mood, their outline morphed
-// between moods. A blunder is a double take, a mistake a slow blink.
+// The upper lids: where they rest in each mood, with their outline morphed
+// between moods. A blunder gets a double take, a mistake a slow blink.
 
 interface LidKeys {
   readonly lid: Key<BezierPath>[];
@@ -72,6 +72,9 @@ export function lidsAnimation(
   });
   return {
     animation: animation({ name: `coach ${coach} lids`, layers, end }),
-    meta: { pose: poseFrames(circuit, LIDS_STEP), trans: transitions(circuit, LIDS_STEP) },
+    meta: {
+      pose: poseFrames(circuit, LIDS_STEP),
+      transitions: transitions(circuit, LIDS_STEP),
+    },
   };
 }
