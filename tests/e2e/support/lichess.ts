@@ -12,8 +12,22 @@ export const FINISHED_GAME = { id: 'tKlG0mrQ', path: '/tKlG0mrQ/black' };
  * the test sees means anything.
  */
 export async function openLichess(page: Page, path: string): Promise<void> {
-  await page.goto(path, { waitUntil: 'load' });
+  await goToLichess(page, path);
   await expect(page.locator('html')).toHaveAttribute('data-cdc-assets', /^chrome-extension:\/\//);
+}
+
+// Lichess answers 429 with its "Too many requests" page when one network asks
+// too much, as CI runners can: back off and ask again before giving up.
+const RATE_LIMIT_BACKOFF_MS = [5_000, 15_000, 30_000];
+const TOO_MANY_REQUESTS = 429;
+
+async function goToLichess(page: Page, path: string): Promise<void> {
+  for (const backoff of [0, ...RATE_LIMIT_BACKOFF_MS]) {
+    if (backoff > 0) await page.waitForTimeout(backoff);
+    const response = await page.goto(path, { waitUntil: 'load' });
+    if (response?.status() !== TOO_MANY_REQUESTS) return;
+  }
+  throw new Error(`lichess.org keeps rate-limiting this network (${path})`);
 }
 
 /** A CSS variable as computed on <html>, trimmed. */
